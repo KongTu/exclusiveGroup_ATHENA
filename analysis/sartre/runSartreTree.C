@@ -80,16 +80,16 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     string fnames[16];
     int nnames = 0;
 
-    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_1.root";
-    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_2.root";
-    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_3.root";
-    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_4.root";
-    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_5.root";
-    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_6.root";
-    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_7.root";
-    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_8.root";
-    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_9.root";
-    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_10.root";
+    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_1.root";
+    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_2.root";
+    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_3.root";
+    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_4.root";
+    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_5.root";
+    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_6.root";
+    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_7.root";
+    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_8.root";
+    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_9.root";
+    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_10.root";
     nnames = 10;
    
     //
