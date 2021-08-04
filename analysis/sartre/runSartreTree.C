@@ -80,16 +80,16 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     string fnames[16];
     int nnames = 0;
 
-    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_1.root";
-    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_2.root";
-    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_3.root";
-    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_4.root";
-    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_5.root";
-    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_6.root";
-    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_7.root";
-    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_8.root";
-    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_9.root";
-    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_phi_10.root";
+    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_1.root";
+    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_2.root";
+    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_3.root";
+    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_4.root";
+    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_5.root";
+    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_6.root";
+    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_7.root";
+    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_8.root";
+    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_9.root";
+    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bsat_Au_phi_10.root";
     nnames = 10;
    
     //
@@ -220,9 +220,9 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     //
     //  Save histos
     //
-    TFile hfile("../../rootfiles/sartre_phi.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_phi_bsat.root","RECREATE");
     hist_t_coherent->Write();
     hist_t_incoherent->Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_phi.root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_phi_bsat.root'." << endl;
 }
