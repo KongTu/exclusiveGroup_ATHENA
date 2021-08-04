@@ -149,7 +149,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		//jpsi = 443, nodecay
 		int pdglist[]={113,333,443};
 		int statuslist[]={2,2,1};
-		int multiplicity[3]={0,0,0};
+		int acceptance[3]={1,1,1};
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -186,6 +186,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
 					const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
 
+					if(TMath::Abs(particle_daug1->GetEta())>4.0||
+						TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
+
 					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
 					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
@@ -200,7 +203,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			}
 
 		} // end of particle loop
-		for(int ivm=0;ivm<3;ivm++){h_VM[processindex][ivm][4]->Fill(-t_hat);}
+		for(int ivm=0;ivm<3;ivm++){
+			if(acceptance[ivm]) h_VM[processindex][ivm][4]->Fill(-t_hat);
+		}
 	}
 
 	output->Write();
