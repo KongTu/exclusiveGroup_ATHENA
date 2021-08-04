@@ -129,7 +129,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		//phi = 333, decay->kk
 		//jpsi = 443, nodecay
 		int pdglist[]={113,333,443};
-		int statuslist[]={1,2,2};
+		int statuslist[]={2,2,1};
 		int multiplicity[3]={0,0,0};
 		for(int j(0); j < nParticles; ++j ) {
 
