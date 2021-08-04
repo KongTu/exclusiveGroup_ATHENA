@@ -72,8 +72,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	//VM histograms//
 	/* first  index VM species, rho=0, phi=1, jpsi=2*/
 	/* second index VM property, pt=0, eta=1, phi=2, theta=3, reserved=4*/
-	double bin_lower[]={0.,-8.,-4.,0.,0.};
-	double bin_upper[]={0.5,8.,4.,100.,1.};
+	double bin_lower[]={0.,-8.,0.,0.,0.};
+	double bin_upper[]={1.5,8.,6.5,100.,1.};
 	TH1D* h_VM[3][5];
 	for(int ivm=0;ivm<3;ivm++){
 		for(int ipro=0;ipro<5;ipro++){
@@ -146,9 +146,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			double mom = particle->GetP();
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
-
-			//only stable particles or j/psi.
-			if( pdg != 443 ) continue;
 
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
