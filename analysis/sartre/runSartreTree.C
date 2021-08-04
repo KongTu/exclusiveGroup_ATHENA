@@ -201,12 +201,12 @@ void runSartreTree(double fractionOfEventsToRead = 1)
         //
         //   Some print outs
         //
-        cout << "\nEvent data:" << endl;
-        PR(myEvent.t);
-        PR(myEvent.Q2);
-        PR(myEvent.x);
-        PR(vmVec);
-        PR(eOutVec);
+        // cout << "\nEvent data:" << endl;
+        // PR(myEvent.t);
+        // PR(myEvent.Q2);
+        // PR(myEvent.x);
+        // PR(vmVec);
+        // PR(eOutVec);
         
     } // end event loop
     
