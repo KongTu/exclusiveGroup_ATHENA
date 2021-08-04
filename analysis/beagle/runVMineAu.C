@@ -181,14 +181,17 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					int daug1=particle->GetChild1Index();
 					int daug2=particle->GetChildNIndex();
 					if(daug1==0 || daug2==0) continue;
-					if(daug1>=nParticles 
-						|| daug2>=nParticles) continue;
+					
 					cout << "daug1~"<<daug1<<endl;
 					cout << "daug2~"<<daug2<<endl;
+					cout << "nParticles~"<<nParticles<<endl;
 
 					const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
 					const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
 
+					cout << "pt daug1 " << particle_daug1->GetPt() << endl;
+					cout << "pt daug2 " << particle_daug2->GetPt() << endl;
+					
 					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
 					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
@@ -199,8 +202,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta()*1000);
 
-					cout << "pt daug1 " << particle_daug1->GetPt() << endl;
-					cout << "pt daug2 " << particle_daug2->GetPt() << endl;
+					
 
 				}
 			}
