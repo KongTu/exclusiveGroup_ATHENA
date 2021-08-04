@@ -85,6 +85,18 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		}
 	}
 	//END VM histograms//
+
+	//VM daughter histograms//
+	TH1D* h_VM_daughter[2][3][5];
+	for(int ibreak=0;ibreak<2;ibreak++){
+		for(int ivm=0;ivm<3;ivm++){
+			for(int ipro=0;ipro<5;ipro++){
+				h_VM_daughter[ibreak][ivm][ipro] = new TH1D(Form("h_VM_daughter_%d_%d_%d",ibreak,ivm,ipro),
+					Form("h_VM_daughter_%d_%d_%d",ibreak,ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+			}
+		}
+	}
+	//END VM daughter histograms
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -163,6 +175,26 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				h_VM[processindex][ivm][1]->Fill(rap);
 				h_VM[processindex][ivm][2]->Fill(phi);
 				h_VM[processindex][ivm][3]->Fill(theta);
+
+				//rho and phi daughters:
+				if(ivm<2){
+					int daug1=particle->GetChild1Index();
+					int daug2=particle->GetChildNIndex();
+					if(daug1==0 || daug2==0) continue;
+					const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
+					const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
+
+					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
+					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
+					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
+					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug1->GetTheta()*1000);
+
+					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug2->GetPt());
+					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug2->GetEta());
+					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
+					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta()*1000);
+
+				}
 			}
 
 		} // end of particle loop
