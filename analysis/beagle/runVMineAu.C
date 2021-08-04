@@ -59,7 +59,7 @@ using namespace std;
 using namespace erhic;
 
 
-void runVMinePb(const TString filename="eA_TEST", const int nEvents = 40000){
+void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 
 	TChain *tree = new TChain("EICTree");
 	tree->Add( filename+".root" );
