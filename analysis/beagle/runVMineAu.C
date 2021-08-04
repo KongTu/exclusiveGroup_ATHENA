@@ -202,7 +202,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 
 		} // end of particle loop
 		for(int ivm=0;ivm<3;ivm++){h_VM[processindex][ivm][4]->Fill(-t_hat);}
-		
+		cout << "Event # " << i << endl;
 	}
 
 	output->Write();
