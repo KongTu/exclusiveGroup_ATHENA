@@ -129,7 +129,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		//phi = 333, decay->kk
 		//jpsi = 443, nodecay
 		int pdglist[]={113,333,443};
-		int nobamlist[]={0,2,2};
+		int nobamlist[]={1,2,2};
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -151,15 +151,12 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
-				// if(NoBAM!=nobamlist[ivm])
+				if(status!=nobamlist[ivm])
 				h_VM[ivm][0]->Fill(pt);
 				h_VM[ivm][1]->Fill(eta);
 				h_VM[ivm][2]->Fill(phi);
 				h_VM[ivm][3]->Fill(theta);
 				h_VM[ivm][4]->Fill(NoBAM);
-				cout<<"pdg = " << pdglist[ivm] << endl;
-				cout << "nobam = " << NoBAM << endl;
-
 			}
 
 		} // end of particle loop
