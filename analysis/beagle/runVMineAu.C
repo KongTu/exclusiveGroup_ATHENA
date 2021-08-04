@@ -181,6 +181,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					int daug1=particle->GetChild1Index();
 					int daug2=particle->GetChildNIndex();
 					if(daug1==0 || daug2==0) continue;
+					cout << "daug1~"<<daug1<<endl;
+					
 					const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
 					const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
 
