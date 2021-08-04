@@ -67,23 +67,22 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
-	TFile* output = new TFile("output.root","RECREATE");
-	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,1);
-	TH1D* h_decomposition = new TH1D("h_decomposition",";",10,0,10);
-	TH2D* h_thetaVsMom[3];
-	TH2D* h_thetaVsMom_min[3];
-	TH2D* h_thetaVsBam[3];
-	TH2D* h_MomVsBam[3];
-	for(int k=0;k<2;k++){
-		h_thetaVsMom[k] = new TH2D(Form("h_thetaVsMom_%d",k),";p (GeV);#theta (mrad)",2500,0,250,10000,0,1000);
-		h_thetaVsMom_min[k] = new TH2D(Form("h_thetaVsMom_min_%d",k),";p (GeV);#theta (mrad)",2500,0,250,10000,0,1000);
-		h_thetaVsBam[k] = new TH2D(Form("h_thetaVsBam_%d",k),";NoBAM;#theta (mrad)",37,-1,36,10000,0,1000);
-		h_MomVsBam[k] = new TH2D(Form("h_MomVsBam_%d",k),";NoBAM;p (GeV)",37,-1,36,2500,0,250);
+	TFile* output = new TFile("rootfiles/beagle_phi.root","RECREATE");
+	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
+	//VM histograms//
+	/* first  index VM species, rho=0, phi=1, jpsi=2*/
+	/* second index VM property, pt=0, eta=1, phi=2, theta=3, reserved=4*/
+	double bin_lower[]={0.,-8.,-4.,0.,0.};
+	double bin_upper[]={0.5,8.,4.,100.,1.};
+	TH1D* h_VM[3][5];
+	for(int ivm=0;ivm<3;ivm++){
+		for(ipro=0;ipro<5;ipro++){
+			h_VM[ivm][ipro] = new TH1D(Form("h_VM_%D_%D",ivm,ipro),
+				Form("h_VM_%D_%D",ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+		}
 	}
-		h_thetaVsMom[2] = new TH2D(Form("h_thetaVsMom_%d",2),";p (GeV);#theta (mrad)",2500,0,20,10000,0,1000);
-		h_thetaVsMom_min[2] = new TH2D(Form("h_thetaVsMom_min_%d",2),";p (GeV);#theta (mrad)",2500,0,20,10000,0,1000);
-		h_thetaVsBam[2] = new TH2D(Form("h_thetaVsBam_%d",2),";NoBAM;#theta (mrad)",37,-1,36,10000,0,1000);
-		h_MomVsBam[2] = new TH2D(Form("h_MomVsBam_%d",2),";NoBAM;p (GeV)",37,-1,36,2500,0,250);
+	//END VM histograms//
+
 
 	for(int i(0); i < nEvents; ++i ) {
       
@@ -121,19 +120,17 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 
 		//event cuts
 		if( event_process != 91 && event_process != 93 ) continue;
-		if( trueQ2 < 1. || trueQ2 > 100. ) continue;
+		if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		if( trueY > 0.95 || trueY < 0.01 ) continue;
 
 		//do analysis, or fill historgrams for event levels
+		h_trueT->Fill(-t_hat);
 
 		//particle loop
-		bool hasJpsi = false;
-		bool hasNeutron = false;
-		bool hasProton = false;
-		bool hasPhoton = false;
-		vector< double> angle_neutron, angle_proton, angle_photon;
-		vector< double> momentum_neutron, momentum_proton, momentum_photon;
-		vector< int> bam_neutron, bam_proton, bam_photon;
+		//rho^0 = 113, decay->pipi
+		//phi = 333, decay->kk
+		//jpsi = 443, nodecay
+		int pdglist[]={113,333,443}
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -149,86 +146,26 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			double theta = particle->GetTheta(); 
 			theta = theta*1000.0; //change to mrad;
 			double mom = particle->GetP();
+			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
 
 			//only stable particles or j/psi.
-			if( status != 1 && pdg != 443 ) continue;
+			if( pdg != 443 ) continue;
 
-			if( pdg == 443 ){ //jpsi
-				hasJpsi = true;
-			}
-			if( pdg == 2112 ){ // neutrons
-				hasNeutron = true;
-				angle_neutron.push_back( theta );
-				momentum_neutron.push_back( mom );
-				bam_neutron.push_back( NoBAM );
-			}
-			if( pdg == 2212 ){ // proton
-				hasProton = true;
-				angle_proton.push_back( theta );
-				momentum_proton.push_back( mom );
-				bam_proton.push_back( NoBAM );
-
-			}
-			if( pdg == 22 ){ // photon
-				hasPhoton = true;
-				angle_photon.push_back( theta );
-				momentum_photon.push_back( mom );
-				bam_photon.push_back( NoBAM );
-			}
 			//do analysis track-by-track
+			for(int ivm=0;ivm<3;ivm++){
+				if(pdg!=pdglist[ivm]) continue;
+				h_VM[ivm][0]->Fill(pt);
+				h_VM[ivm][1]->Fill(eta);
+				h_VM[ivm][2]->Fill(phi);
+				h_VM[ivm][3]->Fill(theta);
+
+			}
 
 		} // end of particle loop
 
 
-		if( hasJpsi ) {
-			if( hasNeutron && !hasProton && !hasPhoton )h_decomposition->Fill(0);
-			if( !hasNeutron && hasProton && !hasPhoton )h_decomposition->Fill(1);
-			if( !hasNeutron && !hasProton && hasPhoton )h_decomposition->Fill(2);
-			if( hasNeutron && hasProton && !hasPhoton )h_decomposition->Fill(3);
-			if( hasNeutron && !hasProton && hasPhoton )h_decomposition->Fill(4);
-			if( !hasNeutron && hasProton && hasPhoton )h_decomposition->Fill(5);
-			if( hasNeutron && hasProton && hasPhoton )h_decomposition->Fill(6);
-
-			h_trueT->Fill( -t_hat );
-			int index_min=-1;
-			double angle_min=999.;
-			for(unsigned ipart=0;ipart<angle_neutron.size();ipart++){
-				if( angle_neutron[ipart] < angle_min) {
-					angle_min=angle_neutron[ipart];
-					index_min=ipart;
-				}
-				h_thetaVsMom[0]->Fill(momentum_neutron[ipart],angle_neutron[ipart]);
-				h_thetaVsBam[0]->Fill(bam_neutron[ipart], angle_neutron[ipart]);
-				h_MomVsBam[0]->Fill(bam_neutron[ipart], momentum_neutron[ipart]);
-			}
-			if(index_min!=-1) h_thetaVsMom_min[0]->Fill( momentum_neutron[index_min],angle_neutron[index_min] );
-			index_min = -1;
-			angle_min=999.;
-			for(unsigned ipart=0;ipart<angle_proton.size();ipart++){
-				if( angle_proton[ipart] < angle_min) {
-					angle_min=angle_proton[ipart];
-					index_min=ipart;
-				}
-				h_thetaVsMom[1]->Fill(momentum_proton[ipart],angle_proton[ipart]);
-				h_thetaVsBam[1]->Fill(bam_proton[ipart], angle_proton[ipart]);
-				h_MomVsBam[1]->Fill(bam_proton[ipart], momentum_proton[ipart]);
-			}
-			if(index_min!=-1) h_thetaVsMom_min[1]->Fill( momentum_proton[index_min],angle_proton[index_min] );
-			index_min = -1;
-			angle_min=999.;
-			for(unsigned ipart=0;ipart<angle_photon.size();ipart++){
-				if( angle_photon[ipart] < angle_min) {
-					angle_min=angle_photon[ipart];
-					index_min=ipart;
-				}
-				h_thetaVsMom[2]->Fill(momentum_photon[ipart],angle_photon[ipart]);
-				h_thetaVsBam[2]->Fill(bam_photon[ipart], angle_photon[ipart]);
-				h_MomVsBam[2]->Fill(bam_photon[ipart], momentum_photon[ipart]);
-			}
-			if(index_min!=-1) h_thetaVsMom_min[2]->Fill( momentum_photon[index_min],angle_photon[index_min] );
-		}
-		//fill histograms
+		
 	}
 
 	output->Write();
