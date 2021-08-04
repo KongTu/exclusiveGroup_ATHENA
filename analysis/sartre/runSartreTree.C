@@ -220,9 +220,9 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     //
     //  Save histos
     //
-    TFile hfile("exampleHistos.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_jpsi.root","RECREATE");
     hist_t_coherent->Write();
     hist_t_incoherent->Write();
     hfile.Close();
-    cout << "All histos stored in file 'exampleHistos.root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_jpsi.root'." << endl;
 }
