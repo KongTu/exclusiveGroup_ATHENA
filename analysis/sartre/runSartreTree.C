@@ -80,16 +80,16 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     string fnames[16];
     int nnames = 0;
 
-    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_1.root";
-    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_2.root";
-    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_3.root";
-    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_4.root";
-    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_5.root";
-    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_6.root";
-    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_7.root";
-    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_8.root";
-    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_9.root";
-    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_rho_10.root";
+    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_1.root";
+    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_2.root";
+    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_3.root";
+    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_4.root";
+    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_5.root";
+    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_6.root";
+    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_7.root";
+    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_8.root";
+    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_9.root";
+    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_10.root";
     nnames = 10;
    
     //
@@ -220,9 +220,9 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     //
     //  Save histos
     //
-    TFile hfile("../../rootfiles/sartre_rho_bnonsat.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_jpsi_bnonsat.root","RECREATE");
     hist_t_coherent->Write();
     hist_t_incoherent->Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_rho_bnonsat.root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_jpsi_bnonsat.root'." << endl;
 }

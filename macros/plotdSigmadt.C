@@ -6,7 +6,7 @@ using namespace std;
 #define MASS_NUCLEON  0.93891875 //.93891875
 #define MASS_DEUTERON  1.8756129 //1.8756129 //1.8756134 (most precise)
 
-void plotdSigmadt(){
+void plotdSigmadt(TString name="phi"){
 
 	/* Beagle */
 	
@@ -29,11 +29,21 @@ void plotdSigmadt(){
 
 	/* Sartre */
 
-	TFile* file_sartre = new TFile("../rootfiles/sartre_phi_bnonsat.root");
+	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
 	TH1D* h_phi_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_phi_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
 
-	double sartre_lumi = (20000000./(4.72E+3));//nanbarn
+	double sigma=-1;
+	int vm_index=-1;
+	if(name=="rho"){
+		sigma = 3.58E+4;
+		vm_index=0;
+	}
+	else if(name=="phi"){
+		sigma=4.72E+3;
+		vm_index=1;
+	}
+	double sartre_lumi = 20000000./sigma;//nanbarn
 	double sartre_delta_t = h_phi_coh_sartre->GetBinWidth(1); 
 
 	TCanvas* c1 = new TCanvas("c1","c1",1,1,600,600);
@@ -41,7 +51,7 @@ void plotdSigmadt(){
 	gPad->SetLeftMargin(0.15);
 	gPad->SetBottomMargin(0.15);
 	TH1D* base1 = makeHist("base1", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (nb/GeV^{2}) ", 100,0,0.18,kBlack);
-	base1->GetYaxis()->SetRangeUser(1e-1, 1e7);
+	base1->GetYaxis()->SetRangeUser(1e-1, 1e8);
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
 	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.7);
@@ -60,8 +70,8 @@ void plotdSigmadt(){
 	h_phi_incoh_sartre->SetLineColor(kRed);
 	h_phi_incoh_sartre->Draw("HIST same");
 
-	TH1D* h_VM_background = (TH1D*) h_VM[0][1][4]->Clone("h_VM_background");
-	h_VM_background->Add(h_VM[1][1][4],+1);
+	TH1D* h_VM_background = (TH1D*) h_VM[0][vm_index][4]->Clone("h_VM_background");
+	h_VM_background->Add(h_VM[1][vm_index][4],+1);
 	h_VM_background->Rebin(2);
 	h_VM_background->Scale(1./2);
 	h_VM_background->SetMarkerStyle(24);
