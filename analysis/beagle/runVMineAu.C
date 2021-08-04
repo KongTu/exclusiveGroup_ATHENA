@@ -148,6 +148,16 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
 
+			if(pdg==113&&eta>4.){
+				cout << "pt = " << pt<< endl;
+				cout << "mass=" << mass << endl;
+				cout <<"trueQ2="<<trueQ2<<endl;
+				cout <<"trueX="<<trueX<<endl;
+				cout << "process="<<event_process << endl;
+				cout << "status="<<status<<endl;
+				cout << "nucleon="<<struck_nucleon<<endl;
+			}
+
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
