@@ -173,7 +173,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
-				hasvm[im]=1;//found vm.
+				hasvm[ivm]=1;//found vm.
 				h_VM[processindex][ivm][0]->Fill(pt);
 				h_VM[processindex][ivm][1]->Fill(eta);
 				h_VM[processindex][ivm][2]->Fill(phi);
@@ -206,7 +206,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 
 		} // end of particle loop
 		for(int ivm=0;ivm<3;ivm++){
-			if(acceptance[ivm]&&hasvm[im]) h_VM[processindex][ivm][4]->Fill(-t_hat);
+			if(acceptance[ivm]&&hasvm[ivm]) h_VM[processindex][ivm][4]->Fill(-t_hat);
 		}
 	}
 
