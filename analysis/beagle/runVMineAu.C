@@ -76,11 +76,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	double bin_lower[]={0.,-8.,0.,0.,0.};
 	double bin_upper[]={5.0,8.,6.5,100.,100.};
 	TH1D* h_VM[3][3][5];
-	for(int ibreak=0;ibreal<3;ibreak++){
+	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipro=0;ipro<5;ipro++){
-				h_VM[ibreak][ivm][ipro] = new TH1D(Form("h_VM_%d_%d_%d",ibreal,ivm,ipro),
-					Form("h_VM_%d_%d_%d",ibreal,ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+				h_VM[ibreak][ivm][ipro] = new TH1D(Form("h_VM_%d_%d_%d",ibreak,ivm,ipro),
+					Form("h_VM_%d_%d_%d",ibreak,ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
 			}
 		}
 	}
