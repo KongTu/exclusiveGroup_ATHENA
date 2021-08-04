@@ -76,7 +76,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	double bin_upper[]={0.5,8.,4.,100.,1.};
 	TH1D* h_VM[3][5];
 	for(int ivm=0;ivm<3;ivm++){
-		for(ipro=0;ipro<5;ipro++){
+		for(int ipro=0;ipro<5;ipro++){
 			h_VM[ivm][ipro] = new TH1D(Form("h_VM_%D_%D",ivm,ipro),
 				Form("h_VM_%D_%D",ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
 		}
