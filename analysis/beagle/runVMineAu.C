@@ -74,9 +74,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	/* second  index VM species, rho=0, phi=1, jpsi=2*/
 	/* third   index VM property, pt=0, eta=1, phi=2, theta=3, reserved=4*/
 	double bin_lower[]={0.,-8.,0.,0.,0.};
-	double bin_upper[]={5.0,8.,6.5,100.,100.};
-	TH1D* h_VM[3][3][5];
-	for(int ibreak=0;ibreak<3;ibreak++){
+	double bin_upper[]={5.0,8.,6.5,100.,1.2};
+	TH1D* h_VM[2][3][5];
+	for(int ibreak=0;ibreak<2;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipro=0;ipro<5;ipro++){
 				h_VM[ibreak][ivm][ipro] = new TH1D(Form("h_VM_%d_%d_%d",ibreak,ivm,ipro),
@@ -84,7 +84,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			}
 		}
 	}
-	
 	//END VM histograms//
 	for(int i(0); i < nEvents; ++i ) {
       
@@ -164,11 +163,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				h_VM[processindex][ivm][1]->Fill(rap);
 				h_VM[processindex][ivm][2]->Fill(phi);
 				h_VM[processindex][ivm][3]->Fill(theta);
-				multiplicity[ivm]++;
 			}
 
 		} // end of particle loop
-		for(int ivm=0;ivm<3;ivm++){h_VM[processindex][ivm][4]->Fill(multiplicity[ivm]);}
+		for(int ivm=0;ivm<3;ivm++){h_VM[processindex][ivm][4]->Fill(-t_hat);}
 		
 	}
 
