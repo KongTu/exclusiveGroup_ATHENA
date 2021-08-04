@@ -70,17 +70,21 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	TFile* output = new TFile("../../rootfiles/beagle_phi.root","RECREATE");
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
 	//VM histograms//
-	/* first  index VM species, rho=0, phi=1, jpsi=2*/
-	/* second index VM property, pt=0, eta=1, phi=2, theta=3, reserved=4*/
+	/* first   index VM process, 91=0, 93=1, 91+93=2*/
+	/* second  index VM species, rho=0, phi=1, jpsi=2*/
+	/* third   index VM property, pt=0, eta=1, phi=2, theta=3, reserved=4*/
 	double bin_lower[]={0.,-8.,0.,0.,0.};
 	double bin_upper[]={5.0,8.,6.5,100.,100.};
-	TH1D* h_VM[3][5];
-	for(int ivm=0;ivm<3;ivm++){
-		for(int ipro=0;ipro<5;ipro++){
-			h_VM[ivm][ipro] = new TH1D(Form("h_VM_%d_%d",ivm,ipro),
-				Form("h_VM_%d_%d",ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+	TH1D* h_VM[3][3][5];
+	for(int ibreak=0;ibreal<3;ibreak++){
+		for(int ivm=0;ivm<3;ivm++){
+			for(int ipro=0;ipro<5;ipro++){
+				h_VM[ibreak][ivm][ipro] = new TH1D(Form("h_VM_%d_%d_%d",ibreal,ivm,ipro),
+					Form("h_VM_%d_%d_%d",ibreal,ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+			}
 		}
 	}
+	
 	//END VM histograms//
 	for(int i(0); i < nEvents; ++i ) {
       
@@ -117,9 +121,12 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		int N_pevap = event->Npevap;
 
 		//event cuts
-		if( event_process != 91 && event_process != 93 ) continue;
-		// if( trueQ2 < 1. || trueQ2 > 20. ) continue;
-		// if( trueY > 0.95 || trueY < 0.01 ) continue;
+		int processindex=-1;
+		if( event_process==91) processindex=0;
+		if( event_process==93) processindex=1;
+		if( processindex<0 ) continue;
+		if( trueQ2 < 1. || trueQ2 > 20. ) continue;
+		if( trueY > 0.95 || trueY < 0.01 ) continue;
 
 		//do analysis, or fill historgrams for event levels
 		h_trueT->Fill(-t_hat);
@@ -149,30 +156,19 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
 
-			// if(pdg==113&&eta>4.){
-			// 	cout << "pt = " << pt<< endl;
-			// 	cout << "mass=" << mass << endl;
-			// 	cout <<"trueQ2="<<trueQ2<<endl;
-			// 	cout <<"trueX="<<trueX<<endl;
-			// 	cout << "process="<<event_process << endl;
-			// 	cout << "status="<<status<<endl;
-			// 	cout << "nucleon="<<struck_nucleon<<endl;
-			// }
-
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
-				h_VM[ivm][0]->Fill(pt);
-				h_VM[ivm][1]->Fill(rap);
-				h_VM[ivm][2]->Fill(phi);
-				h_VM[ivm][3]->Fill(theta);
-				// h_VM[ivm][4]->Fill(-t_hat);
+				h_VM[processindex][ivm][0]->Fill(pt);
+				h_VM[processindex][ivm][1]->Fill(rap);
+				h_VM[processindex][ivm][2]->Fill(phi);
+				h_VM[processindex][ivm][3]->Fill(theta);
 				multiplicity[ivm]++;
 			}
 
 		} // end of particle loop
-		for(int ivm=0;ivm<3;ivm++){h_VM[ivm][4]->Fill(multiplicity[ivm]);}
+		for(int ivm=0;ivm<3;ivm++){h_VM[processindex][ivm][4]->Fill(multiplicity[ivm]);}
 		
 	}
 
