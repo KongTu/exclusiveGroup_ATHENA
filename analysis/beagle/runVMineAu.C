@@ -163,7 +163,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 			double rap = particle->GetRapidity();
 			double mass = particle->GetM();
 			double theta = particle->GetTheta(); 
-			theta = theta*1000.0; //change to mrad;
+			// theta = theta*1000.0; //change to mrad;
 			double mom = particle->GetP();
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
@@ -193,12 +193,12 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
 					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
-					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug1->GetTheta()*1000);
+					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug1->GetTheta()*1000.);
 
 					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug2->GetPt());
 					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug2->GetEta());
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
-					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta()*1000);
+					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta()*1000.);
 
 				}
 			}
