@@ -153,7 +153,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm])
 				h_VM[ivm][0]->Fill(pt);
-				h_VM[ivm][1]->Fill(eta);
+				h_VM[ivm][1]->Fill(rap);
 				h_VM[ivm][2]->Fill(phi);
 				h_VM[ivm][3]->Fill(theta);
 				h_VM[ivm][4]->Fill(-t_hat);
