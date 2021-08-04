@@ -23,9 +23,12 @@ void plotdSigmadt(TString name="phi"){
 		}
 	}
 
-	double beagle_lumi = 59813./(34.4*118) + (100000-59813)/(34.4*79);//nanobarn
+	//branching ratios
+	double BR_decay[] = {1.0,0.489,1.0};//branching ratio
+	//beagle constants
+	double beagle_lumi = 1e5/(34.4*197);//nanobarn
+	beagle_lumi=beagle_lumi*11.;
 	double beagle_delta_t = h_VM[0][1][4]->GetBinWidth(1);
-	double BR_phiTokk = 0.489;//branching ratio
 
 	/* Sartre */
 
@@ -35,57 +38,72 @@ void plotdSigmadt(TString name="phi"){
 
 	double sigma=-1;
 	int vm_index=-1;
+	TString legendName="";
 	if(name=="rho"){
 		sigma = 3.58E+4;
 		vm_index=0;
+		legendName="#rho^{0}";
 	}
 	else if(name=="phi"){
 		sigma=4.72E+3;
 		vm_index=1;
+		legendName="#phi";
+	}
+	else if(name=="jpsi"){
+		sigma=199.;
+		vm_index=2;
+		legendName="J/#psi";
 	}
 	double sartre_lumi = 20000000./sigma;//nanbarn
 	double sartre_delta_t = h_phi_coh_sartre->GetBinWidth(1); 
 
 	TCanvas* c1 = new TCanvas("c1","c1",1,1,600,600);
 	gPad->SetLogy(1);
+	gPad->SetTicks();
 	gPad->SetLeftMargin(0.15);
 	gPad->SetBottomMargin(0.15);
 	TH1D* base1 = makeHist("base1", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (nb/GeV^{2}) ", 100,0,0.18,kBlack);
-	base1->GetYaxis()->SetRangeUser(1e-1, 1e8);
+	if(name=="rho"){base1->GetYaxis()->SetRangeUser(1e-1, 1e8);}
+	if(name=="phi"){base1->GetYaxis()->SetRangeUser(1e-2, 1e7);}
+	if(name=="jpsi"){base1->GetYaxis()->SetRangeUser(1e-3, 1e6);}
+	
+	
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
-	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.7);
-	base1->GetXaxis()->SetTitleSize(base1->GetXaxis()->GetTitleSize()*1.7);
-	base1->GetYaxis()->SetLabelSize(base1->GetYaxis()->GetLabelSize()*1.8);
-	base1->GetXaxis()->SetLabelSize(base1->GetXaxis()->GetLabelSize()*1.7);
+	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.5);
+	base1->GetXaxis()->SetTitleSize(base1->GetXaxis()->GetTitleSize()*1.5);
+	base1->GetYaxis()->SetLabelSize(base1->GetYaxis()->GetLabelSize()*1.5);
+	base1->GetXaxis()->SetLabelSize(base1->GetXaxis()->GetLabelSize()*1.5);
 	base1->GetXaxis()->SetNdivisions(4,4,0);
 	base1->GetYaxis()->SetNdivisions(5,5,0);
 	base1->Draw();
 
-	h_phi_coh_sartre->Scale(1./(sartre_lumi * sartre_delta_t * BR_phiTokk));
+	h_phi_coh_sartre->Scale(1./(sartre_lumi * sartre_delta_t * BR_decay[vm_index]));
 	h_phi_coh_sartre->SetLineColor(kBlue);
-	h_phi_coh_sartre->Draw("HIST same");
+	h_phi_coh_sartre->SetLineWidth(2);
+	h_phi_coh_sartre->Draw(" hist same");
 
-	h_phi_incoh_sartre->Scale(1./(sartre_lumi * sartre_delta_t * BR_phiTokk));
+	h_phi_incoh_sartre->Scale(1./(sartre_lumi * sartre_delta_t * BR_decay[vm_index]));
 	h_phi_incoh_sartre->SetLineColor(kRed);
-	h_phi_incoh_sartre->Draw("HIST same");
+	h_phi_incoh_sartre->SetLineWidth(2);
+	h_phi_incoh_sartre->Draw(" hist same");
 
 	TH1D* h_VM_background = (TH1D*) h_VM[0][vm_index][4]->Clone("h_VM_background");
 	h_VM_background->Add(h_VM[1][vm_index][4],+1);
 	h_VM_background->Rebin(2);
 	h_VM_background->Scale(1./2);
 	h_VM_background->SetMarkerStyle(24);
-	h_VM_background->Scale( 1./ (beagle_lumi * beagle_delta_t * BR_phiTokk) );
+	h_VM_background->Scale( 1./ (beagle_lumi * beagle_delta_t * BR_decay[vm_index]) );
 	h_VM_background->Draw("P SAME");
 
-	TLegend *w5 = new TLegend(0.56,0.74,0.78,0.87);
+	TLegend *w5 = new TLegend(0.53,0.74,0.73,0.87);
 	w5->SetLineColor(kWhite);
 	w5->SetFillColor(0);
-	w5->SetTextSize(19);
+	w5->SetTextSize(18);
 	w5->SetTextFont(45);
-	w5->AddEntry(h_phi_coh_sartre, "Sartre #phi coherent  ", "PL");
-	w5->AddEntry(h_phi_incoh_sartre, "Sartre #phi incoherent  ", "PL");
-	w5->AddEntry(h_VM_background, "BeAGLE #phi incoherent ", "P");
+	w5->AddEntry(h_phi_coh_sartre, "Sartre "+legendName+" coherent  ", "PL");
+	w5->AddEntry(h_phi_incoh_sartre, "Sartre "+legendName+" incoherent  ", "PL");
+	w5->AddEntry(h_VM_background, "BeAGLE "+legendName+" incoherent ", "P");
 	w5->Draw("same");
 
 	TLatex* r42 = new TLatex(0.18, 0.91, "eAu 18x110 GeV^{2}");
@@ -100,11 +118,13 @@ void plotdSigmadt(TString name="phi"){
 	r43->SetTextSize(0.04);
 	r43->Draw("same");
 
-	TLatex* r44 = new TLatex(0.18, 0.84, "1<Q^{2}<20 GeV^{2}, |#eta(K)|<4.0");
+	TLatex* r44 = new TLatex(0.18, 0.84, "1<Q^{2}<20 GeV^{2}, |#eta_{dau}|<4.0");
 	r44->SetNDC();
 	r44->SetTextSize(20);
 	r44->SetTextFont(43);
 	r44->SetTextColor(kBlack);
 	r44->Draw("same");
+
+	c1->Print("../figures/dsigma_dt_"+name+".pdf");
 
 }
