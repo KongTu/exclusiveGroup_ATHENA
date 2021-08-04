@@ -178,8 +178,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 
 				//rho and phi daughters:
 				if(ivm<2){
-					int daug1=particle->GetChild1Index();
-					int daug2=particle->GetChildNIndex();
+					int daug1=particle->GetChild1Index()-1;
+					int daug2=particle->GetChildNIndex()-1;
 					if(daug1==0 || daug2==0) continue;
 					
 					cout << "daug1~"<<daug1<<endl;
