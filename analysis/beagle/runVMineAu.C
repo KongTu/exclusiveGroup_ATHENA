@@ -173,9 +173,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				h_VM[processindex][ivm][0]->Fill(pt);
-				h_VM[processindex][ivm][1]->Fill(rap);
+				h_VM[processindex][ivm][1]->Fill(eta);
 				h_VM[processindex][ivm][2]->Fill(phi);
 				h_VM[processindex][ivm][3]->Fill(theta);
+				cout << "theta~"<<theta<<endl;
 
 				//rho and phi daughters:
 				if(ivm<2){
