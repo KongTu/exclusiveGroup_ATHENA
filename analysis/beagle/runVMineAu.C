@@ -197,6 +197,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta()*1000);
 
+					cout << "pt daug1 " << particle_daug1->GetPt() << endl;
+					cout << "pt daug2 " << particle_daug2->GetPt() << endl;
+
 				}
 			}
 
