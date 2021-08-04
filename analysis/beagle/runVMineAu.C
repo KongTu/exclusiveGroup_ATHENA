@@ -138,7 +138,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		if( event_process==93) processindex=1;
 		if( processindex<0 ) continue;
 		if( trueQ2 < 1. || trueQ2 > 20. ) continue;
-		if( trueY > 0.95 || trueY < 0.01 ) continue;
+		// if( trueY > 0.95 || trueY < 0.01 ) continue;
+		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 
 		//do analysis, or fill historgrams for event levels
 		h_trueT->Fill(-t_hat);
