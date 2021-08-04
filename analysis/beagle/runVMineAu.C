@@ -67,7 +67,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
-	TFile* output = new TFile("../rootfiles/beagle_phi.root","RECREATE");
+	TFile* output = new TFile("../../rootfiles/beagle_phi.root","RECREATE");
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
 	//VM histograms//
 	/* first  index VM species, rho=0, phi=1, jpsi=2*/
@@ -82,8 +82,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		}
 	}
 	//END VM histograms//
-
-
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
