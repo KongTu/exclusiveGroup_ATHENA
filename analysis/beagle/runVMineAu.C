@@ -77,8 +77,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	TH1D* h_VM[3][5];
 	for(int ivm=0;ivm<3;ivm++){
 		for(int ipro=0;ipro<5;ipro++){
-			h_VM[ivm][ipro] = new TH1D(Form("h_VM_%D_%D",ivm,ipro),
-				Form("h_VM_%D_%D",ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+			h_VM[ivm][ipro] = new TH1D(Form("h_VM_%d_%d",ivm,ipro),
+				Form("h_VM_%d_%d",ivm,ipro),100,bin_lower[ipro],bin_upper[ipro] );
 		}
 	}
 	//END VM histograms//
