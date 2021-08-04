@@ -181,6 +181,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					int daug1=particle->GetChild1Index();
 					int daug2=particle->GetChildNIndex();
 					if(daug1==0 || daug2==0) continue;
+					if(daug1>=nParticles 
+						|| daug2>=nParticles) continue;
 					cout << "daug1~"<<daug1<<endl;
 					cout << "daug2~"<<daug2<<endl;
 
