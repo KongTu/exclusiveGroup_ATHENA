@@ -130,7 +130,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		//rho^0 = 113, decay->pipi
 		//phi = 333, decay->kk
 		//jpsi = 443, nodecay
-		int pdglist[]={113,333,443}
+		int pdglist[]={113,333,443};
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
