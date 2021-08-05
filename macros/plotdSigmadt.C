@@ -1,11 +1,4 @@
-#include "RiceStyle.h"
-using namespace std;
-#define PI 3.1415926
-#define MASS_PROTON   0.93827208816
-#define MASS_NEUTRON  0.93956542052
-#define MASS_NUCLEON  0.93891875 //.93891875
-#define MASS_DEUTERON  1.8756129 //1.8756129 //1.8756134 (most precise)
-
+#include "utility.h"
 void plotdSigmadt(TString name="phi"){
 
 	/* Beagle */
@@ -23,39 +16,11 @@ void plotdSigmadt(TString name="phi"){
 		}
 	}
 
-	//branching ratios
-	double BR_decay[] = {1.0,0.489,1.0};//branching ratio
-	//beagle constants
-	double beagle_lumi = 1e5/(34.4*197);//nanobarn
-	beagle_lumi=beagle_lumi*11.;
-	double beagle_delta_t = h_VM[0][1][4]->GetBinWidth(1);
-
 	/* Sartre */
 
 	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
-	TH1D* h_phi_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
-	TH1D* h_phi_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
-
-	double sigma=-1;
-	int vm_index=-1;
-	TString legendName="";
-	if(name=="rho"){
-		sigma = 3.58E+4;
-		vm_index=0;
-		legendName="#rho^{0}";
-	}
-	else if(name=="phi"){
-		sigma=4.72E+3;
-		vm_index=1;
-		legendName="#phi";
-	}
-	else if(name=="jpsi"){
-		sigma=199.;
-		vm_index=2;
-		legendName="J/#psi";
-	}
-	double sartre_lumi = 20000000./sigma;//nanbarn
-	double sartre_delta_t = h_phi_coh_sartre->GetBinWidth(1); 
+	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
+	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
 
 	TCanvas* c1 = new TCanvas("c1","c1",1,1,600,600);
 	gPad->SetLogy(1);
@@ -67,7 +32,6 @@ void plotdSigmadt(TString name="phi"){
 	if(name=="phi"){base1->GetYaxis()->SetRangeUser(1e-2, 1e7);}
 	if(name=="jpsi"){base1->GetYaxis()->SetRangeUser(1e-3, 1e6);}
 	
-	
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
 	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.5);
@@ -78,22 +42,23 @@ void plotdSigmadt(TString name="phi"){
 	base1->GetYaxis()->SetNdivisions(5,5,0);
 	base1->Draw();
 
-	h_phi_coh_sartre->Scale(1./(sartre_lumi * sartre_delta_t * BR_decay[vm_index]));
-	h_phi_coh_sartre->SetLineColor(kBlue);
-	h_phi_coh_sartre->SetLineWidth(2);
-	h_phi_coh_sartre->Draw(" hist same");
+	measureXsection(name, h_coh_sartre, 1);
+	h_coh_sartre->SetLineColor(kBlue);
+	h_coh_sartre->SetLineWidth(2);
+	h_coh_sartre->Draw(" hist same");
 
-	h_phi_incoh_sartre->Scale(1./(sartre_lumi * sartre_delta_t * BR_decay[vm_index]));
-	h_phi_incoh_sartre->SetLineColor(kRed);
-	h_phi_incoh_sartre->SetLineWidth(2);
-	h_phi_incoh_sartre->Draw(" hist same");
+	measureXsection(name, h_incoh_sartre, 1);
+	h_incoh_sartre->SetLineColor(kRed);
+	h_incoh_sartre->SetLineWidth(2);
+	h_incoh_sartre->Draw(" hist same");
 
 	TH1D* h_VM_background = (TH1D*) h_VM[0][vm_index][4]->Clone("h_VM_background");
 	h_VM_background->Add(h_VM[1][vm_index][4],+1);
+	//adding elastic and dissoc. together.
+	measureXsection(name, h_VM_background, 0);
 	h_VM_background->Rebin(2);
 	h_VM_background->Scale(1./2);
 	h_VM_background->SetMarkerStyle(24);
-	h_VM_background->Scale( 1./ (beagle_lumi * beagle_delta_t * BR_decay[vm_index]) );
 	h_VM_background->Draw("P SAME");
 
 	TLegend *w5 = new TLegend(0.53,0.74,0.73,0.87);
@@ -101,8 +66,8 @@ void plotdSigmadt(TString name="phi"){
 	w5->SetFillColor(0);
 	w5->SetTextSize(18);
 	w5->SetTextFont(45);
-	w5->AddEntry(h_phi_coh_sartre, "Sartre "+legendName+" coherent  ", "PL");
-	w5->AddEntry(h_phi_incoh_sartre, "Sartre "+legendName+" incoherent  ", "PL");
+	w5->AddEntry(h_coh_sartre, "Sartre "+legendName+" coherent  ", "PL");
+	w5->AddEntry(h_incoh_sartre, "Sartre "+legendName+" incoherent  ", "PL");
 	w5->AddEntry(h_VM_background, "BeAGLE "+legendName+" incoherent ", "P");
 	w5->Draw("same");
 
