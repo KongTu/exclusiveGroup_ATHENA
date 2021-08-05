@@ -102,6 +102,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
       
 		// Read the next entry from the tree.
 		tree->GetEntry(i);
+		double eFrac = 100.*static_cast<double>(i)/nEvents;
+        if (i%100000 == 0) cout << "Processing event " << i << " (" << eFrac << "%)" << endl;
 		
 		double pzlep = event->pzlep;
 		double pztarg = event->pztarg;
