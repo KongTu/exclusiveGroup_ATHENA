@@ -98,6 +98,19 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		}
 	}
 	//END VM daughter histograms
+	// .
+	// .
+	//Nuclear Breakup histograms
+	TH2D* h_part[2][3][8];
+	for(int ibreak=0;ibreak<2;ibreak++){
+		for(int ivm=0;ivm<3;ivm++){
+			for(int ipid=0;ipid<8;ipid++){
+				h_part[ibreak][ivm][ipid] = new TH2D(Form("h_part_%d_%d_%d",ibreak,ivm,ipid),Form("h_part_%d_%d_%d",ibreak,ivm,ipid),1000,1e-3,1e4,100,0,100);
+				
+			}
+		}
+	}
+	//END Nuclear Breakup histograms
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -154,6 +167,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		int statuslist[]={2,2,1};
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
+		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -204,6 +218,16 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
 				}
+				//fill breakup particles
+				for(int ipid=0;ipid<8;ipid++){
+					if( TMath::Abs(pdg) == pdgdecaylist[ipid]
+						&& status==1 ){
+						h_part[processindex][ivm][ipid]->Fill(mom, theta*1000.);
+					}
+					
+				}
+				//end filling breakup particles, and it doesn't matter if they are VM decays.
+				
 			}
 
 		} // end of particle loop
