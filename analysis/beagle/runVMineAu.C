@@ -218,22 +218,38 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
 				}
-				//fill breakup particles
-				for(int ipid=0;ipid<8;ipid++){
-					if( TMath::Abs(pdg) == pdgdecaylist[ipid]
-						&& status==1 ){
-						h_part[processindex][ivm][ipid]->Fill(mom, theta*1000.);
-					}
-					
-				}
-				//end filling breakup particles, and it doesn't matter if they are VM decays.
 				
 			}
 
 		} // end of particle loop
+
+		//for each vm; do...
 		for(int ivm=0;ivm<3;ivm++){
-			if(acceptance[ivm]&&hasvm[ivm]) h_VM[processindex][ivm][4]->Fill(-t_hat);
+			if(acceptance[ivm]&&hasvm[ivm]) {
+				h_VM[processindex][ivm][4]->Fill(-t_hat);
+				//loop over particle again
+				for(int j(0); j < nParticles; ++j ) {
+					const erhic::ParticleMC* particle = event->GetTrack(j);
+					int pdg = particle->GetPdgCode();
+					int status = particle->GetStatus();
+					int index = particle->GetIndex();
+					double mom = particle->GetP();
+					double theta = particle->GetTheta();theta=theta*1000.;
+					//fill breakup particles
+					for(int ipid=0;ipid<8;ipid++){
+						if( TMath::Abs(pdg) == pdgdecaylist[ipid]
+							&& status==1 ){
+							h_part[processindex][ivm][ipid]->Fill(mom, theta);
+						}
+						
+					}
+					//end filling breakup particles, and it doesn't matter if they are VM decays.
+				}
+
+			}
 		}
+		//end each vm;
+
 	}
 
 	output->Write();
