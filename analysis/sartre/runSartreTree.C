@@ -72,7 +72,7 @@ ostream& operator<<(ostream& os, const TLorentzVector& v)
 //  Main function
 //===========================================================================
 
-void runSartreTree(double fractionOfEventsToRead = 1)
+void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
 {
     //
     //  Setup filenames
@@ -80,20 +80,20 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     string fnames[16];
     int nnames = 0;
 
-    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_1.root";
-    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_2.root";
-    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_3.root";
-    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_4.root";
-    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_5.root";
-    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_6.root";
-    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_7.root";
-    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_8.root";
-    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_9.root";
-    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_10.root";
+    fnames[0] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"1.root";
+    fnames[1] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"2.root";
+    fnames[2] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"3.root";
+    fnames[3] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"4.root";
+    fnames[4] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"5.root";
+    fnames[5] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"6.root";
+    fnames[6] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"7.root";
+    fnames[7] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"8.root";
+    fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"9.root";
+    fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au"+vm_name+"10.root";
     nnames = 10;
     
     //output root files:
-    TFile hfile("../../rootfiles/sartre_jpsi_bnonsat.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre"+vm_name+"bnonsat.root","RECREATE");
     //
     //   Histogram Booking (example)
     //
@@ -254,5 +254,5 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     
     hfile.Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_jpsi_bnonsat.root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre"+vm_name+"bnonsat.root'." << endl;
 }
