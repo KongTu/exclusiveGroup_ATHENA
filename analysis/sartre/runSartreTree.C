@@ -91,13 +91,27 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     fnames[8] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_9.root";
     fnames[9] = "/gpfs02/eic/DATA/sartre/data/sartre_bnonsat_Au_jpsi_10.root";
     nnames = 10;
-   
+    
+    //output root files:
+    TFile hfile("../../rootfiles/sartre_jpsi_bnonsat.root","RECREATE");
     //
     //   Histogram Booking (example)
     //
     TH1D *hist_t_coherent = new TH1D("hist_t_coherent", "coherent", 72, 0, 0.18);
     TH1D *hist_t_incoherent = new TH1D("hist_t_incoherent", "incoherent", 72, 0, 0.18);
-
+   
+    TH1D *h_VM[2][3];
+    TH1D *h_VM_daughter[2][3];
+    double bin_lower[]={0.,-8.,0.,0.,0.};
+    double bin_upper[]={5.0,8.,6.5,4.,0.2};
+    for(int icoh=0;icoh<2;icoh++){
+        for(int ipro=0;ipro<3;ipro++){
+            h_VM[icoh][ipro]=new TH1D(Form("h_VM_%d_%d",icoh,ipro),
+            Form("h_VM_%d_%d",icoh,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+            h_VM_daughter[icoh][ipro]=new TH1D(Form("h_VM_daughter_%d_%d",icoh,ipro),
+            Form("h_VM_daughter_%d_%d",icoh,ipro),100,bin_lower[ipro],bin_upper[ipro] );
+        }
+    }
     //
     //  Build chain
     //
@@ -180,6 +194,23 @@ void runSartreTree(double fractionOfEventsToRead = 1)
         //  ==> At this point all information of the tuple is available <==
         //=================================================================
         
+        //Kong's edits to fill some histograms:
+        int coh_index=-1;
+        if(myEvent.dmode < 0.5) coh_index=0;
+        else coh_index=1;
+        //VM.
+        h_VM[coh_index][0]->Fill(vmVec.Pt());
+        h_VM[coh_index][1]->Fill(vmVec.Eta());
+        h_VM[coh_index][2]->Fill(vmVec.Phi());
+        //daug.1
+        h_VM_daughter[coh_index][0]->Fill(vmd1Vec.Pt());
+        h_VM_daughter[coh_index][1]->Fill(vmd1Vec.Eta());
+        h_VM_daughter[coh_index][2]->Fill(vmd1Vec.Phi());
+        //daug.2
+        h_VM_daughter[coh_index][0]->Fill(vmd2Vec.Pt());
+        h_VM_daughter[coh_index][1]->Fill(vmd2Vec.Eta());
+        h_VM_daughter[coh_index][2]->Fill(vmd2Vec.Phi());
+
         // Apply cuts (example) ...
     
         bool accepted = true;
@@ -220,9 +251,8 @@ void runSartreTree(double fractionOfEventsToRead = 1)
     //
     //  Save histos
     //
-    TFile hfile("../../rootfiles/sartre_jpsi_bnonsat.root","RECREATE");
-    hist_t_coherent->Write();
-    hist_t_incoherent->Write();
+    
+    hfile.Write();
     hfile.Close();
     cout << "All histos stored in file '../../rootfiles/sartre_jpsi_bnonsat.root'." << endl;
 }
