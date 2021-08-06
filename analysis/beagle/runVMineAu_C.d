@@ -1,6 +1,7 @@
 
 # DO NOT DELETE
 
+./runVMineAu_C.so: pleaseIncludeMe.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/include/eicsmear/erhic/EventBase.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/include/eicsmear/erhic/EventMC.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TClonesArray.h
