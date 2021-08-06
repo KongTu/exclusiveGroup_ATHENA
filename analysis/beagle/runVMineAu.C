@@ -105,7 +105,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	for(int ibreak=0;ibreak<2;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipid=0;ipid<8;ipid++){
-				h_part[ibreak][ivm][ipid] = new TH2D(Form("h_part_%d_%d_%d",ibreak,ivm,ipid),Form("h_part_%d_%d_%d",ibreak,ivm,ipid),100,TMath::Log(1e-3),TMath::Log(1e4),50,0,50);
+				h_part[ibreak][ivm][ipid] = new TH2D(Form("h_part_%d_%d_%d",ibreak,ivm,ipid),
+					Form("h_part_%d_%d_%d",ibreak,ivm,ipid),100,TMath::Log(1e-3),TMath::Log(3e4),50,0,50);
 				
 			}
 		}
@@ -237,9 +238,17 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					double theta = particle->GetTheta();theta=theta*1000.;
 					//fill breakup particles
 					for(int ipid=0;ipid<8;ipid++){
-						if( TMath::Abs(pdg) == pdgdecaylist[ipid]
-							&& status==1 ){
-							h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), theta);
+						if(ipid<7){
+							if( TMath::Abs(pdg) == pdgdecaylist[ipid]
+								&& status==1 ){
+								h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), theta);
+							}
+						}
+						else{
+							if( TMath::Abs(pdg) > pdgdecaylist[ipid]
+								&& status==1 ){
+								h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), theta);
+							}
 						}
 						
 					}
