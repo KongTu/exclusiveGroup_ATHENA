@@ -192,8 +192,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				if(status!=statuslist[ivm]) continue;
 				hasvm[ivm]=1;//found vm.
 				
-				//rho and phi daughters:
-				// if(ivm<2){
 				int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
 				int daug2=particle->GetChildNIndex()-1;
 				if(daug1==-1 || daug2==-1) continue;
@@ -207,7 +205,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					acceptance[ivm]=0;
 					continue;
 				}
-				
+
 				h_VM[processindex][ivm][0]->Fill(pt);
 				h_VM[processindex][ivm][1]->Fill(eta);
 				h_VM[processindex][ivm][2]->Fill(phi);
@@ -225,8 +223,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				h_VM_daughter[processindex][ivm][1]->Fill(particle_daug2->GetEta());
 				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
-
-				// }
 				
 			}
 
