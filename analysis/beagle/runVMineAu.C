@@ -1,5 +1,5 @@
 #include "pleaseIncludeMe.h"
-void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
+void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool veto_ = true){
 
 	TChain *tree = new TChain("EICTree");
 	tree->Add( filename+".root" );
@@ -7,7 +7,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
-	TFile* output = new TFile("../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root","RECREATE");
+	TFile* output = 0;
+	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root"
+	if(veto_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root"
+	output = new TFile(outputROOT,"RECREATE");
+	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
 	//VM histograms//
 	/* first   index VM process, 91=0, 93=1*/
@@ -100,8 +104,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 		//perform veto.
-		if( veto_this_event(event, nParticles) ) continue;
-
+		if( veto_ ){
+			if( veto_this_event(event, nParticles) ) continue;
+		}
+		
 		//do analysis, or fill historgrams for event levels
 		h_trueT->Fill(-t_hat);
 
