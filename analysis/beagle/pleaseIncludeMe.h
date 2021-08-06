@@ -95,11 +95,9 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 		else{
 			cout << "something's wrong about the charge" << endl;
 		}
-
+	}
 
 	return veto;
 }
-
-
 
 
