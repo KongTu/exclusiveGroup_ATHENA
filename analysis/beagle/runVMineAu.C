@@ -8,8 +8,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	tree->SetBranchAddress("event", &event);
 
 	TFile* output = 0;
-	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root"
-	if(veto_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root"
+	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root";
+	if(veto_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
 	output = new TFile(outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
