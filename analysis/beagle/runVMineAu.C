@@ -165,7 +165,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		//phi = 333, decay->kk
 		//jpsi = 443, nodecay
 		int pdglist[]={113,333,443};
-		int statuslist[]={2,2,1};
+		int statuslist[]={2,2,2};
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
@@ -191,37 +191,40 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				hasvm[ivm]=1;//found vm.
+				
+				//rho and phi daughters:
+				// if(ivm<2){
+				int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
+				int daug2=particle->GetChildNIndex()-1;
+				if(daug1==-1 || daug2==-1) continue;
+			
+				const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
+				const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
+
+				//for Jpsi only no mumu pairs
+				if( TMath::Abs(particle_daug1->GetPdgCode()) == 13 ||
+					TMath::Abs(particle_daug2->GetPdgCode()) == 13 ) {
+					acceptance[ivm]=0;
+					continue;
+				}
+				
 				h_VM[processindex][ivm][0]->Fill(pt);
 				h_VM[processindex][ivm][1]->Fill(eta);
 				h_VM[processindex][ivm][2]->Fill(phi);
 				h_VM[processindex][ivm][3]->Fill(theta);
 
-				//rho and phi daughters:
-				// if(ivm<2){
-					int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
-					int daug2=particle->GetChildNIndex()-1;
-					if(daug1==-1 || daug2==-1) continue;
-				
-					const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
-					const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
+				if(TMath::Abs(particle_daug1->GetEta())>4.0||
+					TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
 
-					if( TMath::Abs(particle_daug1->GetPdgCode()) == 13 ||
-						TMath::Abs(particle_daug2->GetPdgCode()) == 13 ) {
-						acceptance[ivm]=0;
-						continue;
-					}
-					if(TMath::Abs(particle_daug1->GetEta())>4.0||
-						TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
+				h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
+				h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
+				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
+				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug1->GetTheta());
 
-					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
-					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
-					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
-					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug1->GetTheta());
-
-					h_VM_daughter[processindex][ivm][0]->Fill(particle_daug2->GetPt());
-					h_VM_daughter[processindex][ivm][1]->Fill(particle_daug2->GetEta());
-					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
-					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
+				h_VM_daughter[processindex][ivm][0]->Fill(particle_daug2->GetPt());
+				h_VM_daughter[processindex][ivm][1]->Fill(particle_daug2->GetEta());
+				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
+				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
 				// }
 				
