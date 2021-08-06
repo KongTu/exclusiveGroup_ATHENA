@@ -1,64 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <sstream>
-#include <string>
-
-#include <eicsmear/erhic/EventBase.h>
-#include <eicsmear/erhic/EventMC.h>
-#include <eicsmear/erhic/EventPythia.h>
-#include <eicsmear/erhic/Particle.h>
-#include <eicsmear/erhic/ParticleMC.h>
-#include <eicsmear/erhic/Pid.h>
-
-#include "TString.h"
-#include "TF1.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TH3.h"
-#include "TMath.h"
-#include "TTree.h"
-#include "TChain.h"
-#include "TFile.h"
-#include "TCanvas.h"
-#include "TSystem.h"
-#include "TROOT.h"
-#include "TGraph.h"
-#include "TGraphErrors.h"
-#include "TGraphAsymmErrors.h"
-#include "TMultiGraph.h"
-#include "TCanvas.h"
-#include "TPad.h"
-#include "TLegend.h"
-#include "TLatex.h"
-#include "TLine.h"
-#include "TAxis.h"
-#include "TGraph.h"
-#include "TGraphErrors.h"
-#include "TLorentzVector.h"
-#include "TBranchElement.h"
-
-#define PI            3.1415926
-
-#define MASS_MUON     0.1056
-#define MASS_ELECTRON 0.000511
-#define MASS_JPSI 	  3.09688
-#define MASS_PROTON   0.93827
-#define MASS_NEUTRON  0.93957
-#define MASS_DEUTERON 1.8756129
-#define MASS_TRITON   2.7937167208086358
-#define MASS_HE3      2.7937167208086358
-#define MASS_ALPHA    3.7249556277448477
-#define MASS_LI6      5.5874334416172715
-#define MASS_C12      11.174866883234543
-#define MASS_CA40     37.249556277448477
-#define MASS_XE131    121.99229680864376
-#define MASS_AU197    183.45406466643374
-#define MASS_PB208    193.69769264273208
-
-using namespace std;
-using namespace erhic;
-
-
+#include "pleaseIncludieMe.h"
 void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 
 	TChain *tree = new TChain("EICTree");
@@ -67,7 +7,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
-	TFile* output = new TFile("../../rootfiles/beagle_allVMs_w_breakups.root","RECREATE");
+	TFile* output = new TFile("../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root","RECREATE");
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
 	//VM histograms//
 	/* first   index VM process, 91=0, 93=1*/
@@ -101,6 +41,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 	// .
 	// .
 	//Nuclear Breakup histograms
+	// first index, process 91 or 93
+	// second index, vm particles
+	// thrid, different species, proton, neutron, gamma, pi, kaon, e, mu, A*
 	TH2D* h_part[2][3][8];
 	for(int ibreak=0;ibreak<2;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
@@ -156,6 +99,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
+		//perform veto.
+		if( veto_this_event(event, nParticles) ) continue;
 
 		//do analysis, or fill historgrams for event levels
 		h_trueT->Fill(-t_hat);

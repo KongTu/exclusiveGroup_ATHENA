@@ -12,7 +12,8 @@ TString legendName="";
 void measureXsection(TString name="rho", TH1D* hist=0, int sample=0){
 
 	//branching ratios
-	double BR_decay[] = {1.0,0.489,1.0};//branching ratio
+	double BR_beagle_decay[] = {1.0,1.0,0.5};//branching ratio, depend on what we select in beagle
+	double BR_sartre_decay[] = {1.0,1.0,1.0};//branching ratio
 	//beagle constants
 	double beagle_lumi = 1e5/(34.4*197);//nanobarn
 	beagle_lumi=beagle_lumi*100.;
@@ -36,15 +37,18 @@ void measureXsection(TString name="rho", TH1D* hist=0, int sample=0){
 	//here we use 2E7 events
 	double sartre_lumi = 20000000./sigma;//nanbarn
 
+	double BR_to_apply = 1.;
 	double lumi_to_apply=-99;
 	if(sample==0){
 		lumi_to_apply = beagle_lumi;
+		BR_to_apply = BR_beagle_decay[vm_index];
 	}
 	else if(sample==1){
 		lumi_to_apply = sartre_lumi;
+		BR_to_apply = BR_sartre_decay[vm_index];
 	}
 	double binwidth = hist->GetBinWidth(1);
 
-	hist->Scale(1./ (lumi_to_apply * BR_decay[vm_index] * binwidth) );
+	hist->Scale(1./ (lumi_to_apply * BR_to_apply * binwidth) );
 
 }
