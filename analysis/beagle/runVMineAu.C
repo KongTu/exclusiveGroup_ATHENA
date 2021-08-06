@@ -106,7 +106,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipid=0;ipid<8;ipid++){
 				h_part[ibreak][ivm][ipid] = new TH2D(Form("h_part_%d_%d_%d",ibreak,ivm,ipid),
-					Form("h_part_%d_%d_%d",ibreak,ivm,ipid),100,TMath::Log(1e-3),TMath::Log(3e4),50,0,50);
+					Form("h_part_%d_%d_%d",ibreak,ivm,ipid),100,TMath::Log(1e-3),TMath::Log(3e4),100,TMath::Log(1e-3),TMath::Log(50));
 				
 			}
 		}
