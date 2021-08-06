@@ -241,13 +241,13 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 						if(ipid<7){
 							if( TMath::Abs(pdg) == pdgdecaylist[ipid]
 								&& status==1 ){
-								h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), theta);
+								h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), TMath::Log(theta) );
 							}
 						}
 						else{
 							if( TMath::Abs(pdg) > pdgdecaylist[ipid]
 								&& status==1 ){
-								h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), theta);
+								h_part[processindex][ivm][ipid]->Fill(TMath::Log(mom), TMath::Log(theta) );
 							}
 						}
 						
