@@ -197,7 +197,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 				h_VM[processindex][ivm][3]->Fill(theta);
 
 				//rho and phi daughters:
-				if(ivm<2){
+				// if(ivm<2){
 					int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
 					int daug2=particle->GetChildNIndex()-1;
 					if(daug1==-1 || daug2==-1) continue;
@@ -205,6 +205,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
 					const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
 
+					if( TMath::Abs(particle_daug1->GetPdgCode()) == 13 ||
+						TMath::Abs(particle_daug2->GetPdgCode()) == 13 ) {
+						acceptance[ivm]=0;
+						continue;
+					}
 					if(TMath::Abs(particle_daug1->GetEta())>4.0||
 						TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
 
@@ -218,7 +223,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000){
 					h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 					h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
-				}
+				// }
 				
 			}
 
