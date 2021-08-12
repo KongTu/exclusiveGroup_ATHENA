@@ -67,7 +67,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			for(int imethod=0;imethod<3;imethod++){
 				h_t_reco[ibreak][ivm][imethod] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),
-					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),1000,0,5 );
+					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),1000,0,2 );
 			}
 		}
 	}
@@ -147,7 +147,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
-		TLorentzVector all_vect(0.,0.,0.,0.);
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -165,8 +164,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
 			if( index==3 ) e_scattered = particle->Get4Vector();
-
-			if(processindex==0 && status==1) {all_vect+=particle->Get4Vector();}
 
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
@@ -214,17 +211,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 
 		} // end of particle loop
-		if(processindex==0) {
-			// if((e_beam+A_beam-all_vect).E()<-1){
-				// cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
-				// cout << "t_hat " << -t_hat << " Q2 " << trueQ2 << endl;
-				// printSTABLE(event, nParticles);
-				// continue;
-			// }
-		}
-		// else{
-		// 	cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
-		// }
 		
 		//for each vm; do...
 		for(int ivm=0;ivm<3;ivm++){
