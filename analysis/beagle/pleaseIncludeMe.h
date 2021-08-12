@@ -99,7 +99,7 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 		}
 	}
 
-	if(multiplicity>3) veto=true;
+	// if(multiplicity>3) veto=true;
 
 	return veto;
 }
