@@ -166,7 +166,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			int NoBAM = particle->eA->NoBam;
 			if( index==3 ) e_scattered = particle->Get4Vector();
 
-			if(processindex==0 && status==1) {all_vect+=particle->Get4Vector();}
+			if(processindex==1 && status==1) {all_vect+=particle->Get4Vector();}
 
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
@@ -214,7 +214,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 
 		} // end of particle loop
-		if(processindex==0) {
+		if(processindex==1) {
 			cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
 		}
 		// else{
