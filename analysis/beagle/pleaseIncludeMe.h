@@ -119,9 +119,9 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 
 	method_L = (p_beam-p_beam_scattered_corr).Mag2();
 
-	if(option==0) return method_E;
-	else if(option==1) return method_A;
-	else if(option==2) return method_L;
+	if(option==0) return -method_E;
+	else if(option==1) return -method_A;
+	else if(option==2) return -method_L;
 	else return -99;
 }
 
