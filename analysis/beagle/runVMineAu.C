@@ -157,7 +157,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				hasvm[ivm]=1;//found vm.
-				vm_vect[im]=particle->Get4Vector();
+				vm_vect[ivm]=particle->Get4Vector();
 				
 				int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
 				int daug2=particle->GetChildNIndex()-1;
