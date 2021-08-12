@@ -14,13 +14,13 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
 	//VM histograms//
-	/* first   index VM process, 91=0, 93=1*/
+	/* first   index VM process, 91=0, 93=1, everything else=2*/
 	/* second  index VM species, rho=0, phi=1, jpsi=2*/
 	/* third   index VM property, pt=0, eta=1, phi=2, theta=3, reserved=4*/
 	double bin_lower[]={0.,-8.,0.,0.,0.};
 	double bin_upper[]={5.0,8.,6.5,4.,0.2};
-	TH1D* h_VM[2][3][5];
-	for(int ibreak=0;ibreak<2;ibreak++){
+	TH1D* h_VM[3][3][5];
+	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipro=0;ipro<5;ipro++){
 				h_VM[ibreak][ivm][ipro] = new TH1D(Form("h_VM_%d_%d_%d",ibreak,ivm,ipro),
@@ -32,8 +32,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	// .
 	// .
 	//VM daughter histograms//
-	TH1D* h_VM_daughter[2][3][5];
-	for(int ibreak=0;ibreak<2;ibreak++){
+	TH1D* h_VM_daughter[3][3][5];
+	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipro=0;ipro<5;ipro++){
 				h_VM_daughter[ibreak][ivm][ipro] = new TH1D(Form("h_VM_daughter_%d_%d_%d",ibreak,ivm,ipro),
@@ -48,8 +48,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	// first index, process 91 or 93
 	// second index, vm particles
 	// thrid, different species, proton, neutron, gamma, pi, kaon, e, mu, A*
-	TH2D* h_part[2][3][8];
-	for(int ibreak=0;ibreak<2;ibreak++){
+	TH2D* h_part[3][3][8];
+	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int ipid=0;ipid<8;ipid++){
 				h_part[ibreak][ivm][ipid] = new TH2D(Form("h_part_%d_%d_%d",ibreak,ivm,ipid),
@@ -98,8 +98,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		//event cuts
 		int processindex=-1;
 		if( event_process==91) processindex=0;
-		if( event_process==93) processindex=1;
-		if( processindex<0 ) continue;
+		else if( event_process==93) processindex=1;
+		else processindex=2;
 		if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre

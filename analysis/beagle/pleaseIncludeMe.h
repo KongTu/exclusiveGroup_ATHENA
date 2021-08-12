@@ -61,7 +61,7 @@ using namespace erhic;
 bool veto_this_event(EventBeagle* event, int nParticles){
 
 	bool veto = false;
-
+	int multiplicity=0;
 	for(int j(0); j < nParticles; ++j ) {
 		const erhic::ParticleMC* particle = event->GetTrack(j);
 		int pdg = particle->GetPdgCode();
@@ -91,13 +91,19 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 			if( theta>0. && theta<5.0 
 				&& rigidity_ratio>0.7 && rigidity_ratio<0.95 ) veto=true;
 			if( theta>5.5 && theta<20.0 ) veto=true;
+
+			if(TMath::Abs(eta)<4.0) multiplicity++;
 		}
 		else{
 			cout << "something's wrong about the charge" << endl;
 		}
 	}
 
+	if(multiplicity>3) veto=true;
+
 	return veto;
 }
+
+
 
 

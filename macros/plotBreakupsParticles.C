@@ -7,7 +7,7 @@ void plotBreakupsParticles(TString name="phi"){
 
 	/* Beagle */
 	
-	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups.root");
+	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups_w_vetos.root");
 	TH2D* h_part[2][3][8];
 	// first index, process 91 or 93
 	// second index, vm particles
@@ -75,7 +75,7 @@ void plotBreakupsParticles(TString name="phi"){
 
 	for(int ipid=0;ipid<8;ipid++){
 		h_part[0][vm_index][ipid]->Draw("cont1 same");
-		c1->Print(Form("../figures/breakup_particles/"+name+"_breakup_stagged_%d.pdf",ipid) );
+		c1->Print(Form("../figures/breakup_particles/veto_"+name+"_breakup_stagged_%d.pdf",ipid) );
 	}
 
 }

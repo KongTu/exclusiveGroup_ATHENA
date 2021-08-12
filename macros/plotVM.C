@@ -3,7 +3,7 @@ void plotVM(TString name="phi"){
 
 	/* Beagle */
 	
-	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups.root");
+	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups_w_vetos.root");
 	TH1D* h_VM[2][3][5];
 	TH1D* h_VM_daughter[2][3][5];
 	//VM histograms//
@@ -214,9 +214,9 @@ void plotVM(TString name="phi"){
 	r43->Draw("same");
 	w6->Draw("same");
 
-	c1->Print("../figures/"+name+"_eta_incoh.pdf");
-	c2->Print("../figures/"+name+"_pt_incoh.pdf");
-	c3->Print("../figures/"+name+"_pt_coh.pdf");
-	c4->Print("../figures/"+name+"_eta_coh.pdf");
+	c1->Print("../figures/veto_"+name+"_eta_incoh.pdf");
+	c2->Print("../figures/veto_"+name+"_pt_incoh.pdf");
+	c3->Print("../figures/veto_"+name+"_pt_coh.pdf");
+	c4->Print("../figures/veto_"+name+"_eta_coh.pdf");
 
 }

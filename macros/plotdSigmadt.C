@@ -3,7 +3,7 @@ void plotdSigmadt(TString name="phi"){
 
 	/* Beagle */
 	
-	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups.root");
+	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups_w_vetos.root");
 	TH1D* h_VM[2][3][5];
 	TH1D* h_VM_daughter[2][3][5];
 
@@ -90,6 +90,6 @@ void plotdSigmadt(TString name="phi"){
 	r44->SetTextColor(kBlack);
 	r44->Draw("same");
 
-	c1->Print("../figures/dsigma_dt_"+name+".pdf");
+	c1->Print("../figures/veto_dsigma_dt_"+name+".pdf");
 
 }
