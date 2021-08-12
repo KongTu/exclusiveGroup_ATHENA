@@ -214,13 +214,13 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 
 		} // end of particle loop
-		if(processindex==1) {
-			if((e_beam+A_beam-all_vect).E()<-1){
-				// cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
-				// cout << "t_hat " << -t_hat << " Q2 " << trueQ2 << endl;
-				// printSTABLE(event, nParticles);
+		if(processindex==0) {
+			// if((e_beam+A_beam-all_vect).E()<-1){
+				cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
+				cout << "t_hat " << -t_hat << " Q2 " << trueQ2 << endl;
+				printSTABLE(event, nParticles);
 				continue;
-			}
+			// }
 		}
 		// else{
 		// 	cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
