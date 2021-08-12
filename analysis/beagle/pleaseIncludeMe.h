@@ -114,13 +114,14 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	
 	double method_L = -99.;
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
+	cout << "p_beam_scattered mass = " << p_beam_scattered.M() << endl;
+	cout << "p_beam_scattered E = " << p_beam_scattered.E() << endl;
 	double p_Aplus = p_beam_scattered.E()+p_beam_scattered.Pz();
-	double p_TAsquared = TMath::Power(p_beam_scattered.Px(),2)+TMath::Power(p_beam_scattered.Py(),2);
+	double p_TAsquared = TMath::Power(p_beam_scattered.Pt(),2);
 	double M_A = 187.1;//gold mass
 	double p_Aminus = (M_A*M_A + p_TAsquared) / p_Aplus;
 	TLorentzVector p_beam_scattered_corr; 
 	p_beam_scattered_corr.SetPxPyPzE(p_beam_scattered.Px(),p_beam_scattered.Py(),(p_Aplus-p_Aminus)/2., (p_Aplus+p_Aminus)/2. );
-
 	method_L = (p_beam_scattered_corr-p_beam).Mag2();
 
 	if(option==0) return -method_E;
