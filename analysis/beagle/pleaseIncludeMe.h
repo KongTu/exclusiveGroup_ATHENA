@@ -106,8 +106,12 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 
 double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 
-	double method_E = (vm_vect+e_scattered-e_beam).Mag2();
-	double method_A = TMath::Power((vm_vect.Pt()+e_scattered.Pt()),2);
+	double method_E = (-vm_vect-e_scattered+e_beam).Mag2();
+	
+	double method_A = -99;
+	TVector2 sum_pt(vm_vect.Px()+e_scattered.Px(), vm_vect.Py()+e_scattered.Py());
+	method_A = sum_pt.Mod2();
+	
 	double method_L = -99.;
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
 	double p_Aplus = p_beam_scattered.E()+p_beam_scattered.Pz();
@@ -117,10 +121,10 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	TLorentzVector p_beam_scattered_corr; 
 	p_beam_scattered_corr.SetPxPyPzE(p_beam_scattered.Px(),p_beam_scattered.Py(),(p_Aplus-p_Aminus)/2., (p_Aplus+p_Aminus)/2. );
 
-	method_L = (p_beam-p_beam_scattered_corr).Mag2();
+	method_L = (p_beam_scattered_corr-p_beam).Mag2();
 
 	if(option==0) return -method_E;
-	else if(option==1) return -method_A;
+	else if(option==1) return method_A;
 	else if(option==2) return -method_L;
 	else return -99;
 }
