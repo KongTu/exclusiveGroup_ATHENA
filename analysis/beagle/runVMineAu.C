@@ -214,8 +214,13 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 
 		} // end of particle loop
-
-		cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
+		if(all_vect.E()==0) {
+			cout << "check this event # " << i << endl;
+		}
+		else{
+			cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
+		}
+		
 		//for each vm; do...
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
