@@ -131,6 +131,20 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 	return p_beam_scattered.M()/MASS_AU197;
 }
 
+void printSTABLE(EventBeagle* event, int nParticles){
+	for(int j(0); j < nParticles; ++j ) {
+		const erhic::ParticleMC* particle = event->GetTrack(j);
+		int pdg = particle->GetPdgCode();
+		int status = particle->GetStatus();
+		int index = particle->GetIndex();//index 1 and 2 are incoming particle electron and proton.
+		double pt = particle->GetPt();
+		double eta = particle->GetEta();
+		double phi = particle->GetPhi();
+		if(status!=1) continue;
+		cout << "PDG = " << pdg << " , pt = " << pt << " , eta = " << eta << " , phi = " << phi << endl;  
+	}
+
+}
 
 
 
