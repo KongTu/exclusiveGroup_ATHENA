@@ -104,13 +104,12 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 	return veto;
 }
 
-double giveMe_t(int option=0, TLorentzVector e_beam, TLorentzVector e_scattered, 
-	TLorentzVector p_beam, TLorentzVector vm_vect){
+double giveMe_t(int option=0, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 
 	double method_E = (vm_vect+e_scattered-e_beam).Mag2();
 	double method_A = TMath::Power((vm_vect.Pt()+e_scattered.Pt()),2);
 	double method_L = -99.;
-	TLorentzVector p_beam_scattered = p_beam-(vm_vect++e_scattered-e_beam);
+	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
 	double p_Aplus = p_beam_scattered.E()+p_beam_scattered.Pz();
 	double p_TAsquared = TMath::Power(p_beam_scattered.Px(),2)+TMath::Power(p_beam_scattered.Py(),2);
 	double M_A = 187.1;//gold mass
