@@ -138,8 +138,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			if( veto_this_event(event, nParticles) ) continue;
 		}
 		
-		
-
 		//particle loop
 		//rho^0 = 113, decay->pipi
 		//phi = 333, decay->kk
@@ -214,11 +212,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
-
 				for(int imethod=0;imethod<3;imethod++){
 					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect[ivm]);
 					h_t_reco[processindex][ivm][imethod]->Fill( t_reco );
-					if(imethod=2)h_Amass[processindex][ivm]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect[ivm]));
+					if(imethod==2)h_Amass[processindex][ivm]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect[ivm]));
 				}
 				//loop over particle again
 				for(int j(0); j < nParticles; ++j ) {
