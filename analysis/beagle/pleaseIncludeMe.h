@@ -127,6 +127,10 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	else if(option==2) return -method_L;
 	else return -99;
 }
+double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
+	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
+	return p_beam_scattered.M();
+}
 
 
 

@@ -71,6 +71,13 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 		}
 	}
+	TH2D* h_Amass[3][3];
+	for(int ibreak=0;ibreak<3;ibreak++){
+		for(int ivm=0;ivm<3;ivm++){
+			h_Amass[ibreak][ivm] = new TH2D(Form("h_Amass_%d_%d",ibreak,ivm),
+				Form("h_Amass_%d_%d",ibreak,ivm), 100,0,0.2,100,-3,3);
+		}
+	}
 
 	for(int i(0); i < nEvents; ++i ) {
       
@@ -115,6 +122,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int N_nevap = event->Nnevap;
 		int N_pevap = event->Npevap;
 
+		//do analysis, or fill historgrams for event levels
+		h_trueT->Fill(-t_hat);
+
 		//event cuts
 		int processindex=-1;
 		if( event_process==91) processindex=0;
@@ -128,8 +138,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			if( veto_this_event(event, nParticles) ) continue;
 		}
 		
-		//do analysis, or fill historgrams for event levels
-		h_trueT->Fill(-t_hat);
+		
 
 		//particle loop
 		//rho^0 = 113, decay->pipi
@@ -205,9 +214,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
+
 				for(int imethod=0;imethod<3;imethod++){
 					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect[ivm]);
 					h_t_reco[processindex][ivm][imethod]->Fill( t_reco );
+					if(imethod=2)h_Amass[processindex][ivm]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect[ivm]));
 				}
 				//loop over particle again
 				for(int j(0); j < nParticles; ++j ) {

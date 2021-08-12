@@ -9,14 +9,15 @@ using namespace std;
 
 int vm_index=-1;
 TString legendName="";
-void measureXsection(TString name="rho", TH1D* hist=0, int sample=0){
+void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_events=1e5){
 
 	//branching ratios
 	double BR_beagle_decay[] = {1.0,1.0,0.5};//branching ratio, depend on what we select in beagle
 	double BR_sartre_decay[] = {1.0,1.0,1.0};//branching ratio
 	//beagle constants
 	double beagle_lumi = 1e5/(34.4*197);//nanobarn
-	beagle_lumi=beagle_lumi*100.;
+	double lumi_factor = total_events/1e5;
+	beagle_lumi=beagle_lumi*lumi_factor;
 
 	double sigma=-1;
 	if(name=="rho"){
