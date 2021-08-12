@@ -67,7 +67,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			for(int imethod=0;imethod<3;imethod++){
 				h_t_reco[ibreak][ivm][imethod] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),
-					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),100,0,0.2 );
+					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),100,0,2 );
 			}
 		}
 	}
@@ -216,10 +216,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		} // end of particle loop
 		if(processindex==0) {
 			// if((e_beam+A_beam-all_vect).E()<-1){
-				cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
-				cout << "t_hat " << -t_hat << " Q2 " << trueQ2 << endl;
-				printSTABLE(event, nParticles);
-				continue;
+				// cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
+				// cout << "t_hat " << -t_hat << " Q2 " << trueQ2 << endl;
+				// printSTABLE(event, nParticles);
+				// continue;
 			// }
 		}
 		// else{
