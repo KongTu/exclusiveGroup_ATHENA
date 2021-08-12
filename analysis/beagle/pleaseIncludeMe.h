@@ -104,7 +104,7 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 	return veto;
 }
 
-double giveMe_t(int option=0, TLorentzVector e_beam=0, TLorentzVector e_scattered=0, TLorentzVector p_beam=0, TLorentzVector vm_vect=0){
+double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 
 	double method_E = (vm_vect+e_scattered-e_beam).Mag2();
 	double method_A = TMath::Power((vm_vect.Pt()+e_scattered.Pt()),2);
