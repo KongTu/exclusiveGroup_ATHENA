@@ -81,12 +81,15 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		
 		double pzlep = event->pzlep;
 		double pztarg = event->pztarg;
+		int Atarg = event->Atarg;
+		double pztargA=pztarg*Atarg;
 		int struck_nucleon = event->nucleon;
 		double MASS_NUCLEON = MASS_PROTON;
 		if( struck_nucleon==2112 ) MASS_NUCLEON = MASS_NEUTRON;
 
 		TLorentzVector e_beam(0.,0.,pzlep,sqrt(pzlep*pzlep+MASS_ELECTRON*MASS_ELECTRON));
 		TLorentzVector p_beam(0.,0.,pztarg,sqrt(pztarg*pztarg+MASS_NUCLEON*MASS_NUCLEON));
+		TLorentzVector A_beam(0.,0.,pztarg*Atarg,sqrt(pztargA*pztargA+MASS_AU197*MASS_AU197));
 		TLorentzVector e_scattered(0.,0.,0.,0.);
 		TLorentzVector vm_vect[3];
 		for(int ivm=0;ivm<3;ivm++){
@@ -203,7 +206,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
 				for(int imethod=0;imethod<3;imethod++){
-					double t_reco = giveMe_t(imethod,e_beam,e_scattered,p_beam,vm_vect[ivm]);
+					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect[ivm]);
 					h_t_reco[processindex][ivm][imethod]->Fill( t_reco );
 				}
 				//loop over particle again

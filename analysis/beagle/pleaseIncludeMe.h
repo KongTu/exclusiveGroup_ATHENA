@@ -114,8 +114,6 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	
 	double method_L = -99.;
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
-	cout << "p_beam_scattered mass = " << p_beam_scattered.M() << endl;
-	cout << "p_beam_scattered E = " << p_beam_scattered.E() << endl;
 	double p_Aplus = p_beam_scattered.E()+p_beam_scattered.Pz();
 	double p_TAsquared = TMath::Power(p_beam_scattered.Pt(),2);
 	double M_A = 187.1;//gold mass
