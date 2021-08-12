@@ -183,6 +183,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
+				cout << "-t = " << -t_hat << " and Q2 = " << trueQ2 << endl;
 				//loop over particle again
 				for(int j(0); j < nParticles; ++j ) {
 					const erhic::ParticleMC* particle = event->GetTrack(j);
