@@ -59,6 +59,19 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		}
 	}
 	//END Nuclear Breakup histograms
+	// .
+	// .
+	// t_reco histograms
+	TH1D* h_t_reco[3][3][3];
+	for(int ibreak=0;ibreak<3;ibreak++){
+		for(int ivm=0;ivm<3;ivm++){
+			for(int imethod=0;imethod<3;imethod++){
+				h_t_reco[ibreak][ivm][imethod] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),
+					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),100,0,0.2 );
+			}
+		}
+	}
+
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -75,6 +88,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		TLorentzVector e_beam(0.,0.,pzlep,sqrt(pzlep*pzlep+MASS_ELECTRON*MASS_ELECTRON));
 		TLorentzVector p_beam(0.,0.,pztarg,sqrt(pztarg*pztarg+MASS_NUCLEON*MASS_NUCLEON));
 		TLorentzVector e_scattered(0.,0.,0.,0.);
+		TLorentzVector vm_vect[3];
 
 		//event information:
 		double trueQ2 = event->GetTrueQ2();
@@ -136,12 +150,14 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			double mom = particle->GetP();
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
+			if( index==3 ) e_scattered = particle->Get4Vector();
 
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				hasvm[ivm]=1;//found vm.
+				vm_vect[im]=particle->Get4Vector();
 				
 				int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
 				int daug2=particle->GetChildNIndex()-1;
@@ -183,7 +199,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
-				cout << "-t = " << -t_hat << " and Q2 = " << trueQ2 << endl;
+				for(int imethod=0;imethod<3;imethod++){
+					double t_reco = giveMe_t(imethod,e_beam,e_scattered,p_beam,vm_vect[ivm]);
+					h_t_reco[processindex][ivm][imethod]->Fill( t_reco );
+				}
 				//loop over particle again
 				for(int j(0); j < nParticles; ++j ) {
 					const erhic::ParticleMC* particle = event->GetTrack(j);
