@@ -88,8 +88,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		TLorentzVector e_beam(0.,0.,pzlep,sqrt(pzlep*pzlep+MASS_ELECTRON*MASS_ELECTRON));
 		TLorentzVector p_beam(0.,0.,pztarg,sqrt(pztarg*pztarg+MASS_NUCLEON*MASS_NUCLEON));
 		TLorentzVector e_scattered(0.,0.,0.,0.);
-		TLorentzVector vm_vect[3];for(int ivm=0;ivm<3;ivm++){
-			vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0);
+		TLorentzVector vm_vect[3];
+		for(int ivm=0;ivm<3;ivm++){
+			vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);
 		}
 
 		//event information:
