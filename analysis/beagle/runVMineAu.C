@@ -214,7 +214,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 
 		} // end of particle loop
-		if(all_vect.E()==0) {
+		if(all_vect.E()==0 && processindex==0) {
 			cout << "check this event # " << i << endl;
 		}
 		else{
