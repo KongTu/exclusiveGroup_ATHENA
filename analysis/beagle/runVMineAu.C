@@ -96,7 +96,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 		TLorentzVector e_beam(0.,0.,pzlep,sqrt(pzlep*pzlep+MASS_ELECTRON*MASS_ELECTRON));
 		TLorentzVector p_beam(0.,0.,pztarg,sqrt(pztarg*pztarg+MASS_NUCLEON*MASS_NUCLEON));
-		TLorentzVector A_beam(0.,0.,pztarg*Atarg,sqrt(pztargA*pztargA+MASS_AU197*MASS_AU197));
+		TLorentzVector A_beam(0.,0.,pztargA,sqrt(pztargA*pztargA+MASS_AU197*MASS_AU197));
 		TLorentzVector e_scattered(0.,0.,0.,0.);
 		TLorentzVector vm_vect[3];
 		for(int ivm=0;ivm<3;ivm++){
@@ -147,6 +147,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
+		TLorentzVector all_vect(0.,0.,0.,0.);
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -165,6 +166,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			int NoBAM = particle->eA->NoBam;
 			if( index==3 ) e_scattered = particle->Get4Vector();
 
+			if(processindex==0 && status==1) {all_vect+=particle->Get4Vector();}
+
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
@@ -179,7 +182,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				const erhic::ParticleMC* particle_daug1 = event->GetTrack(daug1);
 				const erhic::ParticleMC* particle_daug2 = event->GetTrack(daug2);
 
-				//for Jpsi only no mumu pairs
+				//stable particles for daughters.
+				if(particle_daug1->GetStatus()!=1 ||
+					particle_daug2->GetStatus()!=1 ) continue;
+
+				//for Jpsi only no mumu pairs.
 				if( TMath::Abs(particle_daug1->GetPdgCode()) == 13 ||
 					TMath::Abs(particle_daug2->GetPdgCode()) == 13 ) {
 					acceptance[ivm]=0;
@@ -208,6 +215,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 		} // end of particle loop
 
+		cout << "check: incoming-outgoing=" << (e_beam+A_beam-all_vect).E() << endl;
 		//for each vm; do...
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
