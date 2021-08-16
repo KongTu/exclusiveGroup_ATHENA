@@ -71,6 +71,15 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 		}
 	}
+	// vm mass from daughters
+	TH1D* h_VM_mass[3][3];
+	for(int ibreak=0;ibreak<3;ibreak++){
+		for(int ivm=0;ivm<3;ivm++){
+			h_VM_mass[ibreak][ivm] = new TH1D(Form("h_VM_mass_%d_%d",ibreak,ivm),
+				Form("h_VM_mass_%d_%d",ibreak,ivm),1000,0.3,4);
+		}
+	}
+	//nuclear remnant mass
 	TH2D* h_Amass[3][3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
@@ -147,6 +156,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
+		TLorentzVector VM_particle_of_interest(0.,0.,0.,0.);
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -207,7 +217,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				h_VM_daughter[processindex][ivm][1]->Fill(particle_daug2->GetEta());
 				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
-				
+
+				VM_particle_of_interest = particle_daug1->Get4Vector() + particle_daug2->Get4Vector();
+				h_VM_mass[processindex][ivm]->Fill( VM_particle_of_interest.M() );
+
 			}
 
 		} // end of particle loop
