@@ -178,7 +178,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
-				if(status!=statuslist[ivm]||status!=statuslist[ivm]+1) continue;
+				if(status!=statuslist[ivm]&&status!=statuslist[ivm]+1) continue;
 				hasvm[ivm]=1;//found vm.
 				vm_vect[ivm]=particle->Get4Vector();
 				
