@@ -91,6 +91,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		}
 	}
 
+	TH2D* h_CHECK[3];
+	for(int ibreak=0;ibreak<3;ibreak++){
+		h_CHECK[ibreak] = new TH2D(Form("h_CHECK_%d",ibreak),Form("h_CHECK_%d",ibreak),
+			2000,-100,100, 100,0,1.5);
+	}
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -111,6 +116,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		TLorentzVector A_beam(0.,0.,pztargA,sqrt(pztargA*pztargA+MASS_AU197*MASS_AU197));
 		TLorentzVector e_scattered(0.,0.,0.,0.);
 		TLorentzVector vm_vect[3], vm_vect1[3], vm_vect2[3];
+		TLorentzVector all_part(0.,0.,0.,0.);
 		for(int ivm=0;ivm<3;ivm++){
 			vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);
 			vm_vect1[ivm].SetPxPyPzE(0.,0.,0.,0.);
@@ -129,7 +135,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		double photon_flux = event->GetPhotonFlux();
 		int event_process = event->GetProcess();
 		int nParticles = event->GetNTracks();
-		
+		double pxf = event->pxf();
+		double pyf = event->pyf();
+		double pzf = event->pzf();
+		double pf3 = sqrt(pxf*pxf+pyf*pyf+pzf*pzf);
+
 		double impact_parameter = event->b;
 		double Tb = event->Thickness;
 		double distance = event->d1st;
@@ -178,6 +188,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
 			if( index==3 ) e_scattered = particle->Get4Vector();
+
+			if( status==1 ) all_part+=particle->Get4Vector();
 
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
@@ -242,6 +254,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 		} // end of particle loop
 		
+		//check mom. conser.
+		double nonconserve=(e_beam+A_beam-all_part).E();
+		h_CHECK[processindex]->Fill(nonconserve,pf3);
 		//for each vm; do...
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
