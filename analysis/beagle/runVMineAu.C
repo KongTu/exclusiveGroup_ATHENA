@@ -63,11 +63,14 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	// .
 	// t_reco histograms
 	TH1D* h_t_reco[3][3][3];
+	TH2D* h_VM_t_mass[3][3][3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int imethod=0;imethod<3;imethod++){
 				h_t_reco[ibreak][ivm][imethod] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),
 					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),1000,0,2 );
+				h_VM_t_mass[ibreak][ivm][imethod] = new TH2D(Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod),
+					Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod),1000,0.,4,100,0.,0.2)
 			}
 		}
 	}
@@ -107,9 +110,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		TLorentzVector p_beam(0.,0.,pztarg,sqrt(pztarg*pztarg+MASS_NUCLEON*MASS_NUCLEON));
 		TLorentzVector A_beam(0.,0.,pztargA,sqrt(pztargA*pztargA+MASS_AU197*MASS_AU197));
 		TLorentzVector e_scattered(0.,0.,0.,0.);
-		TLorentzVector vm_vect[3];
+		TLorentzVector vm_vect[3], vm_vect1[3], vm_vect2[3];
 		for(int ivm=0;ivm<3;ivm++){
 			vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);
+			vm_vect1[ivm].SetPxPyPzE(0.,0.,0.,0.);
+			vm_vect2[ivm].SetPxPyPzE(0.,0.,0.,0.);
 		}
 
 		//event information:
@@ -156,7 +161,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
-		TLorentzVector VM_particle_of_interest(0.,0.,0.,0.);
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -232,9 +236,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
-				VM_particle_of_interest = particle_daug1->Get4Vector() + particle_daug2->Get4Vector();
-				h_VM_mass[processindex][ivm]->Fill( VM_particle_of_interest.M() );
-
+				vm_vect1[ivm]=particle_daug1->Get4Vector();
+				vm_vect2[ivm]=particle_daug2->Get4Vector();
 			}
 
 		} // end of particle loop
@@ -243,9 +246,12 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
+				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
+				h_VM_mass[processindex][ivm]->Fill(mass);
 				for(int imethod=0;imethod<3;imethod++){
 					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect[ivm]);
 					h_t_reco[processindex][ivm][imethod]->Fill( t_reco );
+					h_VM_t_mass[processindex][ivm][imethod]->Fill(mass,t_reco);
 					if(imethod==2)h_Amass[processindex][ivm]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect[ivm]));
 				}
 				//loop over particle again
