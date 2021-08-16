@@ -233,7 +233,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
 				VM_particle_of_interest = particle_daug1->Get4Vector() + particle_daug2->Get4Vector();
-				h_VM_mass[processindex][ivm]->Fill( vm_vect[ivm].M() );
+				h_VM_mass[processindex][ivm]->Fill( VM_particle_of_interest.M() );
 
 			}
 
