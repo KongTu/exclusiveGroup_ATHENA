@@ -96,10 +96,13 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     }
     // t_reco histograms
     TH1D* h_t_reco[2][3];
+    TH2D* h_VM_t_mass[2][3];
     for(int ibreak=0;ibreak<2;ibreak++){
         for(int imethod=0;imethod<3;imethod++){
             h_t_reco[ibreak][imethod] = new TH1D(Form("h_t_reco_%d_%d",ibreak,imethod),
                 Form("h_t_reco_%d_%d",ibreak,imethod),1000,0,2 );
+            h_VM_t_mass[ibreak][imethod] = new TH2D(Form("h_VM_t_mass_%d_%d",ibreak,imethod),
+                    Form("h_VM_t_mass_%d_%d",ibreak,imethod),1000,0.,4,100,0.,0.2);
         }
     }
     // vm mass from daughters
@@ -211,6 +214,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         for(int imethod=0;imethod<3;imethod++){
             double t_reco = giveMe_t(imethod,eInVec,eOutVec,aInVec,vmVec);
             h_t_reco[coh_index][imethod]->Fill( t_reco );
+            h_VM_t_mass[coh_index][imethod]->Fill((vmd1Vec+vmd2Vec).M(), t_reco );
             if(imethod==2)h_Amass[coh_index]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,aInVec,vmVec));
         }
         //daug.1

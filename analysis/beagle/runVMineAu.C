@@ -68,7 +68,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		for(int ivm=0;ivm<3;ivm++){
 			for(int imethod=0;imethod<3;imethod++){
 				h_t_reco[ibreak][ivm][imethod] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),
-					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),1000,0,2 );
+					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),500,0,4 );
 				h_VM_t_mass[ibreak][ivm][imethod] = new TH2D(Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod),
 					Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod),1000,0.,4,100,0.,0.2);
 			}
