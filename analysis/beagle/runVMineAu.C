@@ -178,7 +178,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			//do analysis track-by-track
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
-				if(status!=statuslist[ivm]&&status!=statuslist[ivm]+1) continue;
+				if(status!=statuslist[ivm]) continue;
 				hasvm[ivm]=1;//found vm.
 				vm_vect[ivm]=particle->Get4Vector();
 				
@@ -233,7 +233,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
 				VM_particle_of_interest = particle_daug1->Get4Vector() + particle_daug2->Get4Vector();
-				h_VM_mass[processindex][ivm]->Fill( VM_particle_of_interest.M() );
+				h_VM_mass[processindex][ivm]->Fill( vm_vect[ivm].M() );
 
 			}
 
