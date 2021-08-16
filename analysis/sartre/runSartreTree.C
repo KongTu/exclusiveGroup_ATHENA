@@ -112,7 +112,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     //nuclear remnant mass
     TH2D* h_Amass[2];
     for(int ibreak=0;ibreak<2;ibreak++){
-        h_Amass[ibreak][ivm] = new TH2D(Form("h_Amass_%d",ibreak),
+        h_Amass[ibreak] = new TH2D(Form("h_Amass_%d",ibreak),
             Form("h_Amass_%d",ibreak), 100,0,0.2,100,-3,3);
     }
     //
