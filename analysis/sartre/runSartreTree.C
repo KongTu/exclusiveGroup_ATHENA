@@ -106,7 +106,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     TH1D* h_VM_mass[2];
     for(int ibreak=0;ibreak<2;ibreak++){
         h_VM_mass[ibreak] = new TH1D(Form("h_VM_mass_%d",ibreak),
-            Form("h_VM_mass_%d",ibreak),1000,0.3,4);
+            Form("h_VM_mass_%d",ibreak),1000,0.,4);
     }
     
     //nuclear remnant mass
@@ -208,6 +208,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
 
         //VM t
         for(int imethod=0;imethod<3;imethod++){
+            cout << "pInVec.M() " << pInVec.M() << " momentum = " << pInVec.P() << endl;
             double t_reco = giveMe_t(imethod,eInVec,eOutVec,pInVec,vmVec);
             h_t_reco[coh_index][imethod]->Fill( t_reco );
             if(imethod==2)h_Amass[coh_index]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,pInVec,vmVec));

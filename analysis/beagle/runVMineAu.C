@@ -76,7 +76,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			h_VM_mass[ibreak][ivm] = new TH1D(Form("h_VM_mass_%d_%d",ibreak,ivm),
-				Form("h_VM_mass_%d_%d",ibreak,ivm),1000,0.3,4);
+				Form("h_VM_mass_%d_%d",ibreak,ivm),1000,0.,4);
 		}
 	}
 	//nuclear remnant mass
