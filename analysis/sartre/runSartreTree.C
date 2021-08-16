@@ -192,6 +192,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         TLorentzVector eOutVec(*eOut);
         TLorentzVector pOutVec(*pOut);
         TLorentzVector gammaVec(*gamma);
+        TLorentzVector aInVec(0.,0.,pInVec.Pz()*197, sqrt(pInVec.Pz()*197*pInVec.Pz()*197 + MASS_AU197*MASS_AU197) );
         
         //=================================================================
         //  ==> At this point all information of the tuple is available <==
@@ -208,10 +209,9 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
 
         //VM t
         for(int imethod=0;imethod<3;imethod++){
-            cout << "pInVec.M() " << pInVec.M() << " momentum = " << pInVec.P() << endl;
-            double t_reco = giveMe_t(imethod,eInVec,eOutVec,pInVec,vmVec);
+            double t_reco = giveMe_t(imethod,eInVec,eOutVec,aInVec,vmVec);
             h_t_reco[coh_index][imethod]->Fill( t_reco );
-            if(imethod==2)h_Amass[coh_index]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,pInVec,vmVec));
+            if(imethod==2)h_Amass[coh_index]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,aInVec,vmVec));
         }
         //daug.1
         h_VM_daughter[coh_index][0]->Fill(vmd1Vec.Pt());
