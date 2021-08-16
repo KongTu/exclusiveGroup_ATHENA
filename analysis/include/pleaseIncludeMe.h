@@ -36,6 +36,9 @@
 #include "TGraphErrors.h"
 #include "TLorentzVector.h"
 #include "TBranchElement.h"
+#include "TRandom2.h"
+#include "Math/Interpolator.h"
+#include "Math/InterpolationTypes.h"
 
 #define PI            3.1415926
 

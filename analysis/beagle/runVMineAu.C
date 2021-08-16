@@ -1,4 +1,4 @@
-#include "pleaseIncludeMe.h"
+#include "../include/pleaseIncludeMe.h"
 void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool veto_ = true){
 
 	TChain *tree = new TChain("EICTree");

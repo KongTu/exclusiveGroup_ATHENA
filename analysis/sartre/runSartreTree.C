@@ -13,26 +13,8 @@
 //
 //
 // ==============================================================================
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include "TObject.h"
-#include "TH1D.h"
-#include "TH2D.h"
-#include "TProfile.h"
-#include "TTree.h"
-#include "TMath.h"
-#include "TFile.h"
-#include "TCanvas.h"
-#include "TROOT.h"
-#include "TStyle.h"
-#include "TChain.h"
-#include "TLorentzVector.h"
-#include "Math/Interpolator.h"
-#include "Math/InterpolationTypes.h"
-#include "TRandom2.h"
-#include "TText.h"
-#include "TGraph.h"
+//kong's include
+#include "../include/pleaseIncludeMe.h"
 #define PR(x) cout << #x << " = " << (x) << endl;
 
 using namespace std;
@@ -111,6 +93,27 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
             h_VM_daughter[icoh][ipro]=new TH1D(Form("h_VM_daughter_%d_%d",icoh,ipro),
             Form("h_VM_daughter_%d_%d",icoh,ipro),100,bin_lower[ipro],bin_upper[ipro] );
         }
+    }
+    // t_reco histograms
+    TH1D* h_t_reco[2][3];
+    for(int ibreak=0;ibreak<2;ibreak++){
+        for(int imethod=0;imethod<3;imethod++){
+            h_t_reco[ibreak][imethod] = new TH1D(Form("h_t_reco_%d_%d",ibreak,imethod),
+                Form("h_t_reco_%d_%d",ibreak,imethod),1000,0,2 );
+        }
+    }
+    // vm mass from daughters
+    TH1D* h_VM_mass[2];
+    for(int ibreak=0;ibreak<2;ibreak++){
+        h_VM_mass[ibreak] = new TH1D(Form("h_VM_mass_%d",ibreak),
+            Form("h_VM_mass_%d",ibreak),1000,0.3,4);
+    }
+    
+    //nuclear remnant mass
+    TH2D* h_Amass[2];
+    for(int ibreak=0;ibreak<2;ibreak++){
+        h_Amass[ibreak][ivm] = new TH2D(Form("h_Amass_%d",ibreak),
+            Form("h_Amass_%d",ibreak), 100,0,0.2,100,-3,3);
     }
     //
     //  Build chain
@@ -202,6 +205,13 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         h_VM[coh_index][0]->Fill(vmVec.Pt());
         h_VM[coh_index][1]->Fill(vmVec.Eta());
         h_VM[coh_index][2]->Fill(vmVec.Phi());
+
+        //VM t
+        for(int imethod=0;imethod<3;imethod++){
+            double t_reco = giveMe_t(imethod,eInVec,eOutVec,pInVec,vmVec);
+            h_t_reco[coh_index][imethod]->Fill( t_reco );
+            if(imethod==2)h_Amass[coh_index]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,pInVec,vmVec));
+        }
         //daug.1
         h_VM_daughter[coh_index][0]->Fill(vmd1Vec.Pt());
         h_VM_daughter[coh_index][1]->Fill(vmd1Vec.Eta());
@@ -210,8 +220,10 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         h_VM_daughter[coh_index][0]->Fill(vmd2Vec.Pt());
         h_VM_daughter[coh_index][1]->Fill(vmd2Vec.Eta());
         h_VM_daughter[coh_index][2]->Fill(vmd2Vec.Phi());
+        //invMASS
+        h_VM_mass[coh_index]->Fill( (vmd1Vec+vmd2Vec).M() );
 
-        // Apply cuts (example) ...
+        // Apply cuts (example) ..
     
         bool accepted = true;
         if (vmd1Vec.PseudoRapidity() < -4) accepted = false;
