@@ -135,9 +135,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		double photon_flux = event->GetPhotonFlux();
 		int event_process = event->GetProcess();
 		int nParticles = event->GetNTracks();
-		double pxf = event->pxf();
-		double pyf = event->pyf();
-		double pzf = event->pzf();
+		double pxf = event->pxf;
+		double pyf = event->pyf;
+		double pzf = event->pzf;
 		double pf3 = sqrt(pxf*pxf+pyf*pyf+pzf*pzf);
 
 		double impact_parameter = event->b;
