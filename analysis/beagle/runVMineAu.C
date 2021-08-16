@@ -93,7 +93,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 	TH2D* h_CHECK[3];
 	for(int ibreak=0;ibreak<3;ibreak++){
-		h_CHECK[ibreak] = new TH2D(Form("h_CHECK_%d",ibreak),Form("h_CHECK_%d",ibreak),
+		h_CHECK[ibreak] = new TH2D(Form("h_CHECK_%d",ibreak),";E (GeV); p_{miss} (GeV)",
 			2000,-100,100, 100,0,1.5);
 	}
 	for(int i(0); i < nEvents; ++i ) {
