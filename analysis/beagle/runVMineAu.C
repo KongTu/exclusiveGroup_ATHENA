@@ -199,6 +199,14 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 					acceptance[ivm]=0;
 					continue;
 				}
+				if(ivm==1){//phi meson
+					if(TMath::Abs(particle_daug1->GetPdgCode()) != 321 ||
+					TMath::Abs(particle_daug2->GetPdgCode()) != 321 ){
+					acceptance[ivm]=0;
+					continue;
+					}
+
+				}
 
 				h_VM[processindex][ivm][0]->Fill(pt);
 				h_VM[processindex][ivm][1]->Fill(eta);
