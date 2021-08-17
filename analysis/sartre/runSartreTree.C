@@ -214,8 +214,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         //VM t
         for(int imass=0;imass<3;imass++){
             TLorentzVector vmd1Vec_new,vmd2Vec_new,vmVec_new;
-            TVector3 temp_v1=vmd1Vec_new.Vect();
-            TVector3 temp_v2=vmd2Vec_new.Vect();
+            TVector3 temp_v1=vmd1Vec.Vect();
+            TVector3 temp_v2=vmd2Vec.Vect();
             vmd1Vec_new.SetVectM(temp_v1,daughtermasslist[imass]);
             vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[imass]);
             vmVec_new = vmd1Vec_new+vmd2Vec_new;
@@ -282,5 +282,5 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     
     hfile.Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat.root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat_test.root'." << endl;
 }
