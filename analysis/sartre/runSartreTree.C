@@ -95,29 +95,31 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         }
     }
     // t_reco histograms
-    TH1D* h_t_reco[2][3];
-    TH2D* h_VM_t_mass[2][3];
+    TH1D* h_t_reco[2][3][3];
+    TH2D* h_VM_t_mass[2][3][3];
     for(int ibreak=0;ibreak<2;ibreak++){
         for(int imethod=0;imethod<3;imethod++){
-            h_t_reco[ibreak][imethod] = new TH1D(Form("h_t_reco_%d_%d",ibreak,imethod),
-                Form("h_t_reco_%d_%d",ibreak,imethod),1000,0,2 );
-            h_VM_t_mass[ibreak][imethod] = new TH2D(Form("h_VM_t_mass_%d_%d",ibreak,imethod),
-                    Form("h_VM_t_mass_%d_%d",ibreak,imethod),1000,0.,4,100,0.,0.2);
+            for(int imass=0;imass<3;imass++){
+                h_t_reco[ibreak][imethod][imass] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,imethod,imass),
+                    Form("h_t_reco_%d_%d_%d",ibreak,imethod,imass),1000,0,2 );
+                h_VM_t_mass[ibreak][imethod][imass] = new TH2D(Form("h_VM_t_mass_%d_%d_%d",ibreak,imethod,imass),
+                        Form("h_VM_t_mass_%d_%d_%d",ibreak,imethod,imass),1000,0.,4,100,0.,0.2);
+            }
         }
     }
     // vm mass from daughters
-    TH1D* h_VM_mass[2];
+    TH1D* h_VM_mass[2][3];
+    //nuclear remnant mass
+    TH2D* h_Amass[2][3];
     for(int ibreak=0;ibreak<2;ibreak++){
-        h_VM_mass[ibreak] = new TH1D(Form("h_VM_mass_%d",ibreak),
-            Form("h_VM_mass_%d",ibreak),1000,0.,4);
+        for(int imass=0;imass<3;imass++){
+            h_VM_mass[ibreak][imass] = new TH1D(Form("h_VM_mass_%d_%d",ibreak,imass),
+                Form("h_VM_mass_%d_%d",ibreak,imass),1000,0.,4);
+            h_Amass[ibreak][imass] = new TH2D(Form("h_Amass_%d_%d",ibreak,imass),
+                Form("h_Amass_%d_%d",ibreak,imass), 100,0,0.2,100,-3,3);
+        }
     }
     
-    //nuclear remnant mass
-    TH2D* h_Amass[2];
-    for(int ibreak=0;ibreak<2;ibreak++){
-        h_Amass[ibreak] = new TH2D(Form("h_Amass_%d",ibreak),
-            Form("h_Amass_%d",ibreak), 100,0,0.2,100,-3,3);
-    }
     //
     //  Build chain
     //
@@ -209,13 +211,23 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         h_VM[coh_index][0]->Fill(vmVec.Pt());
         h_VM[coh_index][1]->Fill(vmVec.Eta());
         h_VM[coh_index][2]->Fill(vmVec.Phi());
-
         //VM t
-        for(int imethod=0;imethod<3;imethod++){
-            double t_reco = giveMe_t(imethod,eInVec,eOutVec,aInVec,vmVec);
-            h_t_reco[coh_index][imethod]->Fill( t_reco );
-            h_VM_t_mass[coh_index][imethod]->Fill((vmd1Vec+vmd2Vec).M(), t_reco );
-            if(imethod==2)h_Amass[coh_index]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,aInVec,vmVec));
+        for(int imass=0;imass<3;imass++){
+            TLorentzVector vmd1Vec_new,vmd2Vec_new,vmVec_new;
+            TVector3 temp_v1=vmd1Vec_new.Vect();
+            TVector3 temp_v2=vmd2Vec_new.Vect();
+            vmd1Vec_new.SetVectM(temp_v1,daughtermasslist[ivm]);
+            vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[ivm]);
+            vmVec_new = vmd1Vec_new+vmd2Vec_new;
+            double mass = vmVec_new.M();
+            for(int imethod=0;imethod<3;imethod++){
+                double t_reco = giveMe_t(imethod,eInVec,eOutVec,aInVec,vmVec_new);
+                h_t_reco[coh_index][imethod][imass]->Fill( t_reco );
+                h_VM_t_mass[coh_index][imethod][imass]->Fill( mass, t_reco );
+                if(imethod==2)h_Amass[coh_index][imass]->Fill(t_reco,giveMe_Amass(eInVec,eOutVec,aInVec,vmVec_new));
+            }
+            //invMASS
+            h_VM_mass[coh_index][imass]->Fill( mass );
         }
         //daug.1
         h_VM_daughter[coh_index][0]->Fill(vmd1Vec.Pt());
@@ -225,8 +237,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         h_VM_daughter[coh_index][0]->Fill(vmd2Vec.Pt());
         h_VM_daughter[coh_index][1]->Fill(vmd2Vec.Eta());
         h_VM_daughter[coh_index][2]->Fill(vmd2Vec.Phi());
-        //invMASS
-        h_VM_mass[coh_index]->Fill( (vmd1Vec+vmd2Vec).M() );
+        
 
         // Apply cuts (example) ..
     

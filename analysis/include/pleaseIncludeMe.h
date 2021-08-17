@@ -59,6 +59,7 @@
 #define MASS_XE131    121.99229680864376
 #define MASS_AU197    183.45406466643374
 #define MASS_PB208    193.69769264273208
+double daughtermasslist[]={MASS_PION,MASS_KAON,MASS_ELECTRON};
 
 using namespace std;
 using namespace erhic;

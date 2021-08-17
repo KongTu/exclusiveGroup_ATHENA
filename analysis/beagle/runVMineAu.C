@@ -187,7 +187,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
-		double daughtermasslist[]={MASS_PION,MASS_KAON,MASS_ELECTRON};
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
