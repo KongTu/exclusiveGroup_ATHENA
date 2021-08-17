@@ -216,8 +216,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
             TLorentzVector vmd1Vec_new,vmd2Vec_new,vmVec_new;
             TVector3 temp_v1=vmd1Vec_new.Vect();
             TVector3 temp_v2=vmd2Vec_new.Vect();
-            vmd1Vec_new.SetVectM(temp_v1,daughtermasslist[ivm]);
-            vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[ivm]);
+            vmd1Vec_new.SetVectM(temp_v1,daughtermasslist[imass]);
+            vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[imass]);
             vmVec_new = vmd1Vec_new+vmd2Vec_new;
             double mass = vmVec_new.M();
             for(int imethod=0;imethod<3;imethod++){
