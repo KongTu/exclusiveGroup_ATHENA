@@ -1,5 +1,5 @@
 #include "../include/pleaseIncludeMe.h"
-void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool veto_ = true){
+void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true){
 
 	TChain *tree = new TChain("EICTree");
 	tree->Add( filename+".root" );
@@ -9,7 +9,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 	TFile* output = 0;
 	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root";
-	if(veto_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
+	if(PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_PHP.root";
+	if(veto_&&!PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
+	if(veto_&&PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
 	output = new TFile(outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
@@ -154,7 +156,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		if( event_process==91) processindex=0;
 		else if( event_process==93) processindex=1;
 		else processindex=2;
-		if( trueQ2 < 1. || trueQ2 > 20. ) continue;
+		if(PHP_){
+			if( trueQ2 > 0.2 ) continue;
+		}else{
+			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
+		}
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 		//perform veto.

@@ -4,6 +4,7 @@ void plotVMdaughters(TString name="phi"){
 	/* Beagle */
 	
 	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups_w_vetos.root");
+	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
 	TH1D* h_VM_daughter[2][3][5];
 	//VM histograms//
@@ -57,13 +58,13 @@ void plotVMdaughters(TString name="phi"){
 	base1->GetYaxis()->SetNdivisions(3,2,0);
 	base1->Draw();
 
-	measureXsection(name,h_VM_daughter[0][vm_index][1],0);
+	measureXsection(name,h_VM_daughter[0][vm_index][1],0,t_hat_all->GetEntries());
 	h_VM_daughter[0][vm_index][1]->SetFillColorAlpha(kBlue,0.4);
     h_VM_daughter[0][vm_index][1]->SetFillStyle(1001);
 	h_VM_daughter[0][vm_index][1]->SetMarkerStyle(24);
 	h_VM_daughter[0][vm_index][1]->SetMarkerColor(kBlue-1);
 
-	measureXsection(name,h_VM_daughter[1][vm_index][1],0);
+	measureXsection(name,h_VM_daughter[1][vm_index][1],0,t_hat_all->GetEntries());
 	h_VM_daughter[1][vm_index][1]->SetFillColorAlpha(kRed,0.4);
     h_VM_daughter[1][vm_index][1]->SetFillStyle(1001);
 	h_VM_daughter[1][vm_index][1]->SetMarkerStyle(25);
@@ -122,13 +123,13 @@ void plotVMdaughters(TString name="phi"){
 	base2->GetYaxis()->SetNdivisions(3,2,0);
 	base2->Draw();
 
-	measureXsection(name,h_VM_daughter[0][vm_index][0],0);
+	measureXsection(name,h_VM_daughter[0][vm_index][0],0,t_hat_all->GetEntries());
 	h_VM_daughter[0][vm_index][0]->SetFillColorAlpha(kBlue,0.4);
     h_VM_daughter[0][vm_index][0]->SetFillStyle(1001);
 	h_VM_daughter[0][vm_index][0]->SetMarkerStyle(24);
 	h_VM_daughter[0][vm_index][0]->SetMarkerColor(kBlue-1);
 
-	measureXsection(name,h_VM_daughter[1][vm_index][0],0);
+	measureXsection(name,h_VM_daughter[1][vm_index][0],0,t_hat_all->GetEntries());
 	h_VM_daughter[1][vm_index][0]->SetFillColorAlpha(kRed,0.4);
     h_VM_daughter[1][vm_index][0]->SetFillStyle(1001);
 	h_VM_daughter[1][vm_index][0]->SetMarkerStyle(25);
