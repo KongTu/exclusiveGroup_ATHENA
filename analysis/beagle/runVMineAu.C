@@ -64,32 +64,42 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	// .
 	// .
 	// t_reco histograms
-	TH1D* h_t_reco[3][3][3];
-	TH2D* h_VM_t_mass[3][3][3];
+	// first index, process 91 or 93
+	// second index, vm particles
+	// thrid index, t method
+	// fourth index, different mass assumptions.
+	TH1D* h_t_reco[3][3][3][3];
+	TH2D* h_VM_t_mass[3][3][3][3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int imethod=0;imethod<3;imethod++){
-				h_t_reco[ibreak][ivm][imethod] = new TH1D(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),
-					Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod),500,0,4 );
-				h_VM_t_mass[ibreak][ivm][imethod] = new TH2D(Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod),
-					Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod),1000,0.,4,100,0.,0.2);
+				for(int imass=0;imass<3;imass++){
+					h_t_reco[ibreak][ivm][imethod][imass] = new TH1D(Form("h_t_reco_%d_%d_%d_%d",ibreak,ivm,imethod,imass),
+						Form("h_t_reco_%d_%d_%d_%d",ibreak,ivm,imethod,imass),500,0,4 );
+					h_VM_t_mass[ibreak][ivm][imethod][imass] = new TH2D(Form("h_VM_t_mass_%d_%d_%d_%d",ibreak,ivm,imethod,imass),
+						Form("h_VM_t_mass_%d_%d_%d_%d",ibreak,ivm,imethod,imass),1000,0.,4,100,0.,0.2);
+				}
 			}
 		}
 	}
 	// vm mass from daughters
-	TH1D* h_VM_mass[3][3];
+	TH1D* h_VM_mass[3][3][3];
+	TH2D* h_Amass[3][3][3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
-			h_VM_mass[ibreak][ivm] = new TH1D(Form("h_VM_mass_%d_%d",ibreak,ivm),
-				Form("h_VM_mass_%d_%d",ibreak,ivm),1000,0.,4);
+			for(int imass=0;imass<3;imass++){
+				h_VM_mass[ibreak][ivm][imass] = new TH1D(Form("h_VM_mass_%d_%d_%d",ibreak,ivm,imass),
+					Form("h_VM_mass_%d_%d_%d",ibreak,ivm,imass),1000,0.,4);
+				h_Amass[ibreak][ivm][imass] = new TH2D(Form("h_Amass_%d_%d_%d",ibreak,ivm,imass),
+				Form("h_Amass_%d_%d_%d",ibreak,ivm,imass), 100,0,0.2,100,-3,3);
+			}
 		}
 	}
 	//nuclear remnant mass
-	TH2D* h_Amass[3][3];
+	
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
-			h_Amass[ibreak][ivm] = new TH2D(Form("h_Amass_%d_%d",ibreak,ivm),
-				Form("h_Amass_%d_%d",ibreak,ivm), 100,0,0.2,100,-3,3);
+			
 		}
 	}
 
@@ -177,6 +187,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int acceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
+		double daughtermasslist[]={MASS_PION,MASS_KAON,MASS_ELECTRON};
 		for(int j(0); j < nParticles; ++j ) {
 
 			const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -194,7 +205,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
 			if( index==3 ) e_scattered = particle->Get4Vector();
-
 			if( status==1 ) all_part+=particle->Get4Vector();
 
 			//do analysis track-by-track
@@ -264,17 +274,47 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		double nonconserve=(e_beam+A_beam-all_part).E();
 		h_CHECK[processindex]->Fill(nonconserve,pf3);
 		//for each vm; do...
+
+		//wrong mass:
+		if( (hasvm[0]&&acceptance[0]) || (hasvm[1]&&acceptance[1]) || (hasvm[2]&&acceptance[2]) ){
+			TLorentzVector vm_vect1_new,vm_vect2_new,vm_vect_new;
+			for(int ivm=0;ivm<3;ivm++){
+				if(vm_vect1[ivm].E()!=0) vm_vect1_new = vm_vect1[ivm]
+				if(vm_vect2[ivm].E()!=0) vm_vect2_new = vm_vect2[ivm]
+				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm]
+			}
+			for(int ivm=0;ivm<3;ivm++){
+				vm_vect1_new.SetM(daughtermasslist[ivm]);
+				vm_vect2_new.SetM(daughtermasslist[ivm]);
+				vm_vect_new = vm_vect1_new+vm_vect2_new;
+				double mass = vm_vect_new.M();
+				h_VM_mass[processindex][ivm][1]->Fill(mass);
+				for(int imethod=0;imethod<3;imethod++){
+					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect_new);
+					h_t_reco[processindex][ivm][imethod][1]->Fill( t_reco );
+					h_VM_t_mass[processindex][ivm][imethod][1]->Fill(mass,t_reco);
+					if(imethod==2)h_Amass[processindex][ivm][1]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect_new));
+				}
+			}
+
+		}
+		
+		//withPID case:
+		//...not yet.
+
+		//accurate mass
 		for(int ivm=0;ivm<3;ivm++){
 			if(acceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
 				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
-				h_VM_mass[processindex][ivm]->Fill(mass);
+				h_VM_mass[processindex][ivm][0]->Fill(mass);
 				for(int imethod=0;imethod<3;imethod++){
 					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect[ivm]);
-					h_t_reco[processindex][ivm][imethod]->Fill( t_reco );
-					h_VM_t_mass[processindex][ivm][imethod]->Fill(mass,t_reco);
-					if(imethod==2)h_Amass[processindex][ivm]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect[ivm]));
+					h_t_reco[processindex][ivm][imethod][0]->Fill( t_reco );
+					h_VM_t_mass[processindex][ivm][imethod][0]->Fill(mass,t_reco);
+					if(imethod==2)h_Amass[processindex][ivm][0]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect[ivm]));
 				}
+				
 				//loop over particle again
 				for(int j(0); j < nParticles; ++j ) {
 					const erhic::ParticleMC* particle = event->GetTrack(j);

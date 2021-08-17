@@ -42,6 +42,8 @@
 
 #define PI            3.1415926
 
+#define MASS_PION     0.13957
+#define MASS_KAON     0.493667
 #define MASS_MUON     0.1056
 #define MASS_ELECTRON 0.000511
 #define MASS_JPSI 	  3.09688

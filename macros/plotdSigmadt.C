@@ -1,9 +1,22 @@
 #include "utility.h"
-void plotdSigmadt(TString name="phi"){
+void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
 	/* Beagle */
-	
-	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups.root");
+
+	if( (name=="rho" && PHP_)||
+	 	(name=="phi" && PHP_)||
+	 	(name=="jpsi" && PHP_)) {
+	 	
+	 	cout << "inconsistent settings between beagle and sartre! "<< endl;
+	 	return;
+
+	 }
+
+	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
+	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
+	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
+	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
 	TH1D* h_VM_daughter[2][3][5];
@@ -32,7 +45,10 @@ void plotdSigmadt(TString name="phi"){
 	if(name=="rho"){base1->GetYaxis()->SetRangeUser(1e-1, 1e8);}
 	if(name=="phi"){base1->GetYaxis()->SetRangeUser(1e-2, 1e7);}
 	if(name=="jpsi"){base1->GetYaxis()->SetRangeUser(1e-3, 1e6);}
-	
+	if(name=="rho_photo"){base1->GetYaxis()->SetRangeUser(1e-1, 1e10);}
+	if(name=="phi_photo"){base1->GetYaxis()->SetRangeUser(1e-1, 1e9);}
+	if(name=="jpsi_photo"){base1->GetYaxis()->SetRangeUser(1e-3, 1e8);}
+
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
 	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.5);
@@ -56,7 +72,7 @@ void plotdSigmadt(TString name="phi"){
 	TH1D* h_VM_background = (TH1D*) h_VM[0][vm_index][4]->Clone("h_VM_background");
 	h_VM_background->Add(h_VM[1][vm_index][4],+1);
 	//adding elastic and dissoc. together.
-	measureXsection(name, h_VM_background, 0, t_hat_all->GetEntries());
+	measureXsection(name, h_VM_background, 0, t_hat_all->GetEntries(), PHP_);
 	h_VM_background->Rebin(2);
 	h_VM_background->Scale(1./2);
 	h_VM_background->SetMarkerStyle(24);
@@ -89,8 +105,16 @@ void plotdSigmadt(TString name="phi"){
 	r44->SetTextSize(20);
 	r44->SetTextFont(43);
 	r44->SetTextColor(kBlack);
-	r44->Draw("same");
 
-	// c1->Print("../figures/veto_dsigma_dt_"+name+".pdf");
+	TLatex* r44_1 = new TLatex(0.18, 0.84, "Q^{2}<0.2 GeV^{2}, |#eta_{dau}|<4.0");
+	r44_1->SetNDC();
+	r44_1->SetTextSize(20);
+	r44_1->SetTextFont(43);
+	r44_1->SetTextColor(kBlack);
+	if(PHP_) r44_1->Draw("same");
+	else r44->Draw("same");
+
+	if(veto_) c1->Print("../figures/dsigmadt/veto_dsigma_dt_"+name+".pdf");
+	else c1->Print("../figures/dsigmadt/dsigma_dt_"+name+".pdf");
 
 }

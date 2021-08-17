@@ -1,9 +1,22 @@
 #include "utility.h"
-void plotVM(TString name="phi"){
+void plotVM(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
 	/* Beagle */
-	
-	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups.root");
+
+	if( (name=="rho" && PHP_)||
+	 	(name=="phi" && PHP_)||
+	 	(name=="jpsi" && PHP_)) {
+	 	
+	 	cout << "inconsistent settings between beagle and sartre! "<< endl;
+	 	return;
+
+	 }
+
+	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
+	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
+	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
+	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
 	TH1D* h_VM_daughter[2][3][5];
@@ -46,7 +59,10 @@ void plotVM(TString name="phi"){
 	if(name=="rho"){base1->GetYaxis()->SetRangeUser(0.1, 9e5);vm_index=0;}
 	if(name=="phi"){base1->GetYaxis()->SetRangeUser(0.1, 4e5);vm_index=1;}
 	if(name=="jpsi"){base1->GetYaxis()->SetRangeUser(0.1, 2e3);vm_index=2;}//jpsi nodecay.
-	
+	if(name=="rho_photo"){base1->GetYaxis()->SetRangeUser(0.1, 9e7);vm_index=0;}
+	if(name=="phi_photo"){base1->GetYaxis()->SetRangeUser(0.1, 4e7);vm_index=1;}
+	if(name=="jpsi_photo"){base1->GetYaxis()->SetRangeUser(0.1, 2e5);vm_index=2;}//jpsi nodecay.
+
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
 	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.5);
@@ -57,13 +73,13 @@ void plotVM(TString name="phi"){
 	base1->GetYaxis()->SetNdivisions(3,2,0);
 	base1->Draw();
 
-	measureXsection(name,h_VM[0][vm_index][1],0,t_hat_all->GetEntries());
+	measureXsection(name,h_VM[0][vm_index][1],0,t_hat_all->GetEntries(),PHP_);
 	h_VM[0][vm_index][1]->SetFillColorAlpha(kBlue,0.4);
     h_VM[0][vm_index][1]->SetFillStyle(1001);
 	h_VM[0][vm_index][1]->SetMarkerStyle(24);
 	h_VM[0][vm_index][1]->SetMarkerColor(kBlue-1);
 
-	measureXsection(name,h_VM[1][vm_index][1],0,t_hat_all->GetEntries());
+	measureXsection(name,h_VM[1][vm_index][1],0,t_hat_all->GetEntries(),PHP_);
 	h_VM[1][vm_index][1]->SetFillColorAlpha(kRed,0.4);
     h_VM[1][vm_index][1]->SetFillStyle(1001);
 	h_VM[1][vm_index][1]->SetMarkerStyle(25);
@@ -101,6 +117,20 @@ void plotVM(TString name="phi"){
 	r43->SetTextSize(0.04);
 	r43->Draw("same");
 
+	TLatex* r44 = new TLatex(0.18, 0.84, "1<Q^{2}<20 GeV^{2}");
+	r44->SetNDC();
+	r44->SetTextSize(20);
+	r44->SetTextFont(43);
+	r44->SetTextColor(kBlack);
+
+	TLatex* r44_1 = new TLatex(0.18, 0.84, "Q^{2}<0.2 GeV^{2}");
+	r44_1->SetNDC();
+	r44_1->SetTextSize(20);
+	r44_1->SetTextFont(43);
+	r44_1->SetTextColor(kBlack);
+	if(PHP_) r44_1->Draw("same");
+	else r44->Draw("same");
+
 	TCanvas* c2 = new TCanvas("c2","c2",1,1,600,600);
 	gPad->SetLogy(1);
 	gPad->SetTicks();
@@ -111,6 +141,9 @@ void plotVM(TString name="phi"){
 	if(name=="rho"){base2->GetYaxis()->SetRangeUser(0.1, 2.5e6);vm_index=0;}
 	if(name=="phi"){base2->GetYaxis()->SetRangeUser(0.1, 2e5);vm_index=1;}
 	if(name=="jpsi"){base2->GetYaxis()->SetRangeUser(0.1, 1e4);vm_index=2;}//jpsi nodecay.
+	if(name=="rho_photo"){base2->GetYaxis()->SetRangeUser(0.1, 2.5e8);vm_index=0;}
+	if(name=="phi_photo"){base2->GetYaxis()->SetRangeUser(0.1, 2e7);vm_index=1;}
+	if(name=="jpsi_photo"){base2->GetYaxis()->SetRangeUser(0.1, 1e6);vm_index=2;}//jpsi nodecay.
 	base2->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base2,1.,1.1);
 	base2->GetYaxis()->SetTitleSize(base2->GetYaxis()->GetTitleSize()*1.5);
@@ -121,13 +154,13 @@ void plotVM(TString name="phi"){
 	base2->GetYaxis()->SetNdivisions(3,2,0);
 	base2->Draw();
 
-	measureXsection(name,h_VM[0][vm_index][0],0,t_hat_all->GetEntries());
+	measureXsection(name,h_VM[0][vm_index][0],0,t_hat_all->GetEntries(),PHP_);
 	h_VM[0][vm_index][0]->SetFillColorAlpha(kBlue,0.4);
     h_VM[0][vm_index][0]->SetFillStyle(1001);
 	h_VM[0][vm_index][0]->SetMarkerStyle(24);
 	h_VM[0][vm_index][0]->SetMarkerColor(kBlue-1);
 
-	measureXsection(name,h_VM[1][vm_index][0],0,t_hat_all->GetEntries());
+	measureXsection(name,h_VM[1][vm_index][0],0,t_hat_all->GetEntries(),PHP_);
 	h_VM[1][vm_index][0]->SetFillColorAlpha(kRed,0.4);
     h_VM[1][vm_index][0]->SetFillStyle(1001);
 	h_VM[1][vm_index][0]->SetMarkerStyle(25);
@@ -145,6 +178,8 @@ void plotVM(TString name="phi"){
 	w5->Draw("same");
 	r42->Draw("same");
 	r43->Draw("same");
+	if(PHP_) r44_1->Draw("same");
+	else r44->Draw("same");
 
 	TCanvas* c3 = new TCanvas("c3","c3",1,1,600,600);
 	gPad->SetLogy(1);
@@ -156,6 +191,9 @@ void plotVM(TString name="phi"){
 	if(name=="rho"){base3->GetYaxis()->SetRangeUser(0.1, 2.5e6);vm_index=0;}
 	if(name=="phi"){base3->GetYaxis()->SetRangeUser(0.1, 2e5);vm_index=1;}
 	if(name=="jpsi"){base3->GetYaxis()->SetRangeUser(0.1, 1e4);vm_index=2;}//jpsi nodecay.
+	if(name=="rho_photo"){base3->GetYaxis()->SetRangeUser(0.1, 2.5e8);vm_index=0;}
+	if(name=="phi_photo"){base3->GetYaxis()->SetRangeUser(0.1, 2e7);vm_index=1;}
+	if(name=="jpsi_photo"){base3->GetYaxis()->SetRangeUser(0.1, 1e6);vm_index=2;}//jpsi nodecay.
 	base3->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base3,1.,1.1);
 	base3->GetYaxis()->SetTitleSize(base3->GetYaxis()->GetTitleSize()*1.5);
@@ -174,6 +212,8 @@ void plotVM(TString name="phi"){
 
 	r42->Draw("same");
 	r43->Draw("same");
+	if(PHP_) r44_1->Draw("same");
+	else r44->Draw("same");
 
 	TLegend *w6 = new TLegend(0.6,0.84,0.75,0.87);
 	w6->SetLineColor(kWhite);
@@ -194,6 +234,9 @@ void plotVM(TString name="phi"){
 	if(name=="rho"){base4->GetYaxis()->SetRangeUser(0.1, 9e5);vm_index=0;}
 	if(name=="phi"){base4->GetYaxis()->SetRangeUser(0.1, 4e5);vm_index=1;}
 	if(name=="jpsi"){base4->GetYaxis()->SetRangeUser(0.1, 2e3);vm_index=2;}//jpsi nodecay.
+	if(name=="rho_photo"){base4->GetYaxis()->SetRangeUser(0.1, 9e7);vm_index=0;}
+	if(name=="phi_photo"){base4->GetYaxis()->SetRangeUser(0.1, 4e7);vm_index=1;}
+	if(name=="jpsi_photo"){base4->GetYaxis()->SetRangeUser(0.1, 2e5);vm_index=2;}//jpsi nodecay.
 	
 	base4->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base4,1.,1.1);
@@ -214,10 +257,22 @@ void plotVM(TString name="phi"){
 	r42->Draw("same");
 	r43->Draw("same");
 	w6->Draw("same");
+	if(PHP_) r44_1->Draw("same");
+	else r44->Draw("same");
 
-	c1->Print("../figures/"+name+"_eta_incoh.pdf");
-	c2->Print("../figures/"+name+"_pt_incoh.pdf");
-	c3->Print("../figures/"+name+"_pt_coh.pdf");
-	c4->Print("../figures/"+name+"_eta_coh.pdf");
+	if(veto_){
+		c1->Print("../figures/kinematicsDistributions/veto_"+name+"_eta_incoh.pdf");
+		c2->Print("../figures/kinematicsDistributions/veto_"+name+"_pt_incoh.pdf");
+		c3->Print("../figures/kinematicsDistributions/veto_"+name+"_pt_coh.pdf");
+		c4->Print("../figures/kinematicsDistributions/veto_"+name+"_eta_coh.pdf");
+	}
+	else{
+		c1->Print("../figures/kinematicsDistributions/"+name+"_eta_incoh.pdf");
+		c2->Print("../figures/kinematicsDistributions/"+name+"_pt_incoh.pdf");
+		c3->Print("../figures/kinematicsDistributions/"+name+"_pt_coh.pdf");
+		c4->Print("../figures/kinematicsDistributions/"+name+"_eta_coh.pdf");
+
+	}
+	
 
 }

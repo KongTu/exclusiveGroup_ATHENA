@@ -9,13 +9,28 @@ using namespace std;
 
 int vm_index=-1;
 TString legendName="";
-void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_events=1e5){
+void setVM(TString name="rho"){
+	if(name=="rho"||name=="rho_photo"){
+		vm_index=0;
+		legendName="#rho^{0}";
+	}
+	else if(name=="phi"||name=="phi_photo"){
+		vm_index=1;
+		legendName="#phi";
+	}
+	else if(name=="jpsi"||name=="jpsi_photo"){
+		vm_index=2;
+		legendName="J/#psi";
+	}
+}
+void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_events=1e5, bool PHP_=false){
 
 	//branching ratios
-	double BR_beagle_decay[] = {1.0,0.49,0.5};//branching ratio, depend on what we select in beagle
+	double BR_beagle_decay[] = {1.0,0.489,0.5};//branching ratio, depend on what we select in beagle
 	double BR_sartre_decay[] = {1.0,1.0,1.0};//branching ratio
 	//beagle constants
 	double beagle_lumi = 1e5/(34.4*197);//nanobarn
+	if(PHP_) beagle_lumi = 1e5/(1.971E3*197);//nanobarn
 	double lumi_factor = total_events/1e5;
 	beagle_lumi=beagle_lumi*lumi_factor;
 
@@ -32,6 +47,22 @@ void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_e
 	}
 	else if(name=="jpsi"){
 		sigma=199.;
+		vm_index=2;
+		legendName="J/#psi";
+	}
+	//photoproduction
+	else if(name=="rho_photo"){
+		sigma = 3.86E+5;
+		vm_index=0;
+		legendName="#rho^{0}";
+	}
+	else if(name=="phi_photo"){
+		sigma=2.42E+5;
+		vm_index=1;
+		legendName="#phi";
+	}
+	else if(name=="jpsi_photo"){
+		sigma=458.;
 		vm_index=2;
 		legendName="J/#psi";
 	}

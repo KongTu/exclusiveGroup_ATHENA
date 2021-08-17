@@ -1,13 +1,25 @@
 #include "utility.h"
-void plotBreakupsParticles(TString name="phi"){
+void plotBreakupsParticles(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
-	if(name=="rho") vm_index=0;
-	if(name=="phi") vm_index=1;
-	if(name=="jpsi") vm_index=2;
+	setVM(name);
 
 	/* Beagle */
 	
-	TFile* file_beagle = new TFile("../rootfiles/beagle_allVMs_w_breakups_w_vetos.root");
+	if( (name=="rho" && PHP_)||
+	 	(name=="phi" && PHP_)||
+	 	(name=="jpsi" && PHP_)) {
+	 	
+	 	cout << "inconsistent settings between beagle and sartre! "<< endl;
+	 	return;
+
+	 }
+
+	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
+	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
+	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
+	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TFile* file_beagle = new TFile(inputROOT);
+
 	TH2D* h_part[2][3][8];
 	// first index, process 91 or 93
 	// second index, vm particles
@@ -74,8 +86,11 @@ void plotBreakupsParticles(TString name="phi"){
 	gPad->Update();
 
 	for(int ipid=0;ipid<8;ipid++){
+		h_part[0][vm_index][ipid]->Add(h_part[1][vm_index][ipid],+1);
 		h_part[0][vm_index][ipid]->Draw("cont1 same");
-		c1->Print(Form("../figures/breakup_particles/veto_"+name+"_breakup_stagged_%d.pdf",ipid) );
+		if(veto_)c1->Print(Form("../figures/breakup_particles/veto_"+name+"_breakup_stagged_%d.pdf",ipid) );
+		else c1->Print(Form("../figures/breakup_particles/"+name+"_breakup_stagged_%d.pdf",ipid) );
+		
 	}
 
 }
