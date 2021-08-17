@@ -1,7 +1,7 @@
 
 # DO NOT DELETE
 
-./runVMineAu_C.so: pleaseIncludeMe.h
+./runVMineAu_C.so: ../include/pleaseIncludeMe.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/include/eicsmear/erhic/EventBase.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/include/eicsmear/erhic/EventMC.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TClonesArray.h
@@ -125,5 +125,9 @@
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TLine.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TBranchElement.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TClassRef.h
+./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TRandom2.h
+./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/TRandom.h
+./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/Math/Interpolator.h
+./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/Math/InterpolationTypes.h
 ./runVMineAu_C.so: /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/cintdictversion.h /afs/rhic.bnl.gov/eic/SOFTWARE/ROOT/v5.34.36/include/RVersion.h
 runVMineAu_C__ROOTBUILDVERSION= 5.34/36
