@@ -75,7 +75,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     nnames = 10;
     
     //output root files:
-    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_test.root","RECREATE");
     //
     //   Histogram Booking (example)
     //
