@@ -277,15 +277,18 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 		//wrong mass:
 		if( (hasvm[0]&&acceptance[0]) || (hasvm[1]&&acceptance[1]) || (hasvm[2]&&acceptance[2]) ){
-			TLorentzVector vm_vect1_new,vm_vect2_new,vm_vect_new;
+			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
 			for(int ivm=0;ivm<3;ivm++){
-				if(vm_vect1[ivm].E()!=0) vm_vect1_new = vm_vect1[ivm]
-				if(vm_vect2[ivm].E()!=0) vm_vect2_new = vm_vect2[ivm]
-				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm]
+				if(vm_vect1[ivm].E()!=0) vm_vect1_new = vm_vect1[ivm];
+				if(vm_vect2[ivm].E()!=0) vm_vect2_new = vm_vect2[ivm];
+				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm];
 			}
+			if(vm_vect1_new.E()==0) continue;
 			for(int ivm=0;ivm<3;ivm++){
-				vm_vect1_new.SetM(daughtermasslist[ivm]);
-				vm_vect2_new.SetM(daughtermasslist[ivm]);
+				TVector3 temp_v1=vm_vect1_new.Vect();
+				TVector3 temp_v2=vm_vect2_new.Vect();
+				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
+				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
 				vm_vect_new = vm_vect1_new+vm_vect2_new;
 				double mass = vm_vect_new.M();
 				h_VM_mass[processindex][ivm][1]->Fill(mass);
