@@ -106,6 +106,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		h_CHECK[ibreak] = new TH2D(Form("h_CHECK_%d",ibreak),";E (GeV); p_{miss} (GeV)",
 			2000,-100,100, 100,0,1.5);
 	}
+	TH2D* h_PID=new TH2D("h_PID",";p;chi2",100,0,3,500,0,100);
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -348,7 +349,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 
 		}
-		//repeat but with PID assignment
+		//repeat but with PID assignment check on phi assumption
 		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
 			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
 				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
@@ -360,51 +361,35 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm];
 			}
 			if(vm_vect1_new.E()==0) continue;
-			int ivm=-1;
-			if(hasvm[1]) ivm=1;
-			else if(hasvm[2]) ivm=2;
-			else if(hasvm[0]){
-
+			//
+			for(int ivm=0;ivm<3;ivm++){
 				TVector3 temp_v1=vm_vect1_new.Vect();
 				TVector3 temp_v2=vm_vect2_new.Vect();
-				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[1]);
-				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[1]);
+				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
+				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
 				vm_vect_new = vm_vect1_new+vm_vect2_new;
-				if(fabs(vm_vect_new.M()-1.019)>0.020) ivm=0;//only under phi peak will be considered.
-				else{
-					if(TMath::Abs(vm_vect1_new.Eta())>1.0 
-						|| TMath::Abs(vm_vect2_new.Eta())>1.0 ){ 
-
-						ivm=1;//outside of PID region;
-					}
-					else{
+				
+				if(ivm==1){
+					if(TMath::Abs(vm_vect1_new.Eta())<1.0 
+						&& TMath::Abs(vm_vect2_new.Eta())<1.0){
 						double chi2_1 = giveMe_PIDChi2(vm_vect1_new, hist_pion);
 						double chi2_2 = giveMe_PIDChi2(vm_vect2_new, hist_pion);
-						if(chi2_1<4.6&&chi2_2<4.6 && chi2_1>0.&&chi2_2>0.){
-							ivm=1;//cannot distinguish.
-						}
-						else{
-							ivm=0;//yes they are pions.
+						//cross check TOF PID.
+						h_PID->Fill(vm_vect1_new.P(), chi2_1);
+						h_PID->Fill(vm_vect2_new.P(), chi2_2);
+						if( chi2_1>4.6||chi2_2>4.6 ){
+							continue;
 						}
 					}
 				}
-			}
-			else{
-				cout << "not sure about this! check" << endl;
-			}
-
-			TVector3 temp_v1=vm_vect1_new.Vect();
-			TVector3 temp_v2=vm_vect2_new.Vect();
-			vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
-			vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
-			vm_vect_new = vm_vect1_new+vm_vect2_new;
-			double mass = vm_vect_new.M();
-			h_VM_mass[processindex][ivm][2]->Fill(mass);
-			for(int imethod=0;imethod<3;imethod++){
-				double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect_new);
-				h_t_reco[processindex][ivm][imethod][2]->Fill( t_reco );
-				h_VM_t_mass[processindex][ivm][imethod][2]->Fill(mass,t_reco);
-				if(imethod==2)h_Amass[processindex][ivm][2]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect_new));
+				double mass = vm_vect_new.M();
+				h_VM_mass[processindex][ivm][2]->Fill(mass);
+				for(int imethod=0;imethod<3;imethod++){
+					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect_new);
+					h_t_reco[processindex][ivm][imethod][2]->Fill( t_reco );
+					h_VM_t_mass[processindex][ivm][imethod][2]->Fill(mass,t_reco);
+					if(imethod==2)h_Amass[processindex][ivm][2]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect_new));
+				}
 			}
 		}
 		//end
