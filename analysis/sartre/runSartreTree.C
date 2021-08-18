@@ -81,7 +81,9 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     //
     TH1D *hist_t_coherent = new TH1D("hist_t_coherent", "coherent", 72, 0, 0.18);
     TH1D *hist_t_incoherent = new TH1D("hist_t_incoherent", "incoherent", 72, 0, 0.18);
-   
+    TH1D *hist_t_afterPhaseSpace_coherent = new TH1D("hist_t_afterPhaseSpace_coherent", "coherent", 72, 0, 0.18);
+    TH1D *hist_t_afterPhaseSpace_incoherent = new TH1D("hist_t_afterPhaseSpace_incoherent", "incoherent", 72, 0, 0.18);
+
     TH1D *h_VM[2][3];
     TH1D *h_VM_daughter[2][3];
     double bin_lower[]={0.,-8.,0.,0.,0.};
@@ -202,8 +204,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         //=================================================================
         //  ==> At this point all information of the tuple is available <==
         //=================================================================
-        
-        //Kong's edits to fill some histograms:
+       
+         //Kong's edits to fill some histograms:
         int coh_index=-1;
         if(myEvent.dmode < 0.5) coh_index=0;
         else coh_index=1;
@@ -211,6 +213,39 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         h_VM[coh_index][0]->Fill(vmVec.Pt());
         h_VM[coh_index][1]->Fill(vmVec.Eta());
         h_VM[coh_index][2]->Fill(vmVec.Phi());
+         //daug.1
+        h_VM_daughter[coh_index][0]->Fill(vmd1Vec.Pt());
+        h_VM_daughter[coh_index][1]->Fill(vmd1Vec.Eta());
+        h_VM_daughter[coh_index][2]->Fill(vmd1Vec.Phi());
+        //daug.2
+        h_VM_daughter[coh_index][0]->Fill(vmd2Vec.Pt());
+        h_VM_daughter[coh_index][1]->Fill(vmd2Vec.Eta());
+        h_VM_daughter[coh_index][2]->Fill(vmd2Vec.Phi());
+        
+
+        bool accepted = true;
+        if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
+        if (!accepted) continue;
+        if (myEvent.dmode < 0.5) { // coherent
+            hist_t_coherent->Fill(fabs(myEvent.t), 1);
+        }
+        else {                    // incoherent
+            hist_t_incoherent->Fill(fabs(myEvent.t), 1);
+        }
+        if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 4.) accepted = false;
+        if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 4.) accepted = false;
+        if (vmd1Vec.Pt() < 0.15) accepted = false;
+        if (vmd2Vec.Pt() < 0.15) accepted = false;
+        if (!accepted) continue;
+        if (myEvent.dmode < 0.5) { // coherent
+            hist_t_afterPhaseSpace_coherent->Fill(fabs(myEvent.t), 1);
+        }
+        else {                    // incoherent
+            hist_t_afterPhaseSpace_incoherent->Fill(fabs(myEvent.t), 1);
+        }
+        
+        acceptedEvents++;
+
         //VM t
         for(int imass=0;imass<3;imass++){
             TLorentzVector vmd1Vec_new,vmd2Vec_new,vmVec_new;
@@ -219,6 +254,24 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
             vmd1Vec_new.SetVectM(temp_v1,daughtermasslist[imass]);
             vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[imass]);
             vmVec_new = vmd1Vec_new+vmd2Vec_new;
+            
+            double chi2_1=-99.;
+            double chi2_2=-99.;
+            if(TMath::Abs(vmd1Vec_new.Eta())<1.0 
+                        && TMath::Abs(vmd2Vec_new.Eta())<1.0
+                            && imass==1){
+
+                if( vm_name=="rho"||vm_name=="rho_photo" ){
+                    chi2_1 = giveMe_PIDChi2(vmd1Vec_new, hist_pion);
+                    chi2_2 = giveMe_PIDChi2(vmd2Vec_new, hist_pion);
+                }
+                if( vm_name=="phi"||vm_name=="phi_photo" ){
+                    chi2_1 = giveMe_PIDChi2(vmd1Vec_new, hist_kaon);
+                    chi2_2 = giveMe_PIDChi2(vmd2Vec_new, hist_kaon);
+                }
+                if( chi2_1>4.6||chi2_2>4.6 ) continue;
+            }
+
             double mass = vmVec_new.M();
             for(int imethod=0;imethod<3;imethod++){
                 double t_reco = giveMe_t(imethod,eInVec,eOutVec,aInVec,vmVec_new);
@@ -229,33 +282,16 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
             //invMASS
             h_VM_mass[coh_index][imass]->Fill( mass );
         }
-        //daug.1
-        h_VM_daughter[coh_index][0]->Fill(vmd1Vec.Pt());
-        h_VM_daughter[coh_index][1]->Fill(vmd1Vec.Eta());
-        h_VM_daughter[coh_index][2]->Fill(vmd1Vec.Phi());
-        //daug.2
-        h_VM_daughter[coh_index][0]->Fill(vmd2Vec.Pt());
-        h_VM_daughter[coh_index][1]->Fill(vmd2Vec.Eta());
-        h_VM_daughter[coh_index][2]->Fill(vmd2Vec.Phi());
-        
+       
 
         // Apply cuts (example) ..
     
-        bool accepted = true;
-        if (vmd1Vec.PseudoRapidity() < -4) accepted = false;
-        if (vmd1Vec.PseudoRapidity() > 4) accepted = false;
-        if (!accepted) continue;
-	acceptedEvents++;
+        
         
         //
         // Histogramming (example) ...
         //
-        if (myEvent.dmode < 0.5) { // coherent
-            hist_t_coherent->Fill(fabs(myEvent.t), 1);
-        }
-        else {                    // incoherent
-            hist_t_incoherent->Fill(fabs(myEvent.t), 1);
-        }
+        
         
         //
         //   Some print outs
