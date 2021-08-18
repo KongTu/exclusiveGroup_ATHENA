@@ -143,7 +143,7 @@ double giveMe_PIDChi2(TLorentzVector v, TH2D* hist){
 	TH1D* h_total_projection = (TH1D*) hist->ProjectionX("h_total_projection",1,1e8);//total y bins
 	int bin_of_interest = h_total_projection->FindBin(p);
 	TH1D* h_normChi2_1D = (TH1D*) hist->ProjectionY("h_normChi2_1D",bin_of_interest,bin_of_interest);
-	// if(h_normChi2_1D->GetEntries()<10) return -99;
+	if(h_normChi2_1D->GetEntries()<26300) return -99;
 	double PID = h_normChi2_1D->GetRandom();
 
 	return PID;
