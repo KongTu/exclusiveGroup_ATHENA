@@ -98,7 +98,7 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 				&& rigidity_ratio>0.7 && rigidity_ratio<0.95 ) veto=true;
 			if( theta>5.5 && theta<20.0 ) veto=true;
 
-			if(TMath::Abs(eta)<4.0) multiplicity++;
+			if(TMath::Abs(eta)<4.0 && pt>0.15) multiplicity++;
 		}
 		else{
 			cout << "something's wrong about the charge" << endl;
@@ -136,6 +136,31 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
 	return p_beam_scattered.M()/MASS_AU197;
 }
+
+double giveMe_PIDChi2(TLorentzVector v, TH2D* hist){
+
+	double p = v.P();
+	TH1D* h_total_projection = (TH1D*) hist->ProjectionX("h_total_projection",1,1e8);//total y bins
+	int bin_of_interest = h_total_projection->FindBin(p);
+	TH1D* h_normChi2_1D = (TH1D*) hist->ProjectionX("h_normChi2_1D",bin_of_interest,bin_of_interest);
+	// if(h_normChi2_1D->GetEntries()<10) return -99;
+	double PID = h_normChi2_1D->GetRandom();
+
+	return PID;
+
+}
+// vector<TH1D*> generate1DPID(TH2D* hist){
+	
+// 	vector<TH1D*> hist_1D;
+// 	TH1D* h_total_projection = (TH1D*) hist->ProjectionX("h_total_projection",1,1e8);
+// 	int total_bins = h_total_projection->GetNbinsX();
+// 	for(int ibin=0;ibin<total_bins;ibin++){
+// 		TH1D* hist_temp = (TH1D*) hist->ProjectionX(Form("hist_temp_%d",ibin),ibin+1,ibin+1);
+// 		hist_1D.push_back( hist_temp );
+// 	}
+
+// 	return hist_1D;
+// }
 
 void printSTABLE(EventBeagle* event, int nParticles){
 	for(int j(0); j < nParticles; ++j ) {

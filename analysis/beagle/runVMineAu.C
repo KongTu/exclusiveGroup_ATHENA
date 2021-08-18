@@ -7,6 +7,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
+	//from zhangbu
+	TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
+	TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
+
 	TFile* output = 0;
 	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root";
 	if(PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_PHP.root";
@@ -84,6 +88,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	}
 	// vm mass from daughters
 	TH1D* h_VM_mass[3][3][3];
+	//nuclear remnant mass
 	TH2D* h_Amass[3][3][3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
@@ -95,14 +100,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			}
 		}
 	}
-	//nuclear remnant mass
 	
-	for(int ibreak=0;ibreak<3;ibreak++){
-		for(int ivm=0;ivm<3;ivm++){
-			
-		}
-	}
-
 	TH2D* h_CHECK[3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		h_CHECK[ibreak] = new TH2D(Form("h_CHECK_%d",ibreak),";E (GeV); p_{miss} (GeV)",
@@ -185,6 +183,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		int pdglist[]={113,333,443};
 		int statuslist[]={2,2,2};
 		int acceptance[3]={1,1,1};
+		int ptacceptance[3]={1,1,1};
 		int hasvm[3]={0,0,0};
 		int pdgdecaylist[]={2212,2112,22,211,321,11,13,80000};
 		for(int j(0); j < nParticles; ++j ) {
@@ -253,6 +252,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				if(TMath::Abs(particle_daug1->GetEta())>4.0||
 					TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
 
+				if(particle_daug1->GetPt()<0.15||
+					particle_daug2->GetPt()<0.15) ptacceptance[ivm]=0;
+
 				h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
 				h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());
 				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug1->GetPhi());
@@ -273,40 +275,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		double nonconserve=(e_beam+A_beam-all_part).E();
 		h_CHECK[processindex]->Fill(nonconserve,pf3);
 		//for each vm; do...
-
-		//wrong mass:
-		if( (hasvm[0]&&acceptance[0]) || (hasvm[1]&&acceptance[1]) || (hasvm[2]&&acceptance[2]) ){
-			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
-			for(int ivm=0;ivm<3;ivm++){
-				if(vm_vect1[ivm].E()!=0) vm_vect1_new = vm_vect1[ivm];
-				if(vm_vect2[ivm].E()!=0) vm_vect2_new = vm_vect2[ivm];
-				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm];
-			}
-			if(vm_vect1_new.E()==0) continue;
-			for(int ivm=0;ivm<3;ivm++){
-				TVector3 temp_v1=vm_vect1_new.Vect();
-				TVector3 temp_v2=vm_vect2_new.Vect();
-				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
-				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
-				vm_vect_new = vm_vect1_new+vm_vect2_new;
-				double mass = vm_vect_new.M();
-				h_VM_mass[processindex][ivm][1]->Fill(mass);
-				for(int imethod=0;imethod<3;imethod++){
-					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect_new);
-					h_t_reco[processindex][ivm][imethod][1]->Fill( t_reco );
-					h_VM_t_mass[processindex][ivm][imethod][1]->Fill(mass,t_reco);
-					if(imethod==2)h_Amass[processindex][ivm][1]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect_new));
-				}
-			}
-
-		}
-		
-		//withPID case:
-		//...not yet.
-
 		//accurate mass
 		for(int ivm=0;ivm<3;ivm++){
-			if(acceptance[ivm]&&hasvm[ivm]) {
+			if(acceptance[ivm]&&ptacceptance[ivm]&&hasvm[ivm]) {
 				h_VM[processindex][ivm][4]->Fill(-t_hat);
 				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
 				h_VM_mass[processindex][ivm][0]->Fill(mass);
@@ -346,9 +317,99 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 			}
 		}
-		//end each vm;
+		//end each vm with correct mass;
+		//...
+		//wrong mass:
+		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
+			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
+				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
+			
+			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
+			for(int ivm=0;ivm<3;ivm++){
+				if(vm_vect1[ivm].E()!=0) vm_vect1_new = vm_vect1[ivm];
+				if(vm_vect2[ivm].E()!=0) vm_vect2_new = vm_vect2[ivm];
+				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm];
+			}
+			if(vm_vect1_new.E()==0) continue;
+			for(int ivm=0;ivm<3;ivm++){
+				TVector3 temp_v1=vm_vect1_new.Vect();
+				TVector3 temp_v2=vm_vect2_new.Vect();
+				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
+				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
+				vm_vect_new = vm_vect1_new+vm_vect2_new;
+				double mass = vm_vect_new.M();
+				h_VM_mass[processindex][ivm][1]->Fill(mass);
+				for(int imethod=0;imethod<3;imethod++){
+					double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect_new);
+					h_t_reco[processindex][ivm][imethod][1]->Fill( t_reco );
+					h_VM_t_mass[processindex][ivm][imethod][1]->Fill(mass,t_reco);
+					if(imethod==2)h_Amass[processindex][ivm][1]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect_new));
+				}
+			}
 
-	}
+		}
+		//repeat but with PID assignment
+		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
+			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
+				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
+
+			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
+			for(int ivm=0;ivm<3;ivm++){
+				if(vm_vect1[ivm].E()!=0) vm_vect1_new = vm_vect1[ivm];
+				if(vm_vect2[ivm].E()!=0) vm_vect2_new = vm_vect2[ivm];
+				if(vm_vect[ivm].E()!=0) vm_vect_new = vm_vect[ivm];
+			}
+			if(vm_vect1_new.E()==0) continue;
+			int ivm=-1;
+			if(hasvm[1]) ivm=1;
+			else if(hasvm[2]) ivm=2;
+			else if(hasvm[0]){
+
+				TVector3 temp_v1=vm_vect1_new.Vect();
+				TVector3 temp_v2=vm_vect2_new.Vect();
+				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[1]);
+				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[1]);
+				vm_vect_new = vm_vect1_new+vm_vect2_new;
+				if(fabs(vm_vect_new.M()-1.019)>0.020) ivm=0;//only under phi peak will be considered.
+				else{
+					if(TMath::Abs(vm_vect1_new.Eta())>1.0 
+						|| TMath::Abs(vm_vect2_new.Eta())>1.0 ){ 
+
+						ivm=1;//outside of PID region;
+					}
+					else{
+						double chi2_1 = giveMe_PIDChi2(vm_vect1_new, hist_pion);
+						double chi2_2 = giveMe_PIDChi2(vm_vect2_new, hist_pion);
+						if(chi2_1<4.6&&chi2_2<4.6 && chi2_1>0.&&chi2_2>0.){
+							ivm=1;//cannot distinguish.
+						}
+						else{
+							ivm=0;//yes they are pions.
+						}
+					}
+				}
+			}
+			else{
+				cout << "not sure about this! check" << endl;
+			}
+
+			TVector3 temp_v1=vm_vect1_new.Vect();
+			TVector3 temp_v2=vm_vect2_new.Vect();
+			vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
+			vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
+			vm_vect_new = vm_vect1_new+vm_vect2_new;
+			double mass = vm_vect_new.M();
+			h_VM_mass[processindex][ivm][2]->Fill(mass);
+			for(int imethod=0;imethod<3;imethod++){
+				double t_reco = giveMe_t(imethod,e_beam,e_scattered,A_beam,vm_vect_new);
+				h_t_reco[processindex][ivm][imethod][2]->Fill( t_reco );
+				h_VM_t_mass[processindex][ivm][imethod][2]->Fill(mass,t_reco);
+				if(imethod==2)h_Amass[processindex][ivm][2]->Fill(t_reco,giveMe_Amass(e_beam,e_scattered,A_beam,vm_vect_new));
+			}
+		}
+		//end
+
+	}//end event loop
 
 	output->Write();
 	output->Close();
