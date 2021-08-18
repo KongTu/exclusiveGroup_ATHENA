@@ -143,24 +143,12 @@ double giveMe_PIDChi2(TLorentzVector v, TH2D* hist){
 	TH1D* h_total_projection = (TH1D*) hist->ProjectionX("h_total_projection",1,1e8);//total y bins
 	int bin_of_interest = h_total_projection->FindBin(p);
 	TH1D* h_normChi2_1D = (TH1D*) hist->ProjectionY("h_normChi2_1D",bin_of_interest,bin_of_interest);
-	if(h_normChi2_1D->GetEntries()<26300) return -99;
-	double PID = h_normChi2_1D->GetRandom();
-
+	if(bin_of_interest<20) return -99;
+		double PID = h_normChi2_1D->GetRandom();
 	return PID;
 
 }
-// vector<TH1D*> generate1DPID(TH2D* hist){
-	
-// 	vector<TH1D*> hist_1D;
-// 	TH1D* h_total_projection = (TH1D*) hist->ProjectionX("h_total_projection",1,1e8);
-// 	int total_bins = h_total_projection->GetNbinsX();
-// 	for(int ibin=0;ibin<total_bins;ibin++){
-// 		TH1D* hist_temp = (TH1D*) hist->ProjectionX(Form("hist_temp_%d",ibin),ibin+1,ibin+1);
-// 		hist_1D.push_back( hist_temp );
-// 	}
 
-// 	return hist_1D;
-// }
 
 void printSTABLE(EventBeagle* event, int nParticles){
 	for(int j(0); j < nParticles; ++j ) {
