@@ -278,7 +278,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		//for each vm; do...
 		//accurate mass
 		for(int ivm=0;ivm<3;ivm++){
-			if(hasvm[ivm]&&fabs(vm_vect[ivm].Rap())<4.0) {//has vm and vm rapidity acceptance < 4.0
+			if(hasvm[ivm]&&fabs(vm_vect[ivm].Rapidity())<4.0) {//has vm and vm rapidity acceptance < 4.0
 				h_VM[processindex][ivm][4]->Fill(-t_hat); //true cross section
 				if(!acceptance[ivm]||!ptacceptance[ivm]) continue; //cut on daughters.
 				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
