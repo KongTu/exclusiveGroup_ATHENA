@@ -7,11 +7,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
-	//from zhangbu
-	TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
-	TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
-	TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
-
 	TFile* output = 0;
 	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root";
 	if(PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_PHP.root";

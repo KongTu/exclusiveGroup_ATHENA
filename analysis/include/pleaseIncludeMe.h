@@ -67,7 +67,7 @@ using namespace erhic;
 TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
 TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
 TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
-	
+//
 bool veto_this_event(EventBeagle* event, int nParticles){
 
 	bool veto = false;
@@ -113,7 +113,7 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 
 	return veto;
 }
-
+//
 double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 
 	double method_E = (-vm_vect-e_scattered+e_beam).Mag2();
@@ -136,11 +136,12 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	else if(option==2) return -method_L;
 	else return -99;
 }
+//
 double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
 	return p_beam_scattered.M()/MASS_AU197;
 }
-
+//
 double giveMe_PIDChi2(TLorentzVector v, TH2D* hist){
 
 	double p = v.P();
@@ -152,8 +153,7 @@ double giveMe_PIDChi2(TLorentzVector v, TH2D* hist){
 	return PID;
 
 }
-
-
+//
 void printSTABLE(EventBeagle* event, int nParticles){
 	for(int j(0); j < nParticles; ++j ) {
 		const erhic::ParticleMC* particle = event->GetTrack(j);
