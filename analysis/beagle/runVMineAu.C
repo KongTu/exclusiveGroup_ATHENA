@@ -369,7 +369,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
 				vm_vect_new = vm_vect1_new+vm_vect2_new;
 				
-				if(ivm==1){
+				if(ivm==1&&!hasvm[1]){
 					if(TMath::Abs(vm_vect1_new.Eta())<1.0 
 						&& TMath::Abs(vm_vect2_new.Eta())<1.0){
 						double chi2_1 = giveMe_PIDChi2(vm_vect1_new, hist_pion);
