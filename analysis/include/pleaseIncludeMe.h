@@ -63,7 +63,11 @@ double daughtermasslist[]={MASS_PION,MASS_KAON,MASS_ELECTRON};
 
 using namespace std;
 using namespace erhic;
-
+//from zhangbu
+TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
+TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
+TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
+	
 bool veto_this_event(EventBeagle* event, int nParticles){
 
 	bool veto = false;
