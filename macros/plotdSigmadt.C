@@ -3,9 +3,12 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
 	/* Beagle */
 
-	if( (name=="rho" && PHP_)||
+	if( ((name=="rho" && PHP_)||
 	 	(name=="phi" && PHP_)||
-	 	(name=="jpsi" && PHP_)) {
+	 	(name=="jpsi" && PHP_)) ||
+	 	((name=="rho_photo" && !PHP_)||
+	 	(name=="phi_photo" && !PHP_)||
+	 	(name=="jpsi_photo" && !PHP_)) ) {
 	 	
 	 	cout << "inconsistent settings between beagle and sartre! "<< endl;
 	 	return;
@@ -96,17 +99,17 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 	TH1D* h_VM_background = (TH1D*) h_VM[0][vm_index][4]->Clone("h_VM_background");
 	h_VM_background->Add(h_VM[1][vm_index][4],+1);
 
-	TH1D* h_VM_background_afterPhaseSpace = (TH1D*) h_t_reco[0][vm_index][0][2]->Clone("h_VM_background_afterPhaseSpace");
-	h_VM_background_afterPhaseSpace->Add(h_t_reco[1][vm_index][0][2],+1);
+	TH1D* h_VM_background_afterPhaseSpace = (TH1D*) h_t_reco[0][vm_index][0][0]->Clone("h_VM_background_afterPhaseSpace");
+	h_VM_background_afterPhaseSpace->Add(h_t_reco[1][vm_index][0][0],+1);
 
 	//adding elastic and dissoc. together.
-	measureXsection(name, h_VM_background, 0, t_hat_all->GetEntries(), PHP_);
+	measureXsection(name, h_VM_background, 0, t_hat_all->GetEntries(), PHP_, 0);
 	h_VM_background->Rebin(2);
 	h_VM_background->Scale(1./2);
 	h_VM_background->SetMarkerStyle(24);
 	h_VM_background->Draw("P SAME");
 
-	measureXsection(name, h_VM_background_afterPhaseSpace, 0, t_hat_all->GetEntries(), PHP_);
+	measureXsection(name, h_VM_background_afterPhaseSpace, 0, t_hat_all->GetEntries(), PHP_, 1);
 	h_VM_background_afterPhaseSpace->SetMarkerStyle(25);
 	h_VM_background_afterPhaseSpace->Draw("P SAME");
 
@@ -156,9 +159,7 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 	w6->AddEntry(h_VM_background_afterPhaseSpace, "BeAGLE w. daug. cut "+legendName+" incoherent ", "P");
 	w6->Draw("same");
 
-
-
-	// if(veto_) c1->Print("../figures/dsigmadt_2/veto_dsigma_dt_"+name+".pdf");
-	// else c1->Print("../figures/dsigmadt_2/dsigma_dt_"+name+".pdf");
+	if(veto_) c1->Print("../figures/dsigmadt_2/veto_dsigma_dt_"+name+".pdf");
+	else c1->Print("../figures/dsigmadt_2/dsigma_dt_"+name+".pdf");
 
 }

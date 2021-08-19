@@ -23,10 +23,16 @@ void setVM(TString name="rho"){
 		legendName="J/#psi";
 	}
 }
-void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_events=1e5, bool PHP_=false){
+double sigma_sartre_elect[]={3.58E+4,4.72E+3,199.};
+double sigma_sartre_photo[]{3.86E+5,2.42E+5,458.};
+
+void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_events=1e5, bool PHP_=false, bool cutOnDaug_=true){
 
 	//branching ratios
 	double BR_beagle_decay[] = {1.0,0.489,0.5};//branching ratio, depend on what we select in beagle
+	if(!cutOnDaug_) {
+		BR_beagle_decay[0]=1.0;BR_beagle_decay[1]={1.0};BR_beagle_decay[2]={1.0};
+	}
 	double BR_sartre_decay[] = {1.0,1.0,1.0};//branching ratio
 	//beagle constants
 	double beagle_lumi = 1e5/(34.4*197);//nanobarn

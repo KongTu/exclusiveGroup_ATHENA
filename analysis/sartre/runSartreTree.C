@@ -75,7 +75,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     nnames = 10;
     
     //output root files:
-    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_extra.root","RECREATE");
     //
     //   Histogram Booking (example)
     //
@@ -269,7 +269,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
                     chi2_1 = giveMe_PIDChi2(vmd1Vec_new, hist_kaon);
                     chi2_2 = giveMe_PIDChi2(vmd2Vec_new, hist_kaon);
                 }
-                if( chi2_1>4.6||chi2_2>4.6 ) continue;
+                // if( chi2_1>4.6||chi2_2>4.6 ) continue;
             }
 
             double mass = vmVec_new.M();
@@ -318,5 +318,5 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
     
     hfile.Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat.root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat_extra.root'." << endl;
 }
