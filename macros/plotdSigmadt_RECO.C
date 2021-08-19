@@ -17,17 +17,18 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 		}
 	}
 	//beagle
-	TH1D* h_t_reco[3][3][3];
-	TH2D* h_VM_t_mass[3][3][3];
+	TH1D* h_t_reco[3][3][3][3];
+	TH2D* h_VM_t_mass[3][3][3][3];
 	for(int ibreak=0;ibreak<3;ibreak++){
 		for(int ivm=0;ivm<3;ivm++){
 			for(int imethod=0;imethod<3;imethod++){
-				h_t_reco[ibreak][ivm][imethod] = (TH1D*) file_beagle->Get(Form("h_t_reco_%d_%d_%d",ibreak,ivm,imethod));
-				h_VM_t_mass[ibreak][ivm][imethod] = (TH2D*) file_beagle->Get(Form("h_VM_t_mass_%d_%d_%d",ibreak,ivm,imethod));
+				for(int imass=0;imass<3;imass++){
+					h_t_reco[ibreak][ivm][imethod][imass] = (TH1D*) file_beagle->Get(Form("h_t_reco_%d_%d_%d_%d",ibreak,ivm,imethod,imass));
+					h_VM_t_mass[ibreak][ivm][imethod][imass] = (TH2D*) file_beagle->Get(Form("h_VM_t_mass_%d_%d_%d_%d",ibreak,ivm,imethod,imass));
+				}
 			}
 		}
 	}
-
 
 	/* Sartre */
 
@@ -35,12 +36,14 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
 	// sartre
-    TH1D* h_t_reco_sartre[2][3];
-    TH2D* h_VM_t_mass_sartre[2][3];
+    TH1D* h_t_reco_sartre[2][3][3];
+    TH2D* h_VM_t_mass_sartre[2][3][3];
     for(int ibreak=0;ibreak<2;ibreak++){
         for(int imethod=0;imethod<3;imethod++){
-            h_t_reco_sartre[ibreak][imethod] = (TH1D*) file_sartre->Get(Form("h_t_reco_%d_%d",ibreak,imethod));
-			h_VM_t_mass_sartre[ibreak][imethod] = (TH2D*) file_sartre->Get(Form("h_VM_t_mass_%d_%d",ibreak,imethod));
+        	for(int imass=0;imass<3;imass++){
+				h_t_reco_sartre[ibreak][imethod][imass] = (TH1D*) file_sartre->Get(Form("h_t_reco_%d_%d_%d",ibreak,imethod,imass));
+				h_VM_t_mass_sartre[ibreak][imethod][imass] = (TH2D*) file_sartre->Get(Form("h_VM_t_mass_%d_%d_%d",ibreak,imethod,imass));
+        	}
         }
     }
 
@@ -65,18 +68,18 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	base1->GetYaxis()->SetNdivisions(5,5,0);
 	base1->Draw();
 
-	measureXsection(name, h_t_reco_sartre[0][method], 1);
-	h_t_reco_sartre[0][method]->SetLineColor(kBlue);
-	h_t_reco_sartre[0][method]->SetLineWidth(2);
-	h_t_reco_sartre[0][method]->Draw(" hist same");
+	measureXsection(name, h_t_reco_sartre[0][method][0], 1);
+	h_t_reco_sartre[0][method][0]->SetLineColor(kBlue);
+	h_t_reco_sartre[0][method][0]->SetLineWidth(2);
+	h_t_reco_sartre[0][method][0]->Draw(" hist same");
 
-	measureXsection(name, h_t_reco_sartre[1][method], 1);
-	h_t_reco_sartre[1][method]->SetLineColor(kRed);
-	h_t_reco_sartre[1][method]->SetLineWidth(2);
-	h_t_reco_sartre[1][method]->Draw(" hist same");
+	measureXsection(name, h_t_reco_sartre[1][method][0], 1);
+	h_t_reco_sartre[1][method][0]->SetLineColor(kRed);
+	h_t_reco_sartre[1][method][0]->SetLineWidth(2);
+	h_t_reco_sartre[1][method][0]->Draw(" hist same");
 
-	TH1D* h_VM_background = (TH1D*) h_t_reco[0][vm_index][method]->Clone("h_VM_background");
-	h_VM_background->Add(h_t_reco[1][vm_index][method],+1);
+	TH1D* h_VM_background = (TH1D*) h_t_reco[0][vm_index][method][0]->Clone("h_VM_background");
+	h_VM_background->Add(h_t_reco[1][vm_index][method][0],+1);
 	//adding elastic and dissoc. together.
 	measureXsection(name, h_VM_background, 0, t_hat_all->GetEntries(),0);
 	h_VM_background->SetMarkerStyle(24);
@@ -87,8 +90,8 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	w5->SetFillColor(0);
 	w5->SetTextSize(18);
 	w5->SetTextFont(45);
-	w5->AddEntry(h_t_reco_sartre[0][method], "Sartre "+legendName+" coherent  ", "PL");
-	w5->AddEntry(h_t_reco_sartre[1][method], "Sartre "+legendName+" incoherent  ", "PL");
+	w5->AddEntry(h_t_reco_sartre[0][method][0], "Sartre "+legendName+" coherent  ", "PL");
+	w5->AddEntry(h_t_reco_sartre[1][method][0], "Sartre "+legendName+" incoherent  ", "PL");
 	w5->AddEntry(h_VM_background, "BeAGLE "+legendName+" incoherent ", "P");
 	w5->Draw("same");
 
@@ -111,7 +114,7 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	r44->SetTextColor(kBlack);
 	r44->Draw("same");
 
-	c1->Print("../figures/methods/dsigma_dt_"+name+"_Method"+std::to_string(method)+".pdf");
+	// c1->Print("../figures/methods/dsigma_dt_"+name+"_Method"+std::to_string(method)+".pdf");
 
 	TCanvas* c2 = new TCanvas("c2","c2",1,1,600,600);
 	gPad->SetLogy(0);
@@ -139,30 +142,30 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	base2->Draw();
 	
 	for(int imethod=0;imethod<3;imethod++){
-		h_t_reco[processindex][vm_index][imethod]->SetMarkerStyle(24+imethod);
+		h_t_reco[processindex][vm_index][imethod][0]->SetMarkerStyle(24+imethod);
 	}
-	h_t_reco[processindex][vm_index][0]->SetMarkerColor(kBlack);
-	h_t_reco[processindex][vm_index][1]->SetMarkerColor(kBlue);
-	h_t_reco[processindex][vm_index][2]->SetMarkerColor(kRed);
-	h_t_reco[processindex][vm_index][0]->DrawNormalized("PE same");
-	h_t_reco[processindex][vm_index][1]->DrawNormalized("PE same");
-	h_t_reco[processindex][vm_index][2]->DrawNormalized("PE same");
+	h_t_reco[processindex][vm_index][0][0]->SetMarkerColor(kBlack);
+	h_t_reco[processindex][vm_index][1][0]->SetMarkerColor(kBlue);
+	h_t_reco[processindex][vm_index][2][0]->SetMarkerColor(kRed);
+	h_t_reco[processindex][vm_index][0][0]->DrawNormalized("PE same");
+	h_t_reco[processindex][vm_index][1][0]->DrawNormalized("PE same");
+	h_t_reco[processindex][vm_index][2][0]->DrawNormalized("PE same");
 
 	TLegend *w6 = new TLegend(0.53,0.74,0.73,0.87);
 	w6->SetLineColor(kWhite);
 	w6->SetFillColor(0);
 	w6->SetTextSize(18);
 	w6->SetTextFont(45);
-	w6->AddEntry(h_t_reco[processindex][vm_index][0], "BeAGLE "+legendName+" Method E  ", "PL");
-	w6->AddEntry(h_t_reco[processindex][vm_index][1], "BeAGLE "+legendName+" Method A  ", "PL");
-	w6->AddEntry(h_t_reco[processindex][vm_index][2], "BeAGLE "+legendName+" Method L ", "PL");
+	w6->AddEntry(h_t_reco[processindex][vm_index][0][0], "BeAGLE "+legendName+" Method E  ", "PL");
+	w6->AddEntry(h_t_reco[processindex][vm_index][1][0], "BeAGLE "+legendName+" Method A  ", "PL");
+	w6->AddEntry(h_t_reco[processindex][vm_index][2][0], "BeAGLE "+legendName+" Method L ", "PL");
 	w6->Draw("same");
-	if(processindex==0){
-		c2->Print("../figures/methods/beagle_"+name+"_process_91.pdf");
-	}
-	else{
-		c2->Print("../figures/methods/beagle_"+name+"_process_93.pdf");
-	}
+	// if(processindex==0){
+	// 	c2->Print("../figures/methods/beagle_"+name+"_process_91.pdf");
+	// }
+	// else{
+	// 	c2->Print("../figures/methods/beagle_"+name+"_process_93.pdf");
+	// }
 	TCanvas* c3 = new TCanvas("c3","c3",1,1,600,600);
 	gPad->SetLogy(1);
 	gPad->SetTicks();
@@ -189,7 +192,7 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	base3->Draw();
 	TH1D* hist_temp[3];
 	for(int imethod=0;imethod<3;imethod++){
-		hist_temp[imethod] = (TH1D*) h_t_reco_sartre[coh][imethod]->Clone(Form("hist_temp_%d",imethod));
+		hist_temp[imethod] = (TH1D*) h_t_reco_sartre[coh][imethod][0]->Clone(Form("hist_temp_%d",imethod));
 		hist_temp[imethod]->SetLineStyle(1+imethod);
 		hist_temp[imethod]->SetLineWidth(2);
 	}
@@ -209,11 +212,11 @@ void plotdSigmadt_RECO(TString name="phi", int method=0){
 	w7->AddEntry(hist_temp[1], "Sartre "+legendName+" Method A  ", "PL");
 	w7->AddEntry(hist_temp[2], "Sartre "+legendName+" Method L ", "PL");
 	w7->Draw("same");
-	if(coh==0){
-		c3->Print("../figures/methods/sartre_"+name+"_coherent.pdf");
-	}else{
-		c3->Print("../figures/methods/sartre_"+name+"_incoherent.pdf");
-	}
+	// if(coh==0){
+	// 	c3->Print("../figures/methods/sartre_"+name+"_coherent.pdf");
+	// }else{
+	// 	c3->Print("../figures/methods/sartre_"+name+"_incoherent.pdf");
+	// }
 	
 
 
