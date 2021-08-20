@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_=false, bool PHP_ = false){
+void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, int method=0, int coh = 1){
 
 	setVM(name);
 	/* Beagle */
@@ -62,6 +62,18 @@ void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_
 		file_sartre_all[1] = new TFile("../rootfiles/sartre_phi_bnonsat.root");
 		file_sartre_all[2] = new TFile("../rootfiles/sartre_jpsi_bnonsat.root");
 	}
+	//sartre wrong mass setting in different rootfiles unfortunately.
+	TFile* file_sartre_all_wrongmass[3];
+	if(PHP_){
+		file_sartre_all_wrongmass[0] = new TFile("../rootfiles/sartre_rho_photo_bnonsat_extra.root");
+		file_sartre_all_wrongmass[1] = new TFile("../rootfiles/sartre_phi_photo_bnonsat_extra.root");
+		file_sartre_all_wrongmass[2] = new TFile("../rootfiles/sartre_jpsi_photo_bnonsat_extra.root");
+	}
+	else{
+		file_sartre_all_wrongmass[0] = new TFile("../rootfiles/sartre_rho_bnonsat_extra.root");
+		file_sartre_all_wrongmass[1] = new TFile("../rootfiles/sartre_phi_bnonsat_extra.root");
+		file_sartre_all_wrongmass[2] = new TFile("../rootfiles/sartre_jpsi_bnonsat_extra.root");
+	}
 	
 
 	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
@@ -74,11 +86,17 @@ void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_
 	// sartre
     TH1D* h_t_reco_sartre[2][3][3];
     TH2D* h_VM_t_mass_sartre[2][3][3];
+    TH2D* h_VM_t_mass_sartre_mixed[2][3][3][3];
+    TH2D* h_VM_t_mass_sartre_wrong[2][3][3][3];
     for(int ibreak=0;ibreak<2;ibreak++){
         for(int imethod=0;imethod<3;imethod++){
         	for(int imass=0;imass<3;imass++){
 				h_t_reco_sartre[ibreak][imethod][imass] = (TH1D*) file_sartre->Get(Form("h_t_reco_%d_%d_%d",ibreak,imethod,imass));
 				h_VM_t_mass_sartre[ibreak][imethod][imass] = (TH2D*) file_sartre->Get(Form("h_VM_t_mass_%d_%d_%d",ibreak,imethod,imass));
+        		for(int ifile=0;ifile<3;ifile++){
+	    			h_VM_t_mass_sartre_mixed[ibreak][imethod][imass][ifile] = (TH2D*) file_sartre_all[ifile]->Get(Form("h_VM_t_mass_%d_%d_%d",ibreak,imethod,imass));
+	    			h_VM_t_mass_sartre_wrong[ibreak][imethod][imass][ifile] = (TH2D*) file_sartre_all_wrongmass[ifile]->Get(Form("h_VM_t_mass_%d_%d_%d",ibreak,imethod,imass));
+	    		}
         	}
         }
     }
@@ -91,8 +109,9 @@ void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_
     		for(int ifile=0;ifile<3;ifile++){
     			h_VM_mass_sartre_mixed[ibreak][imass][ifile] = (TH1D*) file_sartre_all[ifile]->Get(Form("h_VM_mass_%d_%d",ibreak,imass));
 	    		
-	    		if(PHP_) h_VM_mass_sartre_mixed[ibreak][imass][ifile]->Scale(sigma_sartre_photo[ifile]);
-	    		else h_VM_mass_sartre_mixed[ibreak][imass][ifile]->Scale(sigma_sartre_elect[ifile]);
+	    		// if(PHP_) h_VM_mass_sartre_mixed[ibreak][imass][ifile]->Scale(sigma_sartre_photo[ifile]);
+	    		// else h_VM_mass_sartre_mixed[ibreak][imass][ifile]->Scale(sigma_sartre_elect[ifile]);
+	    		
 	    		h_VM_mass_sartre_mixed[ibreak][imass][ifile]->SetLineColor(kBlue);
 	    		h_VM_mass_sartre_mixed[ibreak][imass][ifile]->SetMarkerStyle(28);
     		
@@ -158,7 +177,9 @@ void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_
 	r44_1->SetTextColor(kBlack);
 	if(PHP_) r44_1->Draw("same");
 	else r44->Draw("same");
+	c1_1->Print("../figures/mass/"+name+"_mass.pdf");
 
+	if(name!="phi"&&name!="phi_photo") return;
 
 	TCanvas* c2 = new TCanvas("c2","c2",1,1,600,600);
 	gPad->SetLogy(1);
@@ -167,17 +188,35 @@ void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_
 	gPad->SetBottomMargin(0.15);
 	TH1D* base2 = (TH1D*) base1->Clone("base2");
 	base2->GetYaxis()->SetTitle("~ cross section");
-	base2->GetYaxis()->SetRangeUser(1e4,1e12);
+	base2->GetYaxis()->SetRangeUser(1e0,1e7);
 	base2->Draw();
+	TString name_temp = "rho";
+	if(PHP_) name_temp = "rho_photo";
+	measureXsection(name_temp,h_VM_mass_sartre_mixed[coh][sartre_vm_index][0], 1);
 	h_VM_mass_sartre_mixed[coh][sartre_vm_index][0]->Draw("hist same");
+	name_temp = "phi";
+	if(PHP_) name_temp = "phi_photo";
+	measureXsection(name_temp,h_VM_mass_sartre_mixed[coh][sartre_vm_index][1], 1);
 	h_VM_mass_sartre_mixed[coh][sartre_vm_index][1]->Draw("hist same");
+	name_temp = "jpsi";
+	if(PHP_) name_temp = "jpsi_photo";
+	measureXsection(name_temp,h_VM_mass_sartre_mixed[coh][sartre_vm_index][2], 1);
 	h_VM_mass_sartre_mixed[coh][sartre_vm_index][2]->Draw("hist same");
+	setVM(name);
 
 	if(PHP_) r44_1->Draw("same");
 	else r44->Draw("same");
-	w5->Draw("same");
+	TLegend *w4 = new TLegend(0.53,0.8,0.73,0.87);
+	w4->SetLineColor(kWhite);
+	w4->SetFillColor(0);
+	w4->SetTextSize(18);
+	w4->SetTextFont(45);
+	w4->AddEntry(h_VM_mass_sartre_mixed[coh][sartre_vm_index][0], "Sartre "+legendName+" w. PID  ", "L");
+	// w4->AddEntry(h_VM_mass[processindex][beagle_vm_index][1], "BeAGLE "+legendName+" w. PID  ", "L");
+	w4->Draw("same");
 	r42->Draw("same");
 	r43->Draw("same");
+	c2->Print("../figures/mass/sartre_mass_mixing_"+name+".pdf");
 
 	TCanvas* c3 = new TCanvas("c3","c3",1,1,600,600);
 	gPad->SetLogy(1);
@@ -206,5 +245,172 @@ void plotVM_mass_and_t(TString name="phi", int coh = 1, int method=0, bool veto_
 	w6->Draw("same");
 	r42->Draw("same");
 	r43->Draw("same");
+	c3->Print("../figures/mass/beagle_mass_mixing_"+name+".pdf");
+
+	
+	//only plotting phi
+	TCanvas* c11 = new TCanvas("c11","c11",1,1,600,600);
+	gPad->SetLogy(1);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.15);
+	gPad->SetBottomMargin(0.15);
+	TH1D* base11 = makeHist("base11", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (nb/GeV^{2}) ", 100,0,0.18,kBlack);
+	
+	if(name=="phi"){base11->GetYaxis()->SetRangeUser(1e-2, 1e7);}
+	if(name=="phi_photo"){base11->GetYaxis()->SetRangeUser(1e-1, 1e8);}
+
+	base11->GetXaxis()->SetTitleColor(kBlack);
+	TGaxis::SetMaxDigits(2);
+	fixedFontHist1D(base11,1.,1.1);
+	base11->GetYaxis()->SetTitleSize(base11->GetYaxis()->GetTitleSize()*1.5);
+	base11->GetXaxis()->SetTitleSize(base11->GetXaxis()->GetTitleSize()*1.5);
+	base11->GetYaxis()->SetLabelSize(base11->GetYaxis()->GetLabelSize()*1.5);
+	base11->GetXaxis()->SetLabelSize(base11->GetXaxis()->GetLabelSize()*1.5);
+	base11->GetXaxis()->SetNdivisions(4,4,0);
+	base11->GetYaxis()->SetNdivisions(5,5,0);
+	base11->Draw();
+
+	//coherent
+	TH1D* h_mass_for_binning = (TH1D*) h_VM_t_mass_sartre[0][method][1]->ProjectionX("h_mass_for_binning",1,1000);
+	int bin_lower = h_mass_for_binning->FindBin(1.019-0.02);
+	int bin_upper = h_mass_for_binning->FindBin(1.019+0.02);
+
+	//true phi sample, with phi ->kk mass.
+	TH1D* h_t_from_mass_coherent = (TH1D*) h_VM_t_mass_sartre[0][method][sartre_vm_index]->ProjectionY("h_t_from_mass_coherent",bin_lower,bin_upper);
+	h_t_from_mass_coherent->SetLineColor(kBlue);
+	measureXsection(name, h_t_from_mass_coherent, 1);
+	h_t_from_mass_coherent->Draw("hist same");
+	
+	//use mixed
+	TH1D* h_t_from_mass_coherent_mixed_rho = (TH1D*) h_VM_t_mass_sartre_mixed[0][method][sartre_vm_index][0]->ProjectionY("h_t_from_mass_coherent_mixed_rho",bin_lower,bin_upper);
+	name_temp = "rho";
+	if(PHP_) name_temp = "rho_photo";
+	measureXsection(name_temp, h_t_from_mass_coherent_mixed_rho, 1);
+	
+	TH1D* h_t_from_mass_coherent_mixed_phi = (TH1D*) h_VM_t_mass_sartre_mixed[0][method][sartre_vm_index][1]->ProjectionY("h_t_from_mass_coherent_mixed_phi",bin_lower,bin_upper);
+	name_temp = "phi";
+	if(PHP_) name_temp = "phi_photo";
+	measureXsection(name_temp, h_t_from_mass_coherent_mixed_phi, 1);
+
+	h_t_from_mass_coherent_mixed_phi->SetLineColor(kBlack);
+	h_t_from_mass_coherent_mixed_phi->SetMarkerStyle(25);
+	h_t_from_mass_coherent_mixed_phi->Add(h_t_from_mass_coherent_mixed_rho,+1);
+	h_t_from_mass_coherent_mixed_phi->Draw("P same");
+
+	//using wrong.
+	TH1D* h_t_from_mass_coherent_wrong_rho = (TH1D*) h_VM_t_mass_sartre_wrong[0][method][sartre_vm_index][0]->ProjectionY("h_t_from_mass_coherent_wrong_rho",bin_lower,bin_upper);
+	name_temp = "rho";
+	if(PHP_) name_temp = "rho_photo";
+	measureXsection(name_temp, h_t_from_mass_coherent_wrong_rho, 1);
+
+	TH1D* h_t_from_mass_coherent_wrong_phi = (TH1D*) h_VM_t_mass_sartre_wrong[0][method][sartre_vm_index][1]->ProjectionY("h_t_from_mass_coherent_wrong_phi",bin_lower,bin_upper);
+	name_temp = "phi";
+	if(PHP_) name_temp = "phi_photo";
+	measureXsection(name_temp, h_t_from_mass_coherent_wrong_phi, 1);
+
+	h_t_from_mass_coherent_wrong_phi->SetMarkerColor(kRed);
+	h_t_from_mass_coherent_wrong_phi->SetLineColor(kRed);
+	h_t_from_mass_coherent_wrong_phi->SetMarkerStyle(25);
+	h_t_from_mass_coherent_wrong_phi->Add(h_t_from_mass_coherent_wrong_rho,+1);
+	h_t_from_mass_coherent_wrong_phi->Draw("p same");
+
+	setVM(name);
+	
+	//incoherent
+	TH1D* h_t_from_truemass_incoherent_91 = (TH1D*) h_VM_t_mass[0][vm_index][method][0]->ProjectionY("h_t_from_truemass_incoherent_91",bin_lower,bin_upper);
+	TH1D* h_t_from_truemass_incoherent_93 = (TH1D*) h_VM_t_mass[1][vm_index][method][0]->ProjectionY("h_t_from_truemass_incoherent_93",bin_lower,bin_upper);
+	h_t_from_truemass_incoherent_91->Add(h_t_from_truemass_incoherent_93,+1);
+	measureXsection(name, h_t_from_truemass_incoherent_91, 0, t_hat_all->GetEntries(), PHP_);
+	h_t_from_truemass_incoherent_91->Rebin(2);
+	h_t_from_truemass_incoherent_91->Scale(1./2);
+	h_t_from_truemass_incoherent_91->SetMarkerStyle(24);
+	h_t_from_truemass_incoherent_91->SetMarkerStyle(20);
+	h_t_from_truemass_incoherent_91->SetLineStyle(2);
+	h_t_from_truemass_incoherent_91->SetLineWidth(2);
+	h_t_from_truemass_incoherent_91->SetLineColor(kRed);
+	h_t_from_truemass_incoherent_91->Draw("hist same");
+
+	//incoherent wrong mass
+	TH1D* h_t_from_wrongmass_incoherent_91 = (TH1D*) h_VM_t_mass[0][vm_index][method][1]->ProjectionY("h_t_from_wrongmass_incoherent_91",bin_lower,bin_upper);
+	TH1D* h_t_from_wrongmass_incoherent_93 = (TH1D*) h_VM_t_mass[1][vm_index][method][1]->ProjectionY("h_t_from_wrongmass_incoherent_93",bin_lower,bin_upper);
+	h_t_from_wrongmass_incoherent_91->Add(h_t_from_wrongmass_incoherent_93,+1);
+	measureXsection(name, h_t_from_wrongmass_incoherent_91, 0, t_hat_all->GetEntries(), PHP_);
+	h_t_from_wrongmass_incoherent_91->Rebin(2);
+	h_t_from_wrongmass_incoherent_91->Scale(1./2);
+	h_t_from_wrongmass_incoherent_91->SetMarkerStyle(24);
+	h_t_from_wrongmass_incoherent_91->SetMarkerColor(kRed);
+	h_t_from_wrongmass_incoherent_91->Draw("P same");
+
+	//incoherent pid mass
+	TH1D* h_t_from_PIDmass_incoherent_91 = (TH1D*) h_VM_t_mass[0][vm_index][method][2]->ProjectionY("h_t_from_PIDmass_incoherent_91",bin_lower,bin_upper);
+	TH1D* h_t_from_PIDmass_incoherent_93 = (TH1D*) h_VM_t_mass[1][vm_index][method][2]->ProjectionY("h_t_from_PIDmass_incoherent_93",bin_lower,bin_upper);
+	h_t_from_PIDmass_incoherent_91->Add(h_t_from_PIDmass_incoherent_93,+1);
+	measureXsection(name, h_t_from_PIDmass_incoherent_91, 0, t_hat_all->GetEntries(), PHP_);
+	h_t_from_PIDmass_incoherent_91->Rebin(2);
+	h_t_from_PIDmass_incoherent_91->Scale(1./2);
+	h_t_from_PIDmass_incoherent_91->SetMarkerStyle(24);
+	h_t_from_PIDmass_incoherent_91->SetMarkerColor(kBlue);
+	h_t_from_PIDmass_incoherent_91->Draw("P same");
+
+	TLegend *w7 = new TLegend(0.43,0.65,0.66,0.8);
+	w7->SetLineColor(kWhite);
+	w7->SetFillColor(0);
+	w7->SetTextSize(18);
+	w7->SetTextFont(45);
+	w7->AddEntry(h_t_from_mass_coherent, "Sartre "+legendName+" coh. truth  ", "L");
+	w7->AddEntry(h_t_from_mass_coherent_wrong_phi, "Sartre "+legendName+" coh. mixed NO PID  ", "PL");
+	w7->AddEntry(h_t_from_mass_coherent_mixed_phi, "Sartre "+legendName+" coh. mixed but w. PID  ", "PL");
+	w7->AddEntry(h_t_from_truemass_incoherent_91, "BeAGLE "+legendName+" incoh. truth  ", "L");
+	w7->AddEntry(h_t_from_wrongmass_incoherent_91, "BeAGLE "+legendName+" incoh mixed NO PID  ", "PL");
+	w7->AddEntry(h_t_from_PIDmass_incoherent_91, "BeAGLE "+legendName+" incoh mixed w. PID  ", "PL");
+	w7->Draw("same");
+
+	r42->Draw("same");
+	r43->Draw("same");
+	if(PHP_) r44_1->Draw("same");
+	else r44->Draw("same");
+
+	if(veto_) c11->Print("../figures/dsigmadt_mass/veto_dsigma_dt_"+name+".pdf");
+	else c11->Print("../figures/dsigmadt_mass/dsigma_dt_"+name+".pdf");
+
+	TCanvas* c22 = new TCanvas("c22","c22",1,1,600,600);
+	gPad->SetLogy(0);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.15);
+	gPad->SetBottomMargin(0.15);
+	TH1D* base22 = makeHist("base22", "", "|#it{t} | (GeV^{2})", "Ratio to truth ", 100,0,0.18,kBlack);
+	if(name=="phi"){base22->GetYaxis()->SetRangeUser(0, 2);}
+	if(name=="phi_photo"){base22->GetYaxis()->SetRangeUser(0, 2);}
+	base22->GetXaxis()->SetTitleColor(kBlack);
+	TGaxis::SetMaxDigits(2);
+	fixedFontHist1D(base22,1.,1.1);
+	base22->GetYaxis()->SetTitleSize(base22->GetYaxis()->GetTitleSize()*1.5);
+	base22->GetXaxis()->SetTitleSize(base22->GetXaxis()->GetTitleSize()*1.5);
+	base22->GetYaxis()->SetLabelSize(base22->GetYaxis()->GetLabelSize()*1.5);
+	base22->GetXaxis()->SetLabelSize(base22->GetXaxis()->GetLabelSize()*1.5);
+	base22->GetXaxis()->SetNdivisions(4,4,0);
+	base22->GetYaxis()->SetNdivisions(5,5,0);
+	base22->Draw();
+
+	TH1D* ratio_1 = (TH1D*) h_t_from_mass_coherent_wrong_phi->Clone("ratio_1");
+	TH1D* ratio_2 = (TH1D*) h_t_from_mass_coherent_mixed_phi->Clone("ratio_2");
+	ratio_1->Divide(h_t_from_mass_coherent);
+	ratio_2->Divide(h_t_from_mass_coherent);
+
+	ratio_1->Draw("Psame");
+	ratio_2->Draw("Psame");
+
+	TLegend *w8 = new TLegend(0.43,0.32,0.66,0.4);
+	w8->SetLineColor(kWhite);
+	w8->SetFillColor(0);
+	w8->SetTextSize(18);
+	w8->SetTextFont(45);
+	w8->AddEntry(ratio_1, "Sartre "+legendName+" coh. mixed NO PID  ", "PL");
+	w8->AddEntry(ratio_2, "Sartre "+legendName+" coh. mixed w. PID  ", "PL");
+
+	w8->Draw("same");
+	if(veto_) c22->Print("../figures/dsigmadt_mass/ratio_veto_dsigma_dt_"+name+".pdf");
+	else c22->Print("../figures/dsigmadt_mass/ratio_dsigma_dt_"+name+".pdf");
+
 
 }
