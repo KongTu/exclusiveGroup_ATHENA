@@ -14,6 +14,7 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 	if(veto_&&PHP_) outputROOT="../../rootfiles/testBreakUps_w_vetos_PHP.root";
 	output = new TFile(outputROOT,"RECREATE");
 	
+	TH1D* hist_multiplicity = new TH1D("hist_multiplicity",";N",50,-0.5,49.5);
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.2);
 	TH1D* h_trueT_91 = new TH1D("h_trueT_91",";-t (GeV^{2})", 100,0,0.2);
 	TH1D* h_trueT_91_after = new TH1D("h_trueT_91_after",";-t (GeV^{2})", 100,0,0.2);
@@ -83,6 +84,16 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		}
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
+		
+		int multiplicity=0;
+		for(int j(0); j < nParticles; ++j ) {
+			const erhic::ParticleMC* particle = event->GetTrack(j);
+			int status = particle->GetStatus();
+			if( status!= 1 ) continue;
+			multiplicity++;
+		}
+		hist_multiplicity->Fill(multiplicity);
+
 		//veto by step
 		for(int istep=0;istep<6;istep++){
 			if( !veto_this_event(event, nParticles,istep)&&processindex==0 ) h_veto_step_91[istep]->Fill(-t_hat);
