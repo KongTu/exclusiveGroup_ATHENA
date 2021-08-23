@@ -85,8 +85,8 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 		//veto by step
 		for(int istep=0;istep<6;istep++){
-			if( !veto_this_event(event, nParticles,istep) ) h_veto_step_91[istep]->Fill(-t_hat);
-			if( !veto_this_event(event, nParticles,istep) ) h_veto_step_93[istep]->Fill(-t_hat);
+			if( !veto_this_event(event, nParticles,istep)&&processindex==0 ) h_veto_step_91[istep]->Fill(-t_hat);
+			if( !veto_this_event(event, nParticles,istep)&&processindex==1 ) h_veto_step_93[istep]->Fill(-t_hat);
 		}
 		//perform veto.
 		if( veto_ ){
