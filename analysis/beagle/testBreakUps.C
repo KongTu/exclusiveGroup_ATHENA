@@ -15,6 +15,8 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 	output = new TFile(outputROOT,"RECREATE");
 	
 	TH1D* hist_multiplicity = new TH1D("hist_multiplicity",";N",50,-0.5,49.5);
+	TH1D* hist_multiplicity_91 = new TH1D("hist_multiplicity_91",";N",50,-0.5,49.5);
+	TH1D* hist_multiplicity_93 = new TH1D("hist_multiplicity_93",";N",50,-0.5,49.5);
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.2);
 	TH1D* h_trueT_91 = new TH1D("h_trueT_91",";-t (GeV^{2})", 100,0,0.2);
 	TH1D* h_trueT_91_after = new TH1D("h_trueT_91_after",";-t (GeV^{2})", 100,0,0.2);
@@ -94,6 +96,8 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 			if(TMath::Abs(eta)<4.0 && pt>0.15 && charge!=0) multiplicity++;
 		}
 		hist_multiplicity->Fill(multiplicity);
+		if(processindex==0) hist_multiplicity_91->Fill(multiplicity);
+		if(processindex==1) hist_multiplicity_93->Fill(multiplicity);
 
 		//veto by step
 		for(int istep=0;istep<6;istep++){
