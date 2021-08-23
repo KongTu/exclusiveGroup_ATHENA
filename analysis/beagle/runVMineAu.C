@@ -162,7 +162,7 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		else if( event_process==93) processindex=1;
 		else processindex=2;
 		if(PHP_){
-			if( trueQ2 > 0.5 || trueQ2 < 0.1 ) continue;
+			if( trueQ2 > 0.2 ) continue;
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
