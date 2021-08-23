@@ -19,7 +19,14 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 	TH1D* h_trueT_91_after = new TH1D("h_trueT_91_after",";-t (GeV^{2})", 100,0,0.2);
 	TH1D* h_trueT_93 = new TH1D("h_trueT_93",";-t (GeV^{2})", 100,0,0.2);
 	TH1D* h_trueT_93_after = new TH1D("h_trueT_93_after",";-t (GeV^{2})", 100,0,0.2);
-
+	//Save each step:
+	TH1D* h_veto_step_91[6];
+	TH1D* h_veto_step_93[6];
+		for(int ihist=0;ihist<6;ihist++){
+			h_veto_step_91[ihist] = new TH1D(Form("h_veto_step_91_%d",ihist),";-t (GeV^{2})", 100,0,0.2);
+			h_veto_step_93[ihist] = new TH1D(Form("h_veto_step_93_%d",ihist),";-t (GeV^{2})", 100,0,0.2);
+		}
+	//
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -76,11 +83,15 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		}
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
+		//veto by step
+		for(int istep=0;istep<6;istep++){
+			if( !veto_this_event(event, nParticles,istep) ) h_veto_step_91[istep]->Fill(-t_hat);
+			if( !veto_this_event(event, nParticles,istep) ) h_veto_step_93[istep]->Fill(-t_hat);
+		}
 		//perform veto.
 		if( veto_ ){
 			if( veto_this_event(event, nParticles) ) continue;
 		}
-		
 		if(processindex==0) h_trueT_91_after->Fill(-t_hat);
 		if(processindex==1) h_trueT_93_after->Fill(-t_hat);
 		

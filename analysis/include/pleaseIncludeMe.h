@@ -67,10 +67,10 @@ using namespace erhic;
 TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
 TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
 TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
-//
-bool veto_this_event(EventBeagle* event, int nParticles){
 
-	bool veto = false;
+bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
+
+	bool veto[] = {false,false,false,false,false,false};
 	int multiplicity=0;
 	for(int j(0); j < nParticles; ++j ) {
 		const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -90,17 +90,17 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 
 		if( status!= 1 ) continue;
 		if( charge==0 ){//neutral particles, pi0, photons, neutrons
-			if(theta<4.5 && mom>0.05 ) veto=true;
-			if(theta>5.5 && theta<20. && mom>0.05) veto=true;
+			if(theta<4.5 && mom>0.05 ) veto[1]=true;
+			if(theta>5.5 && theta<20. && mom>0.05) veto[2]=true;
 		}
 		else if( charge!=0 ){//charged particles
 			double rigidity_ratio = (2.* mass)/(MASS_PROTON+MASS_NEUTRON) / TMath::Abs(charge);
 			rigidity_ratio = rigidity_ratio / 2.5;//Au beam rigidity
 			if( theta>0. && theta<5.0 
-				&& rigidity_ratio>0.45 && rigidity_ratio<0.65 ) veto=true;
+				&& rigidity_ratio>0.45 && rigidity_ratio<0.65 ) veto[3]=true;
 			if( theta>0. && theta<5.0 
-				&& rigidity_ratio>0.7 && rigidity_ratio<0.95 ) veto=true;
-			if( theta>5.5 && theta<20.0 ) veto=true;
+				&& rigidity_ratio>0.7 && rigidity_ratio<0.95 ) veto[4]=true;
+			if( theta>5.5 && theta<20.0 ) veto[5]=true;
 
 			if(TMath::Abs(eta)<4.0 && pt>0.15) multiplicity++;
 		}
@@ -109,9 +109,11 @@ bool veto_this_event(EventBeagle* event, int nParticles){
 		}
 	}
 
-	if(multiplicity>5||multiplicity<3) veto=true;
+	if(multiplicity>5||multiplicity<3) veto[0]=true;//first veto
 
-	return veto;
+	bool anyVeto = (veto[0]||veto[1]||veto[2]||veto[3]||veto[4]||veto[5]);
+	if( step_ == -1 ) return anyVeto;
+	else return veto[step_];
 }
 //
 double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
