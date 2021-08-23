@@ -67,7 +67,7 @@ using namespace erhic;
 TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
 TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
 TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
-
+TH1D* hist_multiplicity = new TH1D("hist_multiplicity",";N",50,-0.5,49.5);
 bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 
 	bool veto[] = {false,false,false,false,false,false};
@@ -108,7 +108,7 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 			cout << "something's wrong about the charge" << endl;
 		}
 	}
-
+	hist_multiplicity->Fill(multiplicity);
 	if(multiplicity>5||multiplicity<3) veto[0]=true;//first veto
 
 	bool anyVeto = (veto[0]||veto[1]||veto[2]||veto[3]||veto[4]||veto[5]);
