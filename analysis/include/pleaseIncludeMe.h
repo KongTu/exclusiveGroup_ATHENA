@@ -108,7 +108,7 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 			cout << "something's wrong about the charge" << endl;
 		}
 	}
-	hist_multiplicity->Fill(multiplicity);
+	
 	if(multiplicity>5||multiplicity<3) veto[0]=true;//first veto
 
 	bool anyVeto = (veto[0]||veto[1]||veto[2]||veto[3]||veto[4]||veto[5]);
