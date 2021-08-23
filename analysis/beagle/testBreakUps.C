@@ -86,14 +86,17 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		if(processindex==1) h_trueT_93->Fill(-t_hat);
 
 		int multiplicity=0;
+		double E = -1.;
 		for(int j(0); j < nParticles; ++j ) {
 			const erhic::ParticleMC* particle = event->GetTrack(j);
+			int index = particle->GetIndex();//index 1 and 2 are incoming particle electron and proton.
 			int status = particle->GetStatus();
 			double pt = particle->GetPt();
 			double eta = particle->GetEta();
-			int charge = particle->eA->charge;
+			int charge = particle->eA->charge;	
+			if( index==3 ) E = particle->GetE();
 			if( status!= 1 ) continue;
-			if( particle->GetParentIndex()==3 )continue;
+			if( particle->GetE()==E )continue;
 			if(TMath::Abs(eta)<4.0 && pt>0.15 && charge!=0) multiplicity++;
 		}
 		hist_multiplicity->Fill(multiplicity);
