@@ -65,17 +65,11 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		int N_nevap = event->Nnevap;
 		int N_pevap = event->Npevap;
 
-		//do analysis, or fill historgrams for event levels
-		h_trueT->Fill(-t_hat);
-
 		//event cuts
 		int processindex=-1;
 		if( event_process==91) processindex=0;
 		else if( event_process==93) processindex=1;
 		else processindex=2;
-
-		if(processindex==0) h_trueT_91->Fill(-t_hat);
-		if(processindex==1) h_trueT_93->Fill(-t_hat);
 
 		if(PHP_){
 			if( trueQ2 > 0.2 || trueQ2 < 0.05 ) continue;
@@ -84,7 +78,11 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		}
 		// if( trueY > 0.95 || trueY < 0.01 ) continue;
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
-		
+		//do analysis, or fill historgrams for event levels
+		h_trueT->Fill(-t_hat);
+		if(processindex==0) h_trueT_91->Fill(-t_hat);
+		if(processindex==1) h_trueT_93->Fill(-t_hat);
+
 		int multiplicity=0;
 		for(int j(0); j < nParticles; ++j ) {
 			const erhic::ParticleMC* particle = event->GetTrack(j);
