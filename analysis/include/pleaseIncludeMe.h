@@ -88,6 +88,8 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 		int NoBAM = particle->eA->NoBam;
 
 		if( status!= 1 ) continue;
+		if( particle->GetParentIndex()==3 )continue;
+
 		if( charge==0 ){//neutral particles, pi0, photons, neutrons
 			if(theta<4.5 && mom>0.05 ) veto[1]=true;
 			if(theta>5.5 && theta<20. && mom>0.05) veto[2]=true;
