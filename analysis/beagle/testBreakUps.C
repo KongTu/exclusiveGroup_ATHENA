@@ -93,6 +93,7 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 			double eta = particle->GetEta();
 			int charge = particle->eA->charge;
 			if( status!= 1 ) continue;
+			if( particle->GetParentIndex()==3 )continue;
 			if(TMath::Abs(eta)<4.0 && pt>0.15 && charge!=0) multiplicity++;
 		}
 		hist_multiplicity->Fill(multiplicity);
