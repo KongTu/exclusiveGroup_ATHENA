@@ -20,12 +20,6 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			}
 		}
 	}
-	int pdglist[]={113,333,443};
-	int statuslist[]={2,2,2};
-	int acceptance[3]={1,1,1};
-	int hasvm[3]={0,0,0};
-	TLorentzVector vm_vect[3];
-	for(int ivm=0;ivm<3;ivm++){vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);}
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -50,7 +44,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 		int processindex=-1;
 		if( event_process==91) processindex=0;
 		else if( event_process==93) processindex=1;
-		else processindex=2;
+		else continue;
 
 		if(PHP_){
 			if( trueQ2 > 0.2 ) continue;
@@ -58,7 +52,13 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
-		
+		/*some conditions & initialization*/
+		int pdglist[]={113,333,443};
+		int statuslist[]={2,2,2};
+		int hasvm[3]={0,0,0};
+		TLorentzVector vm_vect[3];
+		for(int ivm=0;ivm<3;ivm++){vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);}
+		//begin particle loop;
 		for(int j(0); j < nParticles; ++j ) {
 			const erhic::ParticleMC* particle = event->GetTrack(j);
 			int status = particle->GetStatus();
@@ -72,6 +72,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				}
 			}
 		}
+		//after particle loop;
 		for(int ivm=0;ivm<3;ivm++){
 			if(hasvm[ivm]){
 				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
