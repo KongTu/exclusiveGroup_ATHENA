@@ -10,8 +10,6 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 	TFile* output = 0;
 	TString outputROOT="../../rootfiles/remakeNuclearBreakUps.root";
 	if(PHP_) outputROOT="../../rootfiles/remakeNuclearBreakUps_PHP.root";
-	if(veto_&&!PHP_) outputROOT="../../rootfiles/remakeNuclearBreakUps_w_vetos.root";
-	if(veto_&&PHP_) outputROOT="../../rootfiles/remakeNuclearBreakUps_w_vetos_PHP.root";
 	output = new TFile(outputROOT,"RECREATE");
 	
 	TH1D* h_VM_t[2][2][3];
@@ -78,9 +76,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			if(hasvm[ivm]&&acceptance[ivm]){
 				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
 				//perform veto.
-				if( veto_ ){
-					if( veto_this_event(event, nParticles) ) continue;
-				}
+				if( veto_this_event(event, nParticles) ) continue;
 				h_VM_t[1][processindex][ivm]->Fill( -t_hat );
 			}
 		}
