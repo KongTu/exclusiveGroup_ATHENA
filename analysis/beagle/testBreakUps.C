@@ -74,7 +74,7 @@ void testBreakUps(const TString filename="eA_TEST", const int nEvents = 40000, b
 		else processindex=2;
 
 		if(PHP_){
-			if( trueQ2 > 0.2 || trueQ2 < 0.05 ) continue;
+			if( trueQ2 > 0.2 ) continue;
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
