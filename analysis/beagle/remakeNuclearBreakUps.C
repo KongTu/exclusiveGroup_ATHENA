@@ -20,6 +20,12 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			}
 		}
 	}
+	TH1D* h_photon[3];
+	TH1D* h_w[3];
+	for(int ivm=0;ivm<3;ivm++){
+		h_photon[ivm] = new TH1D(Form("h_photon_%d",ivm),";flux",100,0,0.2);
+		h_w[ivm] = new TH1D(Form("h_w_%d",ivm),";W (GeV)",100,10,90);
+	}
 	for(int i(0); i < nEvents; ++i ) {
       
 		// Read the next entry from the tree.
@@ -67,7 +73,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				vm_vect[ivm]=particle->Get4Vector();
-				if( fabs(vm_vect[ivm].Rapidity()) < 1.0 ) {
+				if( fabs(vm_vect[ivm].Rapidity()) < 4.0 ) {
 					hasvm[ivm]=1;//found vm.
 				}
 			}
@@ -76,6 +82,8 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 		for(int ivm=0;ivm<3;ivm++){
 			if(hasvm[ivm]){
 				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
+				h_photon[ivm]->Fill(photon_flux);
+				h_w[ivm]->Fill(sqrt(trueW2));
 				//perform veto.
 				if( veto_this_event(event, nParticles) ) continue;
 				h_VM_t[1][processindex][ivm]->Fill( -t_hat );
