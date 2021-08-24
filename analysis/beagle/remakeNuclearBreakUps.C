@@ -69,7 +69,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				if(status!=statuslist[ivm]) continue;
 				hasvm[ivm]=1;//found vm.
 				vm_vect[ivm]=particle->Get4Vector();
-				if( fabs(vm_vect[ivm].Rapidity()) > 1.0 ) acceptance[ivm]=0;
+				// if( fabs(vm_vect[ivm].Rapidity()) > 1.0 ) acceptance[ivm]=0;
 			}
 		}
 		for(int ivm=0;ivm<3;ivm++){
