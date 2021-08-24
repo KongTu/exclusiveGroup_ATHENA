@@ -25,7 +25,6 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 	int acceptance[3]={1,1,1};
 	int hasvm[3]={0,0,0};
 	TLorentzVector vm_vect[3];
-	TLorentzVector all_part(0.,0.,0.,0.);
 	for(int ivm=0;ivm<3;ivm++){vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);}
 	for(int i(0); i < nEvents; ++i ) {
       
@@ -67,13 +66,14 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
-				hasvm[ivm]=1;//found vm.
 				vm_vect[ivm]=particle->Get4Vector();
-				// if( fabs(vm_vect[ivm].Rapidity()) > 1.0 ) acceptance[ivm]=0;
+				if( fabs(vm_vect[ivm].Rapidity()) < 1.0 ) {
+					hasvm[ivm]=1;//found vm.
+				}
 			}
 		}
 		for(int ivm=0;ivm<3;ivm++){
-			if(hasvm[ivm]&&acceptance[ivm]){
+			if(hasvm[ivm]){
 				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
 				//perform veto.
 				if( veto_this_event(event, nParticles) ) continue;
