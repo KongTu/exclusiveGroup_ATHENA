@@ -24,7 +24,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 	TH1D* h_w[3];
 	for(int ivm=0;ivm<3;ivm++){
 		h_photon[ivm] = new TH1D(Form("h_photon_%d",ivm),";flux",100,0,0.2);
-		h_w[ivm] = new TH1D(Form("h_w_%d",ivm),";W (GeV)",100,10,90);
+		h_w[ivm] = new TH1D(Form("h_w_%d",ivm),";W (GeV)",100,1.5,90);
 	}
 	for(int i(0); i < nEvents; ++i ) {
       
