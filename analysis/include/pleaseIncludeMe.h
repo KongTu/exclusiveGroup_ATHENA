@@ -161,7 +161,7 @@ double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2){
 	
 	TLorentzVector v_fake1,v_fake2;
 	v_fake1.SetVectM(v1.Vect(), MASS_KAON);
-	v_fake1.SetVectM(v2.Vect(), MASS_KAON);
+	v_fake2.SetVectM(v2.Vect(), MASS_KAON);
 	
 	double tof3 = pathLength(v_fake1.Pt(),v_fake1.P())/v_fake1.Beta()*1000.0/30.0;//picoseconds 
     double tof4 = pathLength(v_fake2.Pt(),v_fake2.P())/v_fake2.Beta()*1000.0/30.0;//picoseconds
