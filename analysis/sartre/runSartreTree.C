@@ -57,6 +57,8 @@ ostream& operator<<(ostream& os, const TLorentzVector& v)
 void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", int PID_ = 0, double setLowPt_=0.1)
 {
     minPt_ = setLowPt_;
+    TString name_PID=to_string(PID_);
+    TString name_LowPt=to_string(setLowPt_);
     //
     //  Setup filenames
     //
@@ -76,7 +78,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     nnames = 10;
     
     //output root files:
-    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+std::to_string(PID_)+"_minPt_"+std::to_string(setLowPt_)+".root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+name_PID+"_minPt_"+name_LowPt+".root","RECREATE");
     //
     //   Histogram Booking (example)
     //
