@@ -145,7 +145,7 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 //
 double pathLength(double pt, double p){
   double LGADTOF = 50.0; //cm
-  double BField = 3.0; //Tesla 
+  double BField = 1.5; //Tesla 
   double sintheta=LGADTOF*0.003*BField/2.0/pt;
   if (sintheta>1.0) return 0.0;
   double arc = 2.0*p/0.003/BField*TMath::ASin(sintheta);
@@ -163,7 +163,7 @@ double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2, double mass){
 
 	if(fabs(mass-MASS_PION)<1E-2) mass=MASS_PION;
 	if(fabs(mass-MASS_KAON)<1E-2) mass=MASS_KAON;
-	
+
 	TLorentzVector v_real1,v_real2;
 	v_real1.SetVectM(v1.Vect(), mass);
 	v_real2.SetVectM(v2.Vect(), mass);
