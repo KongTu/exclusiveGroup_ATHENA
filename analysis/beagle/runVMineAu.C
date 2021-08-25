@@ -5,7 +5,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 	TString name_LowPt=Form("%.2f",setLowPt_);
 
 	TChain *tree = new TChain("EICTree");
-	tree->Add( filename+".root" );
+	tree->Add( filename );
 	
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
