@@ -58,7 +58,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
 {
     minPt_ = setLowPt_;
     TString name_PID=Form("%d",PID_);
-    TString name_LowPt=Form("%d",setLowPt_);
+    TString name_LowPt=Form("%.2f",setLowPt_);
     //  Setup filenames
     //
     string fnames[16];
