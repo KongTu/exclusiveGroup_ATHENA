@@ -1,5 +1,5 @@
 #include "../include/pleaseIncludeMe.h"
-void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true, double setLowPt_=0.1){
+void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true, double setLowPt_=0.1){
 
 	minPt_=setLowPt_;
 	TString name_LowPt=Form("%.2f",setLowPt_);
@@ -11,11 +11,11 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	tree->SetBranchAddress("event", &event);
 
 	TFile* output = 0;
-	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups_"+name_LowPt+".root";
-	if(PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_PHP_"+name_LowPt+".root";
-	if(veto_&&!PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos_"+name_LowPt+".root";
-	if(veto_&&PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP_"+name_LowPt+".root";
-	output = new TFile(outputROOT,"RECREATE");
+	TString outputROOT="beagle_allVMs_w_breakups_"+name_LowPt+".root";
+	if(PHP_) outputROOT="beagle_allVMs_w_breakups_PHP_"+name_LowPt+".root";
+	if(veto_&&!PHP_) outputROOT="beagle_allVMs_w_breakups_w_vetos_"+name_LowPt+".root";
+	if(veto_&&PHP_) outputROOT="beagle_allVMs_w_breakups_w_vetos_PHP_"+name_LowPt+".root";
+	output = new TFile(outputname+outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
 	//VM histograms//
