@@ -2,7 +2,6 @@
 void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true, double setLowPt_=0.1){
 
 	minPt_=setLowPt_;
-	TString name_LowPt=Form("%.2f",setLowPt_);
 
 	TChain *tree = new TChain("EICTree");
 	tree->Add( filename );
