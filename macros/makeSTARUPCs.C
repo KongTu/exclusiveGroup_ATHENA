@@ -1,6 +1,6 @@
 #include "utility.h"
 
-double photon_flux_from_average = 0.168153;
+double photon_flux_from_average = 0.161227;
 void upcXsections(TH1D* hist){
 	double binwidth=hist->GetBinWidth(1);
 	double BR = 1.0;//ee & mumu channels.
