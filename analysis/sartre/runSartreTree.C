@@ -121,6 +121,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
                 Form("h_Amass_%d_%d",ibreak,imass), 100,0,0.2,100,-3,3);
         }
     }
+    TH2D* h_PID=new TH2D("h_PID",";p;chi2",100,0,3,500,0,100);
+
     
     //
     //  Build chain
@@ -234,8 +236,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
         }
         if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 4.) accepted = false;
         if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 4.) accepted = false;
-        if (vmd1Vec.Pt() < 0.15) accepted = false;
-        if (vmd2Vec.Pt() < 0.15) accepted = false;
+        if (vmd1Vec.Pt() < minPt_) accepted = false;
+        if (vmd2Vec.Pt() < minPt_) accepted = false;
         if (!accepted) continue;
         if (myEvent.dmode < 0.5) { // coherent
             hist_t_afterPhaseSpace_coherent->Fill(fabs(myEvent.t), 1);
@@ -255,21 +257,19 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi")
             vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[imass]);
             vmVec_new = vmd1Vec_new+vmd2Vec_new;
             
-            double chi2_1=-99.;
-            double chi2_2=-99.;
+            double chi2=-99.;
             if(TMath::Abs(vmd1Vec_new.Eta())<1.0 
                         && TMath::Abs(vmd2Vec_new.Eta())<1.0
                             && imass==1){
 
                 if( vm_name=="rho"||vm_name=="rho_photo" ){
-                    chi2_1 = giveMe_PIDChi2(vmd1Vec_new, hist_pion);
-                    chi2_2 = giveMe_PIDChi2(vmd2Vec_new, hist_pion);
+                    chi2 = giveMe_PIDChi2(vmd1Vec_new, vmd2Vec_new, MASS_PION);
                 }
                 if( vm_name=="phi"||vm_name=="phi_photo" ){
-                    chi2_1 = giveMe_PIDChi2(vmd1Vec_new, hist_kaon);
-                    chi2_2 = giveMe_PIDChi2(vmd2Vec_new, hist_kaon);
+                    chi2 = giveMe_PIDChi2(vmd1Vec_new, vmd2Vec_new, MASS_KAON);
                 }
-                // if( chi2_1>4.6||chi2_2>4.6 ) continue;
+                h_PID->Fill(vmd1Vec_new.P(), chi2);
+                if( chi2>4.6 ) continue;
             }
 
             double mass = vmVec_new.M();
