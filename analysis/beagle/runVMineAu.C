@@ -383,27 +383,24 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
 				vm_vect_new = vm_vect1_new+vm_vect2_new;
 				
-				// if(ivm==1){
-				// 	if(TMath::Abs(vm_vect1_new.Eta())<1.0 
-				// 		&& TMath::Abs(vm_vect2_new.Eta())<1.0){
-				// 		double chi2_1=-99.;
-				// 		double chi2_2=-99.;
-				// 		if(hasvm[0]) {
-				// 			chi2_1 = giveMe_PIDChi2(vm_vect1_new, hist_pion);
-				// 			chi2_2 = giveMe_PIDChi2(vm_vect2_new, hist_pion);
-				// 		}
-				// 		if(hasvm[1]){
-				// 			chi2_1 = giveMe_PIDChi2(vm_vect1_new, hist_kaon);
-				// 			chi2_2 = giveMe_PIDChi2(vm_vect2_new, hist_kaon);
-				// 		}
-				// 		//cross check TOF PID.
-				// 		h_PID->Fill(vm_vect1_new.P(), chi2_1);
-				// 		h_PID->Fill(vm_vect2_new.P(), chi2_2);
-				// 		if( chi2_1>4.6||chi2_2>4.6 ){
-				// 			continue;
-				// 		}
-				// 	}
-				// }
+				if(ivm==1){
+					if(TMath::Abs(vm_vect1_new.Eta())<1.0 
+						&& TMath::Abs(vm_vect2_new.Eta())<1.0){
+						double chi2=-99.;
+						if(hasvm[0]) {
+							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new);
+						}
+						if(hasvm[1]){
+							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new);
+						}
+						//cross check TOF PID.
+						h_PID->Fill(vm_vect1_new.P(), chi2_1);
+						if( chi2 > 4.6 ){
+							continue;
+						}
+					}
+				}
+
 				double mass = vm_vect_new.M();
 				h_VM_mass[processindex][ivm][2]->Fill(mass);
 				for(int imethod=0;imethod<3;imethod++){

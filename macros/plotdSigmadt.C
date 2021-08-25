@@ -61,7 +61,7 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 	if(name=="phi"){base1->GetYaxis()->SetRangeUser(1e-2, 1e7);}
 	if(name=="jpsi"){base1->GetYaxis()->SetRangeUser(1e-3, 1e6);}
 	if(name=="rho_photo"){base1->GetYaxis()->SetRangeUser(1e-1, 1e10);}
-	if(name=="phi_photo"){base1->GetYaxis()->SetRangeUser(1e-1, 1e9);}
+	if(name=="phi_photo"){base1->GetYaxis()->SetRangeUser(1e-3, 1e9);}
 	if(name=="jpsi_photo"){base1->GetYaxis()->SetRangeUser(1e-3, 1e8);}
 
 	base1->GetXaxis()->SetTitleColor(kBlack);

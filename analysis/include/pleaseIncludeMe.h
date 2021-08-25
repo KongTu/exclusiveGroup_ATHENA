@@ -63,10 +63,7 @@ double daughtermasslist[]={MASS_PION,MASS_KAON,MASS_ELECTRON};
 
 using namespace std;
 using namespace erhic;
-//from zhangbu
-TFile* PIDinput = new TFile("../include/PIDchi2.root","READ");
-TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
-TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
+
 bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 
 	bool veto[] = {false,false,false,false,false,false,false};
@@ -146,16 +143,38 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 	return p_beam_scattered.M()/MASS_AU197;
 }
 //
-double giveMe_PIDChi2(TLorentzVector v, TH2D* hist){
+double pathLength(double pt, double p){
+  double LGADTOF = 50.0; //cm
+  double BField = 3.0; //Tesla 
+  double sintheta=LGADTOF*0.003*BField/2.0/pt;
+  if (sintheta>1.0) return 0.0;
+  double arc = 2.0*p/0.003/BField*TMath::ASin(sintheta);
+  return arc; 
+}
+double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2){
 
-	double p = v.P();
-	TH1D* h_total_projection = (TH1D*) hist->ProjectionX("h_total_projection",1,1e8);//total y bins
-	int bin_of_interest = h_total_projection->FindBin(p);
-	TH1D* h_normChi2_1D = (TH1D*) hist->ProjectionY("h_normChi2_1D",bin_of_interest,bin_of_interest);
-	if(bin_of_interest<20) return -99;
-		double PID = h_normChi2_1D->GetRandom();
-	return PID;
+	double tofRes = 25.0;//picoseconds 
+    double startRes = 30.0;//scattered electron timing picoseconds 
 
+    double tof1 = pathLength(v1.Vect().Perp(),v1.Vect().Mag())/v1.Beta()*1000.0/30.0;//picoseconds 
+    double tof2 = pathLength(v2.Vect().Perp(),v2.Vect().Mag())/v2.Beta()*1000.0/30.0;//picoseconds 
+	
+	TLorentzVector v_fake1,v_fake2;
+	v_fake1.SetVectM(v1.Vect(), MASS_KAON);
+	v_fake1.SetVectM(v2.Vect(), MASS_KAON);
+	
+	double tof3 = pathLength(v_fake1.Vect().Perp(),v_fake1.Vect().Mag())/v_fake1.Beta()*1000.0/30.0;//picoseconds 
+    double tof4 = pathLength(v_fake2.Vect().Perp(),v_fake2.Vect().Mag())/v_fake2.Beta()*1000.0/30.0;//picoseconds
+	
+	double starttiming = gRandom->Gaus(0.0,startRes);
+    double timesmear1 =  (gRandom->Gaus(0.0,tofRes)+starttiming);
+    double timesmear2 =  (gRandom->Gaus(0.0,tofRes)+starttiming);
+    tof1 += timesmear1;//picoseconds 
+    tof2 += timesmear2;//picoseconds 
+
+    double chi2 = 1.0/pow(tofRes,2)*(pow(tof1-tof3,2)+pow(tof2-tof4,2)-1.0/pow(tofRes,2)*pow(tof1+tof2-tof3-tof4,2)/(2.0/pow(tofRes,2)+1.0/pow(startRes,2)));
+	
+	return chi2;
 }
 //
 void printSTABLE(EventBeagle* event, int nParticles){
