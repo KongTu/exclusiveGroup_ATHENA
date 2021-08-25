@@ -85,7 +85,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				h_photon[ivm]->Fill(photon_flux);
 				h_w[ivm]->Fill(sqrt(trueW2));
 				//perform veto.
-				if( veto_this_event(event, nParticles) ) continue;
+				if( veto_this_event(event, nParticles, 6) ) continue;
 				h_VM_t[1][processindex][ivm]->Fill( -t_hat );
 			}
 		}

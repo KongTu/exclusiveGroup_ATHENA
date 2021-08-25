@@ -1,7 +1,7 @@
 #include "utility.h"
 
-// double photon_flux_from_average = 0.161227;// this is cut on W [8,47] GeV
-double photon_flux_from_average = 0.15124;//this is cut -1<y_J<4
+double photon_flux_from_average = 0.161227;// this is cut on W [8,47] GeV
+// double photon_flux_from_average = 0.15124;//this is cut -1<y_J<4
 
 void upcXsections(TH1D* hist){
 	double binwidth=hist->GetBinWidth(1);
@@ -46,7 +46,7 @@ void makeSTARUPCs(TString name="jpsi"){
 	gPad->SetTicks();
 	gPad->SetLeftMargin(0.15);
 	gPad->SetBottomMargin(0.15);
-	TH1D* base1 = makeHist("base1", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (#mub/GeV^{2}) ", 100,0,0.18,kBlack);
+	TH1D* base1 = makeHist("base1", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (#mub/GeV^{2}) ", 100,0,0.5,kBlack);
 	base1->GetYaxis()->SetRangeUser(1e-1, 1e5);
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
@@ -58,6 +58,7 @@ void makeSTARUPCs(TString name="jpsi"){
 	base1->GetYaxis()->SetNdivisions(5,5,0);
 	base1->Draw();
 
+	photon_flux_from_average = h_photon[vm_]->GetMean();
 	h_VM_t[0][0][vm_]->Add(h_VM_t[0][1][vm_],+1);
 	h_VM_t[1][0][vm_]->Add(h_VM_t[1][1][vm_],+1);
 	upcXsections(h_VM_t[0][0][vm_]);

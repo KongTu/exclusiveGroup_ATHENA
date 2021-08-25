@@ -69,7 +69,7 @@ TH2D* hist_pion = (TH2D*) PIDinput->Get("hist_pion");
 TH2D* hist_kaon = (TH2D*) PIDinput->Get("hist_kaon");
 bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 
-	bool veto[] = {false,false,false,false,false,false};
+	bool veto[] = {false,false,false,false,false,false,false};
 	int multiplicity=0;
 	for(int j(0); j < nParticles; ++j ) {
 		const erhic::ParticleMC* particle = event->GetTrack(j);
@@ -91,6 +91,7 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 		if( particle->GetParentIndex()==3 )continue;
 
 		if( charge==0 ){//neutral particles, pi0, photons, neutrons
+			if(theta<4.5 && pdg==2112 ) veto[6]=true;
 			if(theta<4.5 && mom>0.05 ) veto[1]=true;
 			if(theta>5.5 && theta<20. && mom>0.05) veto[2]=true;
 		}
