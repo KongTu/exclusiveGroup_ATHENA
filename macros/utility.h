@@ -87,6 +87,6 @@ void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_e
 	}
 	double binwidth = hist->GetBinWidth(1);
 
-	hist->Scale(1./ (lumi_to_apply * BR_to_apply * binwidth) );
+	hist->Scale( 1. / (lumi_to_apply * BR_to_apply * binwidth) );
 
 }

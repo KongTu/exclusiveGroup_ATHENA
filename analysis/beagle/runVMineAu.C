@@ -206,8 +206,14 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
-				hasvm[ivm]=1;//found vm.
 				vm_vect[ivm]=particle->Get4Vector();
+				if( fabs(vm_vect[ivm].Rapidity())<4.0 ) hasvm[ivm]=1;//found vm.
+
+				//fill vm.
+				h_VM[processindex][ivm][0]->Fill(pt);
+				h_VM[processindex][ivm][1]->Fill(eta);
+				h_VM[processindex][ivm][2]->Fill(phi);
+				h_VM[processindex][ivm][3]->Fill(theta);
 				
 				int daug1=particle->GetChild1Index()-1;//Beagle list index starts at 1.
 				int daug2=particle->GetChildNIndex()-1;
@@ -241,11 +247,6 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 					}
 				}
 
-				h_VM[processindex][ivm][0]->Fill(pt);
-				h_VM[processindex][ivm][1]->Fill(eta);
-				h_VM[processindex][ivm][2]->Fill(phi);
-				h_VM[processindex][ivm][3]->Fill(theta);
-
 				if(TMath::Abs(particle_daug1->GetEta())>4.0||
 					TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
 
@@ -271,10 +272,26 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		//check mom. conser.
 		double nonconserve=(e_beam+A_beam-all_part).E();
 		h_CHECK[processindex]->Fill(nonconserve,pf3);
+		//apply vm Q2 cut to match sartre photoproduction! this is bad...
+		bool inPhaseSpace[]={true,true,true};
+		if(PHP_){
+			for(int ivm=0;ivm<3;ivm++){
+				if(hasvm[0]){
+					if(trueQ2<0.1 || trueQ2>0.2) inPhaseSpace[0]=false;
+				}
+				if(hasvm[1]){
+					if(trueQ2<0.0001 || trueQ2>0.01) inPhaseSpace[1]=false;
+				}
+				if(hasvm[2]){
+					if(trueQ2<0.0001 || trueQ2>0.01) inPhaseSpace[2]=false;
+				}
+			}
+		}
+		//end
 		//for each vm; do...
 		//accurate mass
 		for(int ivm=0;ivm<3;ivm++){
-			if(hasvm[ivm]&&fabs(vm_vect[ivm].Rapidity())<4.0) {//has vm and vm rapidity acceptance < 4.0
+			if(hasvm[ivm]&&inPhaseSpace[ivm]) {//has vm and vm rapidity acceptance < 4.0
 				h_VM[processindex][ivm][4]->Fill(-t_hat); //true cross section
 				if(!acceptance[ivm]||!ptacceptance[ivm]) continue; //cut on daughters.
 				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
@@ -318,9 +335,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 		//end each vm with correct mass;
 		//...
 		//wrong mass:
-		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
-			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
-				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
+		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]&&inPhaseSpace[0]) 
+			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]&&inPhaseSpace[1]) 
+				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]&&inPhaseSpace[2]) ){
 			
 			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
 			for(int ivm=0;ivm<3;ivm++){
@@ -347,9 +364,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 
 		}
 		//repeat but with PID assignment check on phi assumption
-		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
-			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
-				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
+		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]&&inPhaseSpace[0]) 
+			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]&&inPhaseSpace[1]) 
+				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]&&inPhaseSpace[2]) ){
 
 			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
 			for(int ivm=0;ivm<3;ivm++){
