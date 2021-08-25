@@ -54,12 +54,11 @@ ostream& operator<<(ostream& os, const TLorentzVector& v)
 //  Main function
 //===========================================================================
 
-void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", int PID_ = 0, double setLowPt_=0.1)
+void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", int PID_=0, double setLowPt_=0.1)
 {
     minPt_ = setLowPt_;
-    TString name_PID=to_string(PID_);
-    TString name_LowPt=to_string(setLowPt_);
-    //
+    TString name_PID=Form("%d",PID_);
+    TString name_LowPt=Form("%d",setLowPt_)
     //  Setup filenames
     //
     string fnames[16];
