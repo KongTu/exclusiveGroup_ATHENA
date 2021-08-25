@@ -76,7 +76,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", bo
     nnames = 10;
     
     //output root files:
-    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_extra.root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+toString(PID_)+"_minPt_"+toString(setLowPt_)+".root","RECREATE");
     //
     //   Histogram Booking (example)
     //
@@ -263,7 +263,6 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", bo
                 if(TMath::Abs(vmd1Vec_new.Eta())<1.0 
                             && TMath::Abs(vmd2Vec_new.Eta())<1.0
                                 && imass==1){
-
                     if( vm_name=="rho"||vm_name=="rho_photo" ){
                         chi2 = giveMe_PIDChi2(vmd1Vec_new, vmd2Vec_new, MASS_PION);
                     }
