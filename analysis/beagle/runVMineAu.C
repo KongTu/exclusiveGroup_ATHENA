@@ -382,18 +382,13 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				vm_vect1_new.SetVectM(temp_v1,daughtermasslist[ivm]);
 				vm_vect2_new.SetVectM(temp_v2,daughtermasslist[ivm]);
 				vm_vect_new = vm_vect1_new+vm_vect2_new;
-				
 				if(ivm==1){
 					if(TMath::Abs(vm_vect1_new.Eta())<1.0 
 						&& TMath::Abs(vm_vect2_new.Eta())<1.0){
 						double chi2=-99.;
-						if(hasvm[0]) {
+						if(hasvm[0]||hasvm[1]) {
 							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new);
 						}
-						if(hasvm[1]){
-							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new);
-						}
-
 						//cross check TOF PID.
 						if( chi2 > 0 ) h_PID->Fill(vm_vect1_new.P(), chi2);
 						if( chi2 > 4.6 ){
