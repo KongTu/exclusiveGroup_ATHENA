@@ -1,5 +1,8 @@
 #include "../include/pleaseIncludeMe.h"
-void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true){
+void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true, double setLowPt_=0.1){
+
+	minPt_=setLowPt_;
+	TString name_LowPt=Form("%.2f",setLowPt_);
 
 	TChain *tree = new TChain("EICTree");
 	tree->Add( filename+".root" );
@@ -8,10 +11,10 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 	tree->SetBranchAddress("event", &event);
 
 	TFile* output = 0;
-	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups.root";
-	if(PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_PHP.root";
-	if(veto_&&!PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
-	if(veto_&&PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TString outputROOT="../../rootfiles/beagle_allVMs_w_breakups"+name_LowPt+".root";
+	if(PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_PHP"+name_LowPt+".root";
+	if(veto_&&!PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos"+name_LowPt+".root";
+	if(veto_&&PHP_) outputROOT="../../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP"+name_LowPt+".root";
 	output = new TFile(outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
