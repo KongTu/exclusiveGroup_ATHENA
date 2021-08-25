@@ -250,8 +250,8 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 				if(TMath::Abs(particle_daug1->GetEta())>4.0||
 					TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
 
-				if(particle_daug1->GetPt()<0.15||
-					particle_daug2->GetPt()<0.15) ptacceptance[ivm]=0;
+				if(particle_daug1->GetPt()<minPt_||
+					particle_daug2->GetPt()<minPt_) ptacceptance[ivm]=0;
 
 				h_VM_daughter[processindex][ivm][0]->Fill(particle_daug1->GetPt());
 				h_VM_daughter[processindex][ivm][1]->Fill(particle_daug1->GetEta());

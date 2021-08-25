@@ -64,6 +64,8 @@ double daughtermasslist[]={MASS_PION,MASS_KAON,MASS_ELECTRON};
 using namespace std;
 using namespace erhic;
 
+double minPt_=0.15;
+
 bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 
 	bool veto[] = {false,false,false,false,false,false,false};
@@ -144,8 +146,9 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 }
 //
 double pathLength(double pt, double p){
+  
   double LGADTOF = 50.0; //cm
-  double BField = 1.5; //Tesla 
+  double BField = 0.5; //Tesla 
   double sintheta=LGADTOF*0.003*BField/2.0/pt;
   if (sintheta>1.0) return 0.0;
   double arc = 2.0*p/0.003/BField*TMath::ASin(sintheta);
