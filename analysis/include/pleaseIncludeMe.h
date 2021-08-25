@@ -151,7 +151,7 @@ double pathLength(double pt, double p){
   double arc = 2.0*p/0.003/BField*TMath::ASin(sintheta);
   return arc; 
 }
-double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2){
+double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2, double mass){
 
 	double tofRes = 25.0;//picoseconds 
     double startRes = 30.0;//scattered electron timing picoseconds 
@@ -161,9 +161,12 @@ double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2){
 	
 	if(tof1==0.||tof2==0.) return -99.;
 
+	if(fabs(mass-MASS_PION)<1E-2) mass=MASS_PION;
+	if(fabs(mass-MASS_KAON)<1E-2) mass=MASS_KAON;
+	
 	TLorentzVector v_real1,v_real2;
-	v_real1.SetVectM(v1.Vect(), MASS_PION);
-	v_real2.SetVectM(v2.Vect(), MASS_PION);
+	v_real1.SetVectM(v1.Vect(), mass);
+	v_real2.SetVectM(v2.Vect(), mass);
 	
 	double tof3 = pathLength(v_real1.Pt(),v_real1.P())/v_real1.Beta()*1000.0/30.0;//picoseconds 
     double tof4 = pathLength(v_real2.Pt(),v_real2.P())/v_real2.Beta()*1000.0/30.0;//picoseconds
