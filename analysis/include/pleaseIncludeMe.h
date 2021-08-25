@@ -184,7 +184,7 @@ double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2, double mass){
     tof4 += timesmear2;//picoseconds 
     // cout << "to1,tof2,tof3,tof4 = " << tof1 << " " << tof2 << " " << tof3 << " " << tof4 << endl;
     double chi2 = 1.0/pow(tofRes,2)*(pow(tof1-tof3,2)+pow(tof2-tof4,2)-1.0/pow(tofRes,2)*pow(tof1+tof2-tof3-tof4,2)/(2.0/pow(tofRes,2)+1.0/pow(startRes,2)));
-	if(mass==MASS_PION) cout << "chi2 ? " << chi2 << endl;
+	if(mass==MASS_KAON) cout << "chi2 ? " << chi2 << endl;
 	return chi2;
 }
 //
