@@ -147,7 +147,6 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 //
 double pathLength(double pt, double p){
   
-  cout << "minPt_ " << minPt_ << endl;
   double BField = 0.;//Tesla
   if(minPt_>0.3) BField=3.0;
   if(minPt_>=0.15 && minPt_<=0.3) BField=1.5;
