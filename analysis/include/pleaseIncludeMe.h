@@ -172,9 +172,9 @@ double giveMe_PIDChi2(TLorentzVector v1, TLorentzVector v2){
     double timesmear2 =  (gRandom->Gaus(0.0,tofRes)+starttiming);
     tof1 += timesmear1;//picoseconds 
     tof2 += timesmear2;//picoseconds 
-    cout << "to1,tof2,tof3,tof4 = " << tof1 << " " << tof2 << " " << tof3 << " " << tof4 << endl;
+    // cout << "to1,tof2,tof3,tof4 = " << tof1 << " " << tof2 << " " << tof3 << " " << tof4 << endl;
     double chi2 = 1.0/pow(tofRes,2)*(pow(tof1-tof3,2)+pow(tof2-tof4,2)-1.0/pow(tofRes,2)*pow(tof1+tof2-tof3-tof4,2)/(2.0/pow(tofRes,2)+1.0/pow(startRes,2)));
-	cout << "chi2 ? " << chi2 << endl;
+	// cout << "chi2 ? " << chi2 << endl;
 	return chi2;
 }
 //
