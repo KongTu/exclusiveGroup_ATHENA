@@ -90,7 +90,7 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 		if( particle->GetParentIndex()==3 )continue;
 
 		if( charge==0 ){//neutral particles, pi0, photons, neutrons
-			if(theta<4.5 && pdg==2112 ) veto[6]=true;
+			if(theta<2.5 && pdg==2112 ) veto[6]=true;
 			if(theta<4.5 && mom>0.05 ) veto[1]=true;
 			if(theta>5.5 && theta<20. && mom>0.05) veto[2]=true;
 		}
@@ -146,7 +146,6 @@ double giveMe_Amass(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 }
 //
 double pathLength(double pt, double p){
-  
   double BField = 0.;//Tesla
   if(minPt_>0.3) BField=3.0;
   if(minPt_>=0.15 && minPt_<=0.3) BField=1.5;
