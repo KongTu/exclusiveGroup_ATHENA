@@ -54,7 +54,7 @@ ostream& operator<<(ostream& os, const TLorentzVector& v)
 //  Main function
 //===========================================================================
 
-void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", bool PID_ = false, double setLowPt_=0.1)
+void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", int PID_ = 0, double setLowPt_=0.1)
 {
     minPt_ = setLowPt_;
     //
@@ -258,7 +258,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", bo
             vmd2Vec_new.SetVectM(temp_v2,daughtermasslist[imass]);
             vmVec_new = vmd1Vec_new+vmd2Vec_new;
             
-            if(PID_){
+            if(PID_==1){
                 double chi2=-99.;
                 if(TMath::Abs(vmd1Vec_new.Eta())<1.0 
                             && TMath::Abs(vmd2Vec_new.Eta())<1.0
