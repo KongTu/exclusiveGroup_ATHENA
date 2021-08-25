@@ -321,5 +321,5 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     
     hfile.Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+to_string(PID_)+"_minPt_"+to_string(setLowPt_)+".root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"name_PID+"_minPt_"+name_LowPt+".root'." << endl;
 }
