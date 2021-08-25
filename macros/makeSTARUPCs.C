@@ -1,6 +1,6 @@
 #include "utility.h"
 
-double photon_flux_from_average = 0.1;
+double photon_flux_from_average = 0.168153;
 void upcXsections(TH1D* hist){
 	double binwidth=hist->GetBinWidth(1);
 	double BR = 1.0;//ee & mumu channels.
@@ -56,7 +56,6 @@ void makeSTARUPCs(TString name="jpsi"){
 	base1->GetYaxis()->SetNdivisions(5,5,0);
 	base1->Draw();
 
-	photon_flux_from_average = h_photon[vm_]->GetMean();
 	h_VM_t[0][0][vm_]->Add(h_VM_t[0][1][vm_],+1);
 	h_VM_t[1][0][vm_]->Add(h_VM_t[1][1][vm_],+1);
 	upcXsections(h_VM_t[0][0][vm_]);

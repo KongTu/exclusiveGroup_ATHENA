@@ -9,7 +9,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 
 	TFile* output = 0;
 	TString outputROOT="../../rootfiles/remakeNuclearBreakUps.root";
-	if(PHP_) outputROOT="../../rootfiles/remakeNuclearBreakUps_PHP_toberemove.root";
+	if(PHP_) outputROOT="../../rootfiles/remakeNuclearBreakUps_PHP.root";
 	output = new TFile(outputROOT,"RECREATE");
 	
 	TH1D* h_VM_t[2][2][3];
@@ -58,7 +58,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
 		// if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
-		if( trueW2<TMath::Power(20,2)||trueW2>TMath::Power(30,2)) continue;//to match Sartre
+		if( trueW2<TMath::Power(8,2)||trueW2>TMath::Power(53,2)) continue;//to match Sartre
 		/*some conditions & initialization*/
 		int pdglist[]={113,333,443};
 		int statuslist[]={2,2,2};
@@ -74,9 +74,8 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				vm_vect[ivm]=particle->Get4Vector();
-				 // if( vm_vect[ivm].Rapidity()<4.0 && vm_vect[ivm].Rapidity() > -1.0 ) {
-					hasvm[ivm]=1;//found vm.
-				// }
+				hasvm[ivm]=1;//found vm.
+				
 			}
 		}
 		//after particle loop;
