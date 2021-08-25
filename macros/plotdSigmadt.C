@@ -18,7 +18,7 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
 	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
 	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
-	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP_test.root";
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
@@ -159,7 +159,7 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 	w6->AddEntry(h_VM_background_afterPhaseSpace, "BeAGLE w. daug. cut "+legendName+" incoherent ", "P");
 	w6->Draw("same");
 
-	if(veto_) c1->Print("../figures/dsigmadt_2/veto_dsigma_dt_"+name+".pdf");
-	else c1->Print("../figures/dsigmadt_2/dsigma_dt_"+name+".pdf");
+	// if(veto_) c1->Print("../figures/dsigmadt_2/veto_dsigma_dt_"+name+".pdf");
+	// else c1->Print("../figures/dsigmadt_2/dsigma_dt_"+name+".pdf");
 
 }
