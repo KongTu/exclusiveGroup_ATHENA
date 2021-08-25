@@ -1,6 +1,8 @@
 #include "utility.h"
 
-double photon_flux_from_average = 0.161227;
+// double photon_flux_from_average = 0.161227;// this is cut on W [8,47] GeV
+double photon_flux_from_average = 0.15124;//this is cut -1<y_J<4
+
 void upcXsections(TH1D* hist){
 	double binwidth=hist->GetBinWidth(1);
 	double BR = 1.0;//ee & mumu channels.
@@ -45,7 +47,7 @@ void makeSTARUPCs(TString name="jpsi"){
 	gPad->SetLeftMargin(0.15);
 	gPad->SetBottomMargin(0.15);
 	TH1D* base1 = makeHist("base1", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (#mub/GeV^{2}) ", 100,0,0.18,kBlack);
-	base1->GetYaxis()->SetRangeUser(30, 1e5);
+	base1->GetYaxis()->SetRangeUser(1e-1, 1e5);
 	base1->GetXaxis()->SetTitleColor(kBlack);
 	fixedFontHist1D(base1,1.,1.1);
 	base1->GetYaxis()->SetTitleSize(base1->GetYaxis()->GetTitleSize()*1.5);
