@@ -10,11 +10,11 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 	EventBeagle* event(NULL);
 	tree->SetBranchAddress("event", &event);
 
+	TString name_PHP=Form("%d",PHP_);
+	TString name_veto=Form("%d",veto_);
+    TString name_LowPt=Form("%.2f",setLowPt_);
 	TFile* output = 0;
-	TString outputROOT="beagle_allVMs_w_breakups_"+name_LowPt+".root";
-	if(PHP_) outputROOT="beagle_allVMs_w_breakups_PHP_"+name_LowPt+".root";
-	if(veto_&&!PHP_) outputROOT="beagle_allVMs_w_breakups_w_vetos_"+name_LowPt+".root";
-	if(veto_&&PHP_) outputROOT="beagle_allVMs_w_breakups_w_vetos_PHP_"+name_LowPt+".root";
+	TString outputROOT="beagle_allVMs_w_breakups_PHP_"+name_PHP+"_veto_"+name_veto+"_minPt_"+name_LowPt+".root";
 	output = new TFile(outputname+outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
