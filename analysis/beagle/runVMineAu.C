@@ -393,8 +393,9 @@ void runVMineAu(const TString filename="eA_TEST", const int nEvents = 40000, boo
 						if(hasvm[1]){
 							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new);
 						}
+
 						//cross check TOF PID.
-						h_PID->Fill(vm_vect1_new.P(), chi2_1);
+						if( chi2 > 0 ) h_PID->Fill(vm_vect1_new.P(), chi2);
 						if( chi2 > 4.6 ){
 							continue;
 						}
