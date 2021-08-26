@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
 
         TVector3 restframe = pIn.BoostVector();
         cout << "new cm frame ~ " << endl;
-        pIn_d.Boost(restframe);
+        pIn_d.Boost(-restframe);
         TLorentzVector cm_new = eIn+pIn_d;
         TVector3 cm_new_boost = cm_new.BoostVector();
         gammaOut.Boost(cm_new_boost);
