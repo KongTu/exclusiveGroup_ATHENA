@@ -108,38 +108,22 @@ int main(int argc, char **argv) {
         h_pz->Fill(nIn_d.Pz());
 
         if(pIn_d.P()>0.3) continue;
+        TVector3 p_rf = pIn.BoostVector();
+        gammaOut.Boost(-p_rf);
+        pOut.Boost(-p_rf);
 
-        //begin boost:
-        cout << "starting to boost around. Step.1 boost to CM frame" << endl;
-        TLorentzVector cm = eIn+pIn;
-        TVector3 cm_boost = cm.BoostVector();
-        gammaOut.Boost(-cm_boost);
-        eOut.Boost(-cm_boost);
-        pOut.Boost(-cm_boost);
+        TVector3 diff = pIn_d.Vect()-pIn.Vect();
+        TVector3 gammaOut_vect = gammaOut.Vect()+0.5*diff;
+        TVector3 pOut_vect = pOut.Vect()+0.5*diff;
+        gammaOut.SetVectM(gammaOut_vect,0.);
+        pOut.SetVectM(pOut_vect,MASS_PROTON);
+        
+        gammaOut.Boost(p_rf);
+        pOut.Boost(p_rf);
+        pIn_d.Boost(p_rf);
 
-        PRINT4VECTOR(cm,1);
-
-        TVector3 restframe = pIn.BoostVector();
-        cout << "new cm frame ~ " << endl;
-        pIn_d.Boost(restframe);
-        TLorentzVector cm_new = eIn+pIn_d;
-        TVector3 cm_new_boost = cm_new.BoostVector();
-        gammaOut.Boost(cm_new_boost);
-        eOut.Boost(cm_new_boost);
-        pOut.Boost(cm_new_boost);
-
-        PRINT4VECTOR(cm_new,1);
-        cout << "conservation ~ " << endl;
-
-        TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
+        TLorentzVector all = eIn+pIn_d-eOut-gammaOut-pOut;
         PRINT4VECTOR(all,1);
-        cout << "all particles " << endl;
-        PRINT4VECTOR(eIn,1);
-        PRINT4VECTOR(eOut,1);
-        PRINT4VECTOR(pIn_d,1);
-        PRINT4VECTOR(gammaOut,1);
-        PRINT4VECTOR(pOut,1);
-
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
