@@ -113,8 +113,8 @@ int main(int argc, char **argv) {
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         TVector3 d_rf = dIn.BoostVector();
         TVector3 p_rf = pIn.BoostVector();
-        nIn_d.Boost(d_rf);//Lab frame
-        pIn_d.Boost(d_rf);//lab frame
+        nIn_d.Boost(p_rf);//Lab frame
+        pIn_d.Boost(p_rf);//lab frame
         TVector3 p_rf_new = pIn_d.BoostVector();
         pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
