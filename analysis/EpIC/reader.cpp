@@ -50,6 +50,8 @@ int main(int argc, char **argv) {
     TH1D* h_alpha = new TH1D("h_alpha","",100,0,2);
     TH1D* h_p = new TH1D("h_p","",100,0,1);
     TH1D* h_pz = new TH1D("h_pz","",100,-1,1);
+    TH1D* h_pz_diff_b = new TH1D("h_pz_diff_b","",100,-10,10);
+    TH1D* h_E_diff_b = new TH1D("h_E_diff_b","",100,-10,10);
     TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-10,10);
     TH1D* h_E_diff = new TH1D("h_E_diff","",100,-10,10);
 
@@ -125,6 +127,8 @@ int main(int argc, char **argv) {
         gammaOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        h_pz_diff_b->Fill(all.Pz());
+        h_E_diff_b->Fill(all.E());
         
         //correcting
         gammaStar.Boost(-d_rf);
@@ -141,7 +145,7 @@ int main(int argc, char **argv) {
         double py = pOut.Py();
         double pz = pOut.Pz();
 
-        //comment this out after BeAGLE itself has correct kinematics
+        //ad hoc momentum conservation. move excess momentum energy to photon and struck nucleon
         jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
         pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
 
@@ -155,7 +159,15 @@ int main(int argc, char **argv) {
 
         all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
 
-        // PRINT4VECTOR(all,1);
+        cout << "nIn_d " << endl;
+        PRINT4VECTOR(nIn_d,1);
+
+        cout << "pOut " << endl;
+        PRINT4VECTOR(pOut,1);
+
+        cout << "gammaOut " << endl;
+        PRINT4VECTOR(gammaOut,1);
+
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
 
