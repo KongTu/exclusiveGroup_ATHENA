@@ -109,6 +109,8 @@ int main(int argc, char **argv) {
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
+        PRINT4VECTOR(pIn_d+nIn_d,1);
+
         if(fabs(1.0-alpha_SN)>0.01) continue;
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         
@@ -122,7 +124,7 @@ int main(int argc, char **argv) {
         pOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+pIn_d+nIn_d-eOut-gammaOut-pOut-nIn_d;
-        PRINT4VECTOR(all,1);
+        // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
 
