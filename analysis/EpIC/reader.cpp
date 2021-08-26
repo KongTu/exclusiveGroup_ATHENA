@@ -166,6 +166,7 @@ int main(int argc, char **argv) {
         //Method A.
         TVector2 sum_pt(eOut.Px()+gammaOut.Px(), eOut.Py()+gammaOut.Py());
         double t_doubletagging = -1.*(pOut-(-nIn_d) ).Mag2();
+        cout << "value " << t_doubletagging << endl;
         h_new_t_A->Fill(sum_pt.Mod2());
         h_new_t_D->Fill(t_doubletagging);
 
