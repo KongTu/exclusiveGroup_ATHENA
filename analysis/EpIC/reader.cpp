@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
+        //Deuteron beam.
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         
         TVector3 d_rf = dIn.BoostVector();
@@ -138,7 +139,7 @@ int main(int argc, char **argv) {
         h_pz_diff_b->Fill(all.Pz());
         h_E_diff_b->Fill(all.E());
         
-        //correcting
+        //correcting energy momentum. 
         gammaStar.Boost(-d_rf);
         nIn_d.Boost(-d_rf);
         gammaOut.Boost(-d_rf);
@@ -172,8 +173,9 @@ int main(int argc, char **argv) {
 
         //Method A.
         TVector2 sum_pt(eOut.Px()+gammaOut.Px(), eOut.Py()+gammaOut.Py());
-        h_new_t_A->Fill(sum_pt.Mod2());
+            h_new_t_A->Fill(sum_pt.Mod2());
 
+        //Method D. double tagging
         nIn_d.Boost(-d_rf);
         pOut.Boost(-d_rf);
 
@@ -186,11 +188,12 @@ int main(int argc, char **argv) {
         n_primeprime.SetPxPyPzE(-nIn_d.Px(),-nIn_d.Py(),
         Pz_bInt,E_bInt);
         double t_doubletagging = -1*(pOut - n_primeprime).Mag2();
-        h_new_t_D->Fill(t_doubletagging);
+            h_new_t_D->Fill(t_doubletagging);
 
         nIn_d.Boost(d_rf);
         pOut.Boost(d_rf);
 
+        //2D kinematics
         h_thetaVsp_proton->Fill(pOut.P(), pOut.Theta()*1000.);
         h_thetaVsp_neutron->Fill(nIn_d.P(), nIn_d.Theta()*1000.);
         h_ptVsEta_gamma->Fill(gammaOut.Eta(),gammaOut.Pt());

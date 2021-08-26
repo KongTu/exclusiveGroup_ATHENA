@@ -24,10 +24,7 @@ using namespace HepMC3;
 #define MASS_AU197    183.45406466643374
 #define MASS_PB208    193.69769264273208
 
-// solutions for momentum non-conservations, 
-// won't be needed for the next version of BeAGLE
-// mathematica gives only one of the two solutions are physical.
-
+// solutions for momentum non-conservations by Kong
 Double_t getCorrJz(Double_t qzkz, Double_t numn, Double_t jx, Double_t jy, Double_t px, Double_t py, Double_t Mp){
 
 	double Md = MASS_DEUTERON;
@@ -90,7 +87,6 @@ Double_t getCorrPz(Double_t qzkz, Double_t numn, Double_t jx, Double_t jy, Doubl
 
 void PRINT4VECTOR( TLorentzVector v, bool doPxPyPzE ){
 	
-
 	cout << " --------------------- " << endl;
 	if( doPxPyPzE ){
 		cout << " Px = " << v.Px() << endl;
