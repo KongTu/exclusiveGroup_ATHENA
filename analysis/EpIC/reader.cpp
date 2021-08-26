@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
     TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-10,10);
     TH1D* h_E_diff = new TH1D("h_E_diff","",100,-10,10);
 
+    TH1D* h_new_t = new TH1D("h_new_t", "", 50, 0.0, 1.0);
     
     //open file
     ReaderAscii inputFile(argv[1]);
@@ -111,7 +112,6 @@ int main(int argc, char **argv) {
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
-        if(fabs(1.0-alpha_SN)>0.01) continue;
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         
         TVector3 d_rf = dIn.BoostVector();
@@ -159,17 +159,12 @@ int main(int argc, char **argv) {
 
         all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
 
-        cout << "nIn_d " << endl;
-        PRINT4VECTOR(nIn_d,1);
-
-        cout << "pOut " << endl;
-        PRINT4VECTOR(pOut,1);
-
-        cout << "gammaOut " << endl;
-        PRINT4VECTOR(gammaOut,1);
-
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
+
+        //Method A.
+        TVector2 sum_pt(eOut.Px()+gammaOut.Px(), eOut.Py()+gammaOut.Py());
+        h_new_t->Fill(sum_pt.Mod2());
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
