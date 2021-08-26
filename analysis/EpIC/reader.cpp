@@ -113,9 +113,9 @@ int main(int argc, char **argv) {
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         TVector3 d_rf = dIn.BoostVector();
         TVector3 p_rf = pIn.BoostVector();
-        pIn_d.Boost(p_rf);
         nIn_d.Boost(d_rf);//Lab frame
-        TVector3 p_rf_new = pIn_d.BoostVector();
+        TLorentzVector pIn_d_new = dIn-nIn_d;//off shell proton
+        TVector3 p_rf_new = pIn_d_new.BoostVector();
         
         pOut.Boost(-d_rf);
         pOut.Boost(p_rf_new);
