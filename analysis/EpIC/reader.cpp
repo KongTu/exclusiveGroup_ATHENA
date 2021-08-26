@@ -5,6 +5,7 @@
 #include "HepMC3/GenParticle.h"
 
 #include <TH1.h>
+#include <TH2.h>
 #include <TF1.h>
 #include <TROOT.h>
 #include <TFile.h>
@@ -57,7 +58,11 @@ int main(int argc, char **argv) {
 
     TH1D* h_new_t_A = new TH1D("h_new_t_A", "", 50, 0.0, 1.0);
     TH1D* h_new_t_D = new TH1D("h_new_t_D", "", 50, 0.0, 1.0);
-    
+
+    TH2D* h_thetaVsp_proton = new TH2D("h_thetaVsp_proton",";p (Gev/c);#theta (mrad)",200,0,200,100,0,50);
+    TH2D* h_thetaVsp_neutron = new TH2D("h_thetaVsp_neutron",";p (Gev/c);#theta (mrad)",200,0,200,100,0,50);
+    TH2D* h_ptVsEta_gamma = new TH2D("h_ptVsEta_gamma",";#eta ;p_{T} (GeV/c)",200,-6,6,100,0,4);
+
     //open file
     ReaderAscii inputFile(argv[1]);
     
@@ -77,6 +82,8 @@ int main(int argc, char **argv) {
 
         //DVCS event
         DVCSEvent dvcsEvent(evt);
+
+        //*Kong starts here.
 
         TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
         //out electron
@@ -183,6 +190,11 @@ int main(int argc, char **argv) {
 
         nIn_d.Boost(d_rf);
         pOut.Boost(d_rf);
+
+        h_thetaVsp_proton->Fill(pOut.P(), pOut.Theta()*1000.);
+        h_thetaVsp_neutron->Fill(nIn_d.P(), nIn_d.Theta()*1000.);
+        h_ptVsEta_gamma->Fill(gammaOut.Eta(),gammaOut.Pt());
+        //*Kong ends here.
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
