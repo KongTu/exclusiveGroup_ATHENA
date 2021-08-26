@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
-        if(pIn_d.P()>0.3) continue;
+        if(fabs(1.0-alpha_SN)>0.01) continue;
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         TVector3 d_rf = dIn.BoostVector();
         nIn_d.Boost(d_rf);//Lab frame
