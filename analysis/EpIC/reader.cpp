@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
         TVector3 d_rf = dIn.BoostVector();
         nIn_d.Boost(d_rf);//Lab frame
         
-        TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        TLorentzVector all = eIn+pIn+nIn_d-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
