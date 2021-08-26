@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
         TLorentzVector gammaOut = getFourMomentum(evt.particles().at(4)); 
         //out proton
         TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
+        cout << "before boost "<<endl;
         PRINT4VECTOR(pOut,1);
         //deuteron light front wave fucntion:
         double k1 = deutNk_beagle->GetRandom()*0.197;
@@ -111,11 +112,17 @@ int main(int argc, char **argv) {
         pIn.Boost(-to_rest_frame);
         pOut.Boost(-to_rest_frame);
         gammaOut.Boost(-to_rest_frame);
+        cout << "in rest "<<endl;
+        PRINT4VECTOR(pOut,1);
 
         TVector3 to_fermi = pIn_d.BoostVector();
-        pIn.Boost(to_fermi);
-        pOut.Boost(to_fermi);
-        gammaOut.Boost(to_fermi);
+        pIn.Boost(-to_fermi);
+        pOut.Boost(-to_fermi);
+        gammaOut.Boost(-to_fermi);
+        cout << "in fermi frame "<<endl;
+        PRINT4VECTOR(pOut,1);
+         cout << "boost vector "<<endl;
+        PRINT4VECTOR(pIn_d,1);
 
         pIn.Boost(to_rest_frame);
         pOut.Boost(to_rest_frame);
