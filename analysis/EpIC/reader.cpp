@@ -5,6 +5,7 @@
 #include "HepMC3/GenParticle.h"
 
 #include <TH1.h>
+#include <TF1.h>
 #include <TROOT.h>
 #include <TFile.h>
 #include <TGraph.h>
@@ -33,6 +34,11 @@ int main(int argc, char **argv) {
     std::vector<TH1D*> h_y(10, nullptr);
     std::vector<TH1D*> h_phi(10, nullptr);
 
+    TF1 *deutNk_beagle = new TF1("Deuteron n(k) in fm^{-1}",getdNdkDeut,0,10,0);
+    TF1* cthetaFlat= new TF1("cthetaFlat","0.5",-1.,1.);
+    TF1* phiFlat= new TF1("phiFlat","1",-PI,PI);
+
+
     TFile* output = new TFile("output.root","RECREATE");
 
     h_Q2[0] = new TH1D("h_Q2_00", "", 90, 1., 10.);
@@ -40,6 +46,11 @@ int main(int argc, char **argv) {
     h_xB[0] = new TH1D("h_xB_00", "", 50, 0.0, 1.0);
     h_y[0] = new TH1D("h_y_00", "", 50, 0.0, 1.0);
     h_phi[0] = new TH1D("h_phi_00", "", 100, 0.0, 6.2831);
+
+    TH1D* h_alpha = new TH1D("h_alpha","",100,0,2);
+    TH1D* h_p = new TH1D("h_p","",100,0,1);
+    TH1D* h_pz = new TH1D("h_pz","",100,0,1);
+
     
     //open file
     ReaderAscii inputFile(argv[1]);
@@ -74,7 +85,28 @@ int main(int argc, char **argv) {
         TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
         TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
 
-        cout << "conservation: " << all.Px() << " " << all.Py() << " " << all.Pz() << " " << all.E() << endl;
+        //deuteron light front wave fucntion:
+        double k1 = deutNk_beagle->GetRandom()*0.197;
+        double theta1=TMath::ACos(cthetaFlat->GetRandom());
+        double phi1 = phiFlat->GetRandom();
+        double kx1=k1*TMath::Sin(theta1)*TMath::Cos(phi1);
+        double ky1=k1*TMath::Sin(theta1)*TMath::Sin(phi1);
+        double kz1=k1*TMath::Cos(theta1);
+        double Enn = sqrt(kx1*kx1+ky1*ky1+kz1*kz1+MASS_NUCLEON*MASS_NUCLEON);
+        double alpha_SN = 1. - kz1 / Enn;
+        double alpha_AN = 2 - alpha_SN;
+        double ANMT2 = MASS_PROTON*MASS_PROTON+kx1*kx1+ky1*ky1;
+        double pz1 = -(alpha_AN*MASS_DEUTERON)/4. + ANMT2/(alpha_AN*MASS_DEUTERON);
+        double E1 = (alpha_AN*MASS_DEUTERON)/4. + ANMT2/(alpha_AN*MASS_DEUTERON);
+        double SNMT2 = MASS_NEUTRON*MASS_NEUTRON + kx1*kx1 + ky1*ky1;
+        double pz2 = -(alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
+        double E2 = (alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
+
+        h_alpha->Fill(alpha_SN);
+        TLorentzVector pIn_d(kx1,ky1,pz1,E1);
+        TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
+        h_p->Fill(nIn_d.P());
+        h_pz->Fill(nIn_d.Pz());
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());

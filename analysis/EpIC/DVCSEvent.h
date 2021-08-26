@@ -4,6 +4,46 @@
 
 using namespace HepMC3;
 
+#define PI 3.1415926
+#define MASS_PION     0.13957
+#define MASS_KAON     0.493667
+#define MASS_MUON     0.1056
+#define MASS_ELECTRON 0.000511
+#define MASS_JPSI 	  3.09688
+#define MASS_PROTON   0.93827
+#define MASS_NEUTRON  0.93957
+#define MASS_NUCLEON  0.9389
+#define MASS_DEUTERON 1.8756129
+#define MASS_TRITON   2.7937167208086358
+#define MASS_HE3      2.7937167208086358
+#define MASS_ALPHA    3.7249556277448477
+#define MASS_LI6      5.5874334416172715
+#define MASS_C12      11.174866883234543
+#define MASS_CA40     37.249556277448477
+#define MASS_XE131    121.99229680864376
+#define MASS_AU197    183.45406466643374
+#define MASS_PB208    193.69769264273208
+
+// Deuteron dn(k)/dk distribution from BeAGLE.
+Double_t getdNdkDeut(Double_t *x, Double_t *par){
+
+	double A0 = 157.4;
+	double B0 = 1.24;
+	double C0 = 18.3;
+	double A1 = 0.234;
+	double B1 = 1.27;
+	double C1 = 0.0;
+	double A2 = 0.00623;
+	double B2 = 0.220;
+	double C2 = 0.0;
+	double Z0 = A0 * (TMath::Exp(-B0*x[0]*x[0])/((1+C0*x[0]*x[0])*(1+C0*x[0]*x[0])));
+    double Z1 = A1 * (TMath::Exp(-B1*x[0]*x[0])/((1+C1*x[0]*x[0])*(1+C1*x[0]*x[0])));
+    double Z2 = A2 * (TMath::Exp(-B2*x[0]*x[0])/((1+C2*x[0]*x[0])*(1+C2*x[0]*x[0])));
+	double total = (Z0+Z1+Z2)*x[0]*x[0]*(4*PI);
+
+	return total;
+}
+
 
 double Phi_Phis(int mode, TLorentzVector q, TLorentzVector p, TLorentzVector mu, TLorentzVector mup, TLorentzVector v){
 
