@@ -107,6 +107,8 @@ int main(int argc, char **argv) {
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
+        if(pIn_d.P()>0.3) continue;
+
         //begin boost:
         cout << "starting to boost around. Step.1 boost to CM frame" << endl;
         TLorentzVector cm = eIn+pIn;
@@ -119,7 +121,7 @@ int main(int argc, char **argv) {
 
         TVector3 restframe = pIn.BoostVector();
         cout << "new cm frame ~ " << endl;
-        pIn_d.Boost(-restframe);
+        pIn_d.Boost(restframe);
         TLorentzVector cm_new = eIn+pIn_d;
         TVector3 cm_new_boost = cm_new.BoostVector();
         gammaOut.Boost(cm_new_boost);
