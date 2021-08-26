@@ -121,10 +121,40 @@ int main(int argc, char **argv) {
 
         pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
-        // gammaOut.Boost(-p_rf);
-        // gammaOut.Boost(p_rf_new);
+        gammaOut.Boost(-p_rf);
+        gammaOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        
+        //correcting
+        gammaStar.Boost(-d_rf);
+        nIn_d.Boost(-d_rf);
+        gammaOut.Boost(-d_rf);
+        pOut.Boost(-d_rf);
+
+        double qzkz = gammaStar.Pz() - (nIn_d.Pz());//qz-kz
+        double numn = gammaStar.E() - nIn_d.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
+        double jx = gammaOut.Px();
+        double jy = gammaOut.Py();
+        double jz = gammaOut.Pz();
+        double px = pOut.Px();
+        double py = pOut.Py();
+        double pz = pOut.Pz();
+
+        //comment this out after BeAGLE itself has correct kinematics
+        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
+        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
+
+        gammaOut.SetPxPyPzE(jx,jy,jz,sqrt(jx*jx+jy*jy+jz*jz));
+        pOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_PROTON*MASS_PROTON));
+
+        gammaStar.Boost(d_rf);
+        nIn_d.Boost(d_rf);
+        gammaOut.Boost(d_rf);
+        pOut.Boost(d_rf);
+
+        all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+
         // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());

@@ -31,7 +31,7 @@ using namespace HepMC3;
 Double_t getCorrJz(Double_t qzkz, Double_t numn, Double_t jx, Double_t jy, Double_t px, Double_t py, Double_t Mp){
 
 	double Md = MASS_DEUTERON;
-	double Mj = MASS_JPSI;
+	double Mj = 0.;//gamma for DVCS
 
 	double finalJz = (qzkz*(TMath::Power(jx,2) + TMath::Power(jy,2) + TMath::Power(Mj,2) - TMath::Power(Mp,2) + TMath::Power(Md + numn,2) - 
         TMath::Power(px,2) - TMath::Power(py,2) - TMath::Power(qzkz,2)) - 
@@ -61,7 +61,7 @@ Double_t getCorrJz(Double_t qzkz, Double_t numn, Double_t jx, Double_t jy, Doubl
 Double_t getCorrPz(Double_t qzkz, Double_t numn, Double_t jx, Double_t jy, Double_t px, Double_t py, Double_t Mp){
 
 	double Md = MASS_DEUTERON;
-	double Mj = MASS_JPSI;
+	double Mj = 0.;//gamma for DVCS
 
 	double finalPz = (qzkz*(-TMath::Power(jx,2) - TMath::Power(jy,2) - TMath::Power(Mj,2) + TMath::Power(Mp,2) + TMath::Power(Md + numn,2) + 
         TMath::Power(px,2) + TMath::Power(py,2) - TMath::Power(qzkz,2)) + 
