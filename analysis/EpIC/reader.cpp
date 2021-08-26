@@ -165,10 +165,24 @@ int main(int argc, char **argv) {
 
         //Method A.
         TVector2 sum_pt(eOut.Px()+gammaOut.Px(), eOut.Py()+gammaOut.Py());
-        double t_doubletagging = -1.*(pOut-(-nIn_d) ).Mag2();
-        cout << "value " << t_doubletagging << endl;
         h_new_t_A->Fill(sum_pt.Mod2());
+
+        nIn_d.Boost(-d_rf);
+        pOut.Boost(-d_rf);
+
+        Double_t E_bInt = (alpha_AN*MASS_DEUTERON)/4. + (nIn_d.Px()*nIn_d.Px()+
+            nIn_d.Py()*nIn_d.Py()+MASS_PROTON*MASS_PROTON)/(alpha_AN*MASS_DEUTERON);
+        Double_t Pz_bInt = -(alpha_AN*MASS_DEUTERON)/4. + (nIn_d.Px()*nIn_d.Px()+
+            nIn_d.Py()*nIn_d.Py()+MASS_PROTON*MASS_PROTON)/(alpha_AN*MASS_DEUTERON);
+        //new 4 vector for struck nucleon before interaction;
+        TLorentzVector n_primeprime;
+        n_primeprime.SetPxPyPzE(-nIn_d.Px(),-nIn_d.Py(),
+        Pz_bInt,E_bInt);
+        double t_doubletagging = -1*(pOut - n_primeprime).Mag2();
         h_new_t_D->Fill(t_doubletagging);
+
+        nIn_d.Boost(d_rf);
+        pOut.Boost(d_rf);
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
