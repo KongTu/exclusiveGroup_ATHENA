@@ -121,11 +121,11 @@ int main(int argc, char **argv) {
 
         pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
-        gammaOut.Boost(-p_rf);
-        gammaOut.Boost(p_rf_new);
+        // gammaOut.Boost(-p_rf);
+        // gammaOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
-        PRINT4VECTOR(all,1);
+        // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
 
