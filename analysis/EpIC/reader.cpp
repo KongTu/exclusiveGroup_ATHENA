@@ -112,14 +112,9 @@ int main(int argc, char **argv) {
         if(pIn_d.P()>0.3) continue;
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         TVector3 d_rf = dIn.BoostVector();
-        TVector3 p_rf = pIn.BoostVector();
-        nIn_d.Boost(p_rf);//Lab frame
-        pIn_d.Boost(p_rf);//lab frame
-        TVector3 p_rf_new = pIn_d.BoostVector();
-        pOut.Boost(-p_rf);
-        pOut.Boost(p_rf_new);
-   
-        TLorentzVector all = eIn+pIn_d+nIn_d-eOut-gammaOut-pOut-nIn_d;
+        nIn_d.Boost(d_rf);//Lab frame
+        
+        TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
