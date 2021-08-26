@@ -105,18 +105,39 @@ int main(int argc, char **argv) {
 
         h_alpha->Fill(alpha_SN);
         TLorentzVector pIn_d(kx1,ky1,pz1,E1);
+        TLorentzVector pIn_drf(kx1,ky1,pz1,E1);
         TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
+        TLorentzVector nIn_drf(-kx1,-ky1,pz2,E2);
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
         if(pIn_d.P()>0.3) continue;
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         TVector3 d_rf = dIn.BoostVector();
-        pIn_d.Boost(d_rf);
-        nIn_d.Boost(d_rf);
+        nIn_d.Boost(d_rf);//Lab frame
         TVector3 p_rf_new = pIn_d.BoostVector();
+        
         pOut.Boost(-d_rf);
-        pOut.Boost(p_rf_new);
+        gammaStar.Boost(-d_rf);
+        gammaOut.Boost(-d_rf);
+
+        double qzkz = gammaStar.Pz() - (pOut.Pz());//qz-kz
+        double numn = gammaStar.E() - pOut.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
+        double jx = gammaOut.Px();
+        double jy = gammaOut.Py();
+        double jz = gammaOut.Pz();
+        double px = pOut.Px();
+        double py = pOut.Py();
+        double pz = pOut.Pz();
+
+        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
+        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
+
+        gammaOut.SetPxPyPzE(jx,py,jz,sqrt(jx*jx+jy*jy+jz*jz));
+        pOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_PROTON*MASS_PROTON));
+
+        gammaOut.Boost(d_rf);
+        pOut.Boost(d_rf);
         
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
