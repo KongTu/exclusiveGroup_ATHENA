@@ -114,13 +114,12 @@ int main(int argc, char **argv) {
         TVector3 d_rf = dIn.BoostVector();
         TVector3 p_rf = pIn.BoostVector();
         nIn_d.Boost(d_rf);//Lab frame
-        TLorentzVector pIn_d_new = dIn-nIn_d;//off shell proton
-        TVector3 p_rf_new = pIn_d_new.BoostVector();
-        
+        pIn_d.Boost(d_rf);//lab frame
+        TVector3 p_rf_new = pIn_d.BoostVector();
         pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
    
-        TLorentzVector all = eIn+pIn+nIn_d-eOut-gammaOut-pOut-nIn_d;
+        TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
