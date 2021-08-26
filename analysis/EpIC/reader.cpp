@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
         PRINT4VECTOR(cm_new,1);
         cout << "conservation ~ " << endl;
 
-        TLorentzVector all = eIn+pIn_d-eOut-pOut-gammaOut;
+        TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
         PRINT4VECTOR(all,1);
         cout << "all particles " << endl;
         PRINT4VECTOR(eIn,1);
