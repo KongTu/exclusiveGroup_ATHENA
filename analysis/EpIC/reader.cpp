@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
 
     TH2D* h_thetaVsp_proton = new TH2D("h_thetaVsp_proton",";p (Gev/c);#theta (mrad)",200,0,200,100,0,50);
     TH2D* h_thetaVsp_neutron = new TH2D("h_thetaVsp_neutron",";p (Gev/c);#theta (mrad)",200,0,200,100,0,50);
+    TH2D* h_ptVsEta_gamma_b = new TH2D("h_ptVsEta_gamma_b",";#eta ;p_{T} (GeV/c)",200,-6,6,100,0,4);
     TH2D* h_ptVsEta_gamma = new TH2D("h_ptVsEta_gamma",";#eta ;p_{T} (GeV/c)",200,-6,6,100,0,4);
 
     //open file
@@ -94,6 +95,8 @@ int main(int argc, char **argv) {
         TLorentzVector pIn = getFourMomentum(evt.particles().at(3)); 
         //out photon
         TLorentzVector gammaOut = getFourMomentum(evt.particles().at(4)); 
+        h_ptVsEta_gamma_b->Fill(gammaOut.Eta(),gammaOut.Pt());
+
         //out proton
         TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
    
