@@ -108,32 +108,27 @@ int main(int argc, char **argv) {
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
-        TVector3 to_rest_frame = pIn.BoostVector();
-        pIn.Boost(-to_rest_frame);
-        pOut.Boost(-to_rest_frame);
-        gammaOut.Boost(-to_rest_frame);
-        cout << "in rest "<<endl;
-        PRINT4VECTOR(pOut,1);
+        //begin boost:
+        cout << "starting to boost around. Step.1 boost to CM frame" << endl;
+        TLorentzVector cm = eIn+pIn;
+        TVector3 cm_boost = cm.BoostVector();
+        gammaOut.Boost(-cm_boost);
+        eOut.Boost(-cm_boost);
+        pOut.Boost(-cm_boost);
 
-        TVector3 to_fermi = pIn_d.BoostVector();
-        pIn.Boost(-to_fermi);
-        pOut.Boost(-to_fermi);
-        gammaOut.Boost(-to_fermi);
-        cout << "in fermi frame "<<endl;
-        PRINT4VECTOR(pOut,1);
-         cout << "boost vector "<<endl;
-        PRINT4VECTOR(pIn_d,1);
+        PRINT4VECTOR(cm,1);
 
-        pIn.Boost(to_rest_frame);
-        pOut.Boost(to_rest_frame);
-        gammaOut.Boost(to_rest_frame);
+        cout << "new cm frame ~ " << endl;
+        TLorentzVector cm_new = eIn+pIn_d;
+        TVector3 cm_new_boost = cm_new.BoostVector();
+        gammaOut.Boost(cm_new_boost);
+        eOut.Boost(cm_new_boost);
+        pOut.Boost(cm_new_boost);
 
-        cout << "after boost"<<endl;
-        PRINT4VECTOR(pOut,1);
-        
-        cout << "conservation"<<endl;
+        PRINT4VECTOR(cm_new,1);
+        cout << "conservation ~ " << endl;
 
-        TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
+        TLorentzVector all = eIn+pIn_d-eOut-pOut-gammaOut;
         PRINT4VECTOR(all,1);
 
 
