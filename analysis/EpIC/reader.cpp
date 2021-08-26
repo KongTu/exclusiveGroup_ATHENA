@@ -50,8 +50,8 @@ int main(int argc, char **argv) {
     TH1D* h_alpha = new TH1D("h_alpha","",100,0,2);
     TH1D* h_p = new TH1D("h_p","",100,0,1);
     TH1D* h_pz = new TH1D("h_pz","",100,-1,1);
-    TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-1,1);
-    TH1D* h_E_diff = new TH1D("h_E_diff","",100,-1,1);
+    TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-10,10);
+    TH1D* h_E_diff = new TH1D("h_E_diff","",100,-10,10);
 
     
     //open file
