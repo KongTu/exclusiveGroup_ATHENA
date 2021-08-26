@@ -55,7 +55,8 @@ int main(int argc, char **argv) {
     TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-10,10);
     TH1D* h_E_diff = new TH1D("h_E_diff","",100,-10,10);
 
-    TH1D* h_new_t = new TH1D("h_new_t", "", 50, 0.0, 1.0);
+    TH1D* h_new_t_A = new TH1D("h_new_t_A", "", 50, 0.0, 1.0);
+    TH1D* h_new_t_D = new TH1D("h_new_t_D", "", 50, 0.0, 1.0);
     
     //open file
     ReaderAscii inputFile(argv[1]);
@@ -164,7 +165,9 @@ int main(int argc, char **argv) {
 
         //Method A.
         TVector2 sum_pt(eOut.Px()+gammaOut.Px(), eOut.Py()+gammaOut.Py());
-        h_new_t->Fill(sum_pt.Mod2());
+        double t_doubletagging = (pOut+nIn_d).Mag2();
+        h_new_t_A->Fill(sum_pt.Mod2());
+        h_new_t_D->Fill(t_doubletagging);
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
