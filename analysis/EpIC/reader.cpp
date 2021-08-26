@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
         nIn_d.Boost(d_rf);//Lab frame
         pIn_d.Boost(d_rf);//lab frame
         TVector3 p_rf_new = pIn_d.BoostVector();
-        pOut.Boost(-d_rf);
+        pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
    
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
