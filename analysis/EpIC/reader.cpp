@@ -117,11 +117,13 @@ int main(int argc, char **argv) {
         pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
 
-        TLorentzVector all = eIn+pIn_d+nIn_d-eOut-gammaOut-pOut-nIn_d;
+        TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
+
+        TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
-        
+
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
         h_t[0]->Fill(-1 * dvcsEvent.getT());
