@@ -122,15 +122,21 @@ int main(int argc, char **argv) {
         pIn_d.Boost(restframe);
         TLorentzVector cm_new = eIn+pIn_d;
         TVector3 cm_new_boost = cm_new.BoostVector();
-        gammaOut.Boost(-cm_new_boost);
-        eOut.Boost(-cm_new_boost);
-        pOut.Boost(-cm_new_boost);
+        gammaOut.Boost(cm_new_boost);
+        eOut.Boost(cm_new_boost);
+        pOut.Boost(cm_new_boost);
 
         PRINT4VECTOR(cm_new,1);
         cout << "conservation ~ " << endl;
 
         TLorentzVector all = eIn+pIn_d-eOut-pOut-gammaOut;
         PRINT4VECTOR(all,1);
+        cout << "all particles " << endl;
+        PRINT4VECTOR(eIn,1);
+        PRINT4VECTOR(eOut,1);
+        PRINT4VECTOR(pIn_d,1);
+        PRINT4VECTOR(gammaOut,1);
+        PRINT4VECTOR(pOut,1);
 
 
         //fill
