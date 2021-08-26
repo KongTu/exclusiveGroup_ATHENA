@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
         TLorentzVector pIn_d_new = dIn-nIn_d;//off shell proton
         TVector3 p_rf_new = pIn_d_new.BoostVector();
         
-        pOut.Boost(-d_rf);
+        pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
    
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
