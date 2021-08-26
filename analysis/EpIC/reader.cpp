@@ -117,30 +117,9 @@ int main(int argc, char **argv) {
         nIn_d.Boost(d_rf);//Lab frame
         TVector3 p_rf_new = pIn_d.BoostVector();
         
-        pOut.Boost(-p_rf);
-        pOut.Boost(p_rf_new);
         pOut.Boost(-d_rf);
-        gammaStar.Boost(-d_rf);
-        gammaOut.Boost(-d_rf);
-
-        double qzkz = gammaStar.Pz() - (pOut.Pz());//qz-kz
-        double numn = gammaStar.E() - pOut.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
-        double jx = gammaOut.Px();
-        double jy = gammaOut.Py();
-        double jz = gammaOut.Pz();
-        double px = pOut.Px();
-        double py = pOut.Py();
-        double pz = pOut.Pz();
-
-        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
-        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
-
-        gammaOut.SetPxPyPzE(jx,py,jz,sqrt(jx*jx+jy*jy+jz*jz));
-        pOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_PROTON*MASS_PROTON));
-
-        gammaOut.Boost(d_rf);
-        pOut.Boost(d_rf);
-        
+        pOut.Boost(p_rf_new);
+   
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
         h_pz_diff->Fill(all.Pz());
