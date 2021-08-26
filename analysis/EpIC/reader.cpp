@@ -83,8 +83,7 @@ int main(int argc, char **argv) {
         TLorentzVector gammaOut = getFourMomentum(evt.particles().at(4)); 
         //out proton
         TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
-        TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
-
+        PRINT4VECTOR(pOut,1);
         //deuteron light front wave fucntion:
         double k1 = deutNk_beagle->GetRandom()*0.197;
         double theta1=TMath::ACos(cthetaFlat->GetRandom());
@@ -107,6 +106,29 @@ int main(int argc, char **argv) {
         TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
+
+        TVector3 to_rest_frame = pIn.BoostVector();
+        pIn.Boost(-to_rest_frame);
+        pOut.Boost(-to_rest_frame);
+        gammaOut.Boost(-to_rest_frame);
+
+        TVector3 to_fermi = pIn_d.BoostVector();
+        pIn.Boost(to_fermi);
+        pOut.Boost(to_fermi);
+        gammaOut.Boost(to_fermi);
+
+        pIn.Boost(to_rest_frame);
+        pOut.Boost(to_rest_frame);
+        gammaOut.Boost(to_rest_frame);
+
+        cout << "after boost"<<endl;
+        PRINT4VECTOR(pOut,1);
+        
+        cout << "conservation"<<endl;
+
+        TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
+        PRINT4VECTOR(all,1);
+
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());

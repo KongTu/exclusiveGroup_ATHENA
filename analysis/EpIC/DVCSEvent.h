@@ -24,6 +24,20 @@ using namespace HepMC3;
 #define MASS_AU197    183.45406466643374
 #define MASS_PB208    193.69769264273208
 
+void PRINT4VECTOR( TLorentzVector v, bool doPxPyPzE ){
+	
+
+	cout << " --------------------- " << endl;
+	if( doPxPyPzE ){
+		cout << " Px = " << v.Px() << endl;
+		cout << " Py = " << v.Py() << endl;
+		cout << " Pz = " << v.Pz() << endl;
+		cout << " Mass = " << v.M() << endl;
+		cout << " E = " << v.E() << endl;
+	}
+
+
+}
 // Deuteron dn(k)/dk distribution from BeAGLE.
 Double_t getdNdkDeut(Double_t *x, Double_t *par){
 
