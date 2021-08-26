@@ -122,8 +122,6 @@ int main(int argc, char **argv) {
         pOut.Boost(p_rf_new);
         gammaOut.Boost(-p_rf);
         gammaOut.Boost(p_rf_new);
-        eOut.Boost(-p_rf);
-        eOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+pIn_d+nIn_d-eOut-gammaOut-pOut-nIn_d;
         // PRINT4VECTOR(all,1);
