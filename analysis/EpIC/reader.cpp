@@ -33,6 +33,8 @@ int main(int argc, char **argv) {
     std::vector<TH1D*> h_y(10, nullptr);
     std::vector<TH1D*> h_phi(10, nullptr);
 
+    TFile* output = new TFile("output.root","RECREATE");
+
     h_Q2[0] = new TH1D("h_Q2_00", "", 90, 1., 10.);
     h_t[0] = new TH1D("h_t_00", "", 50, 0.0, 1.0);
     h_xB[0] = new TH1D("h_xB_00", "", 50, 0.0, 1.0);
@@ -60,7 +62,19 @@ int main(int argc, char **argv) {
         DVCSEvent dvcsEvent(evt);
 
         TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
-        cout << "eIn: " << eIn.Px() << " " << eIn.Py() << " " << eIn.Pz() << " " << eIn.E() << endl;
+        //out electron
+        TLorentzVector eOut = getFourMomentum(evt.particles().at(1)); 
+        //virtual photon
+        TLorentzVector gammaStar = getFourMomentum(evt.particles().at(2)); 
+        //in proton
+        TLorentzVector pIn = getFourMomentum(evt.particles().at(3)); 
+        //out photon
+        TLorentzVector gammaOut = getFourMomentum(evt.particles().at(4)); 
+        //out proton
+        TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
+        TLorentzVector all = eIn+pIn-eOut-pOut-gammaOut;
+
+        cout << "conservation: " << all.Px() << " " << all.Py() << " " << all.Pz() << " " << all.E() << endl;
 
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
@@ -115,5 +129,8 @@ int main(int argc, char **argv) {
   
     can->Print("plots.pdf", "pdf");
     
+    output->Write();
+    output->Close();
+
     return 0;
 }
