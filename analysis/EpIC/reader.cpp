@@ -109,18 +109,10 @@ int main(int argc, char **argv) {
 
         if(pIn_d.P()>0.3) continue;
         TVector3 p_rf = pIn.BoostVector();
-        gammaOut.Boost(-p_rf);
-        pOut.Boost(-p_rf);
-
-        TVector3 diff = pIn_d.Vect()-pIn.Vect();
-        TVector3 gammaOut_vect = gammaOut.Vect()+0.5*diff;
-        TVector3 pOut_vect = pOut.Vect()+0.5*diff;
-        gammaOut.SetVectM(gammaOut_vect,0.);
-        pOut.SetVectM(pOut_vect,MASS_PROTON);
-        
-        gammaOut.Boost(p_rf);
-        pOut.Boost(p_rf);
         pIn_d.Boost(p_rf);
+        TVector3 p_rf_new = pIn_d.BoostVector();
+        pOut.Boost(-p_rf);
+        pOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+pIn_d-eOut-gammaOut-pOut;
         PRINT4VECTOR(all,1);
