@@ -59,6 +59,9 @@ int main(int argc, char **argv) {
         //DVCS event
         DVCSEvent dvcsEvent(evt);
 
+        TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
+        cout << "eIn: " << eIn.Px() << " " << eIn.Py() << " " << eIn.Pz() << " " << eIn.E() << endl;
+
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
         h_t[0]->Fill(-1 * dvcsEvent.getT());
