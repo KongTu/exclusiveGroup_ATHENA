@@ -50,6 +50,8 @@ int main(int argc, char **argv) {
     TH1D* h_alpha = new TH1D("h_alpha","",100,0,2);
     TH1D* h_p = new TH1D("h_p","",100,0,1);
     TH1D* h_pz = new TH1D("h_pz","",100,-1,1);
+    TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-1,1);
+    TH1D* h_E_diff = new TH1D("h_E_diff","",100,-1,1);
 
     
     //open file
@@ -110,13 +112,16 @@ int main(int argc, char **argv) {
         if(pIn_d.P()>0.3) continue;
         TVector3 p_rf = pIn.BoostVector();
         pIn_d.Boost(p_rf);
+        nIn_d.Boost(p_rf);
         TVector3 p_rf_new = pIn_d.BoostVector();
         pOut.Boost(-p_rf);
         pOut.Boost(p_rf_new);
 
-        TLorentzVector all = eIn+pIn_d-eOut-gammaOut-pOut;
-        PRINT4VECTOR(all,1);
-
+        TLorentzVector all = eIn+pIn_d+nIn_d-eOut-gammaOut-pOut-nIn_d;
+        // PRINT4VECTOR(all,1);
+        h_pz_diff->Fill(all.Pz());
+        h_E_diff->Fill(all.E());
+        
         //fill
         h_Q2[0]->Fill(dvcsEvent.getQ2());
         h_t[0]->Fill(-1 * dvcsEvent.getT());
