@@ -105,18 +105,20 @@ int main(int argc, char **argv) {
 
         h_alpha->Fill(alpha_SN);
         TLorentzVector pIn_d(kx1,ky1,pz1,E1);
-        TLorentzVector pIn_drf(kx1,ky1,pz1,E1);
         TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
-        TLorentzVector nIn_drf(-kx1,-ky1,pz2,E2);
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
         if(pIn_d.P()>0.3) continue;
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         TVector3 d_rf = dIn.BoostVector();
+        TVector3 p_rf = pIn.BoostVector();
+        pIn_d.Boost(p_rf);
         nIn_d.Boost(d_rf);//Lab frame
         TVector3 p_rf_new = pIn_d.BoostVector();
         
+        pOut.Boost(-p_rf);
+        pOut.Boost(p_rf_new);
         pOut.Boost(-d_rf);
         gammaStar.Boost(-d_rf);
         gammaOut.Boost(-d_rf);
