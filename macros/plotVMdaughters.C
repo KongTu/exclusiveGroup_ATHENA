@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotVMdaughters(TString name="phi", bool veto_ = false, bool PHP_ = false){
+void plotVMdaughters(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_=0.1){
 
 	/* Beagle */
 
@@ -12,10 +12,7 @@ void plotVMdaughters(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
 	 }
 
-	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
-	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
-	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
-	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.1f.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];

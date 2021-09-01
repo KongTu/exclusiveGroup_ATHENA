@@ -6,7 +6,7 @@ double photon_flux_from_average = 0.161227;// this is cut on W [8,47] GeV
 void upcXsections(TH1D* hist){
 	double binwidth=hist->GetBinWidth(1);
 	double BR = 1.0;//ee & mumu channels.
-	double beagle_lumi = 2e7/(1.971E3*197);//nanobarn
+	double beagle_lumi = 4e7/(1.971E3*197);//nanobarn
 	double flux = photon_flux_from_average;
 	double flux_UPCs = 11.78;
 	double factor = (flux * binwidth * BR * beagle_lumi);
@@ -59,8 +59,12 @@ void makeSTARUPCs(TString name="jpsi"){
 	base1->Draw();
 
 	photon_flux_from_average = h_photon[vm_]->GetMean();
+
 	h_VM_t[0][0][vm_]->Add(h_VM_t[0][1][vm_],+1);
 	h_VM_t[1][0][vm_]->Add(h_VM_t[1][1][vm_],+1);
+	TH1D* h_raw_all = (TH1D*) h_VM_t[0][0][vm_]->Clone("h_raw_all");
+	TH1D* h_raw_neutron = (TH1D*) h_VM_t[1][0][vm_]->Clone("h_raw_neutron");
+	
 	upcXsections(h_VM_t[0][0][vm_]);
 	upcXsections(h_VM_t[1][0][vm_]);
 
@@ -68,6 +72,56 @@ void makeSTARUPCs(TString name="jpsi"){
 	h_VM_t[1][0][vm_]->SetLineColor(kRed);
 	h_VM_t[1][0][vm_]->Draw("hist same");
 
+	TLatex* r42 = new TLatex(0.18, 0.91, "eAu 18x110 GeV^{2}");
+	r42->SetNDC();
+	r42->SetTextSize(22);
+	r42->SetTextFont(43);
+	r42->SetTextColor(kBlack);
+	// r42->Draw("same");
 
+	TLatex* r43 = new TLatex(0.7,0.91, "BeAGLE");
+	r43->SetNDC();
+	r43->SetTextSize(0.04);
+	r43->Draw("same");
+
+	TLatex* r44_1 = new TLatex(0.18, 0.84, "Q^{2}<0.2 GeV^{2}, |y_{VM}|<1.0");
+	r44_1->SetNDC();
+	r44_1->SetTextSize(20);
+	r44_1->SetTextFont(43);
+	r44_1->SetTextColor(kBlack);
+	r44_1->Draw("same");
+
+	TLatex* r44_2 = new TLatex(0.18, 0.79, "Prediction for STAR AuAu J/#psi UPCs");
+	r44_2->SetNDC();
+	r44_2->SetTextSize(20);
+	r44_2->SetTextFont(43);
+	r44_2->SetTextColor(kBlack);
+	r44_2->Draw("same");
+
+	TLegend *w5 = new TLegend(0.2,0.65,0.53,0.74);
+	w5->SetLineColor(kWhite);
+	w5->SetFillColor(0);
+	w5->SetTextSize(18);
+	w5->SetTextFont(45);
+	w5->AddEntry(h_VM_t[0][0][vm_], "Incoherent all ", "PL");
+	w5->AddEntry(h_VM_t[1][0][vm_], "Incoherent ZDC neutron vetoed  ", "PL");
+	w5->Draw("same");
+
+	TFile * output = new TFile("../UPCs/forSTAR_AuAu200_Jpsi.root","RECREATE");
+	h_VM_t[0][0][vm_]->SetName("h_correct_all");
+	h_VM_t[0][0][vm_]->GetYaxis()->SetTitle("d#sigma/d|#it{t} | (#mub/GeV^{2})");
+	h_VM_t[0][0][vm_]->GetXaxis()->SetTitle("|#it{t} | (GeV^{2})");
+	h_VM_t[1][0][vm_]->SetName("h_correct_neutron");
+	h_VM_t[1][0][vm_]->GetYaxis()->SetTitle("d#sigma/d|#it{t} | (#mub/GeV^{2})");
+	h_VM_t[1][0][vm_]->GetXaxis()->SetTitle("|#it{t} | (GeV^{2})");
+	h_VM_t[0][0][vm_]->Write();
+	h_VM_t[1][0][vm_]->Write();
+	h_raw_all->GetYaxis()->SetTitle("Raw counts");
+	h_raw_neutron->GetYaxis()->SetTitle("Raw counts");
+	h_raw_all->GetXaxis()->SetTitle("|#it{t} | (GeV^{2})");
+	h_raw_neutron->GetXaxis()->SetTitle("|#it{t} | (GeV^{2})");
+	h_raw_all->Write();
+	h_raw_neutron->Write();
+	c1->Print("../UPCs/forSTAR_AuAu200_Jpsi.pdf");
 
 }

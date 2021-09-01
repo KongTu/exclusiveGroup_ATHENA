@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotdSigmadt_RECO(TString name="phi", int method=0, bool veto_ = false, bool PHP_ = false){
+void plotdSigmadt_RECO(TString name="phi", int method=0, int veto_ = 0, int PHP_ = 0, double minPt_=0.1){
 
 	/* Beagle */
 	if(name=="rho_photo"
@@ -19,12 +19,9 @@ void plotdSigmadt_RECO(TString name="phi", int method=0, bool veto_ = false, boo
 	}
 
 	int processindex=1;//91,93
-	int coh=1;
+	int coh=0;
 
-	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
-	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
-	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
-	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
@@ -54,7 +51,7 @@ void plotdSigmadt_RECO(TString name="phi", int method=0, bool veto_ = false, boo
 
 	/* Sartre */
 
-	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_0_minPt_%.2f.root",minPt_));
 	//not use here
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");

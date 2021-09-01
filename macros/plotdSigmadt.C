@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
+void plotdSigmadt(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_=0.15){
 
 	/* Beagle */
 
@@ -15,10 +15,7 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
 	 }
 
-	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
-	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
-	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
-	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP_test.root";
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
@@ -45,7 +42,7 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 
 	/* Sartre */
 
-	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_0_minPt_%.2f.root",minPt_));
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
 	TH1D* hist_t_afterPhaseSpace_coherent_sartre = (TH1D*) file_sartre->Get("hist_t_afterPhaseSpace_coherent");
@@ -158,6 +155,9 @@ void plotdSigmadt(TString name="phi", bool veto_ = false, bool PHP_ = false){
 	w6->AddEntry(hist_t_afterPhaseSpace_incoherent_sartre, "Sartre w. daug. cut "+legendName+" incoherent  ", "PL");
 	w6->AddEntry(h_VM_background_afterPhaseSpace, "BeAGLE w. daug. cut "+legendName+" incoherent ", "P");
 	w6->Draw("same");
+
+	cout << "beagle: " << h_VM_background->Integral(h_VM_background->FindBin(0.02),h_VM_background->FindBin(0.2),"width") << endl;
+	cout << "sartre: " << h_incoh_sartre->Integral(h_incoh_sartre->FindBin(0.02),h_incoh_sartre->FindBin(0.2),"width") << endl;
 
 	// if(veto_) c1->Print("../figures/dsigmadt_2/veto_dsigma_dt_"+name+".pdf");
 	// else c1->Print("../figures/dsigmadt_2/dsigma_dt_"+name+".pdf");

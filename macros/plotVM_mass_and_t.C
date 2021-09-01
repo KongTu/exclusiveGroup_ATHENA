@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, int method=0, int coh = 1){
+void plotVM_mass_and_t(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_=0.1, int method=0, int coh = 1){
 
 	setVM(name);
 	/* Beagle */
@@ -21,10 +21,7 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 
 	int processindex=1;//91,93
 
-	TString inputROOT="../rootfiles/beagle_allVMs_w_breakups.root";
-	if(PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_PHP.root";
-	if(veto_&&!PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos.root";
-	if(veto_&&PHP_) inputROOT="../rootfiles/beagle_allVMs_w_breakups_w_vetos_PHP.root";
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 
@@ -53,30 +50,30 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 	/* Sartre */
 	TFile* file_sartre_all[3];
 	if(PHP_){
-		file_sartre_all[0] = new TFile("../rootfiles/sartre_rho_photo_bnonsat.root");
-		file_sartre_all[1] = new TFile("../rootfiles/sartre_phi_photo_bnonsat.root");
-		file_sartre_all[2] = new TFile("../rootfiles/sartre_jpsi_photo_bnonsat.root");
+		file_sartre_all[0] = new TFile(Form("../rootfiles/sartre_rho_photo_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+		file_sartre_all[1] = new TFile(Form("../rootfiles/sartre_phi_photo_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+		file_sartre_all[2] = new TFile(Form("../rootfiles/sartre_jpsi_photo_bnonsat_PID_1_minPt_%.2f.root",minPt_));
 	}
 	else{
-		file_sartre_all[0] = new TFile("../rootfiles/sartre_rho_bnonsat.root");
-		file_sartre_all[1] = new TFile("../rootfiles/sartre_phi_bnonsat.root");
-		file_sartre_all[2] = new TFile("../rootfiles/sartre_jpsi_bnonsat.root");
+		file_sartre_all[0] = new TFile(Form("../rootfiles/sartre_rho_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+		file_sartre_all[1] = new TFile(Form("../rootfiles/sartre_phi_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+		file_sartre_all[2] = new TFile(Form("../rootfiles/sartre_jpsi_bnonsat_PID_1_minPt_%.2f.root",minPt_));
 	}
 	//sartre wrong mass setting in different rootfiles unfortunately.
 	TFile* file_sartre_all_wrongmass[3];
 	if(PHP_){
-		file_sartre_all_wrongmass[0] = new TFile("../rootfiles/sartre_rho_photo_bnonsat_extra.root");
-		file_sartre_all_wrongmass[1] = new TFile("../rootfiles/sartre_phi_photo_bnonsat_extra.root");
-		file_sartre_all_wrongmass[2] = new TFile("../rootfiles/sartre_jpsi_photo_bnonsat_extra.root");
+		file_sartre_all_wrongmass[0] = new TFile(Form("../rootfiles/sartre_rho_photo_bnonsat_PID_0_minPt_%.2f.root",minPt_));
+		file_sartre_all_wrongmass[1] = new TFile(Form("../rootfiles/sartre_phi_photo_bnonsat_PID_0_minPt_%.2f.root",minPt_));
+		file_sartre_all_wrongmass[2] = new TFile(Form("../rootfiles/sartre_jpsi_photo_bnonsat_PID_0_minPt_%.2f.root",minPt_));
 	}
 	else{
-		file_sartre_all_wrongmass[0] = new TFile("../rootfiles/sartre_rho_bnonsat_extra.root");
-		file_sartre_all_wrongmass[1] = new TFile("../rootfiles/sartre_phi_bnonsat_extra.root");
-		file_sartre_all_wrongmass[2] = new TFile("../rootfiles/sartre_jpsi_bnonsat_extra.root");
+		file_sartre_all_wrongmass[0] = new TFile(Form("../rootfiles/sartre_rho_bnonsat_PID_0_minPt_%.2f.root",minPt_));
+		file_sartre_all_wrongmass[1] = new TFile(Form("../rootfiles/sartre_phi_bnonsat_PID_0_minPt_%.2f.root",minPt_));
+		file_sartre_all_wrongmass[2] = new TFile(Form("../rootfiles/sartre_jpsi_bnonsat_PID_0_minPt_%.2f.root",minPt_));
 	}
 	
 
-	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_1_minPt_%.2f.root",minPt_));
 	//not use here
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
@@ -108,9 +105,6 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
     		h_VM_mass_sartre[ibreak][imass]->SetLineColor(kBlue);
     		for(int ifile=0;ifile<3;ifile++){
     			h_VM_mass_sartre_mixed[ibreak][imass][ifile] = (TH1D*) file_sartre_all[ifile]->Get(Form("h_VM_mass_%d_%d",ibreak,imass));
-	    		
-	    		// if(PHP_) h_VM_mass_sartre_mixed[ibreak][imass][ifile]->Scale(sigma_sartre_photo[ifile]);
-	    		// else h_VM_mass_sartre_mixed[ibreak][imass][ifile]->Scale(sigma_sartre_elect[ifile]);
 	    		
 	    		h_VM_mass_sartre_mixed[ibreak][imass][ifile]->SetLineColor(kBlue);
 	    		h_VM_mass_sartre_mixed[ibreak][imass][ifile]->SetMarkerStyle(28);
@@ -177,7 +171,7 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 	r44_1->SetTextColor(kBlack);
 	if(PHP_) r44_1->Draw("same");
 	else r44->Draw("same");
-	c1_1->Print("../figures/mass/"+name+"_mass.pdf");
+	// c1_1->Print("../figures/mass/"+name+"_mass.pdf");
 
 	if(name!="phi"&&name!="phi_photo") return;
 
@@ -216,7 +210,7 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 	w4->Draw("same");
 	r42->Draw("same");
 	r43->Draw("same");
-	c2->Print("../figures/mass/sartre_mass_mixing_"+name+".pdf");
+	// c2->Print("../figures/mass/sartre_mass_mixing_"+name+".pdf");
 
 	TCanvas* c3 = new TCanvas("c3","c3",1,1,600,600);
 	gPad->SetLogy(1);
@@ -245,7 +239,7 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 	w6->Draw("same");
 	r42->Draw("same");
 	r43->Draw("same");
-	c3->Print("../figures/mass/beagle_mass_mixing_"+name+".pdf");
+	// c3->Print("../figures/mass/beagle_mass_mixing_"+name+".pdf");
 
 	
 	//only plotting phi
@@ -370,8 +364,8 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 	if(PHP_) r44_1->Draw("same");
 	else r44->Draw("same");
 
-	if(veto_) c11->Print("../figures/dsigmadt_mass/veto_dsigma_dt_"+name+".pdf");
-	else c11->Print("../figures/dsigmadt_mass/dsigma_dt_"+name+".pdf");
+	// if(veto_) c11->Print("../figures/dsigmadt_mass/veto_dsigma_dt_"+name+".pdf");
+	// else c11->Print("../figures/dsigmadt_mass/dsigma_dt_"+name+".pdf");
 
 	TCanvas* c22 = new TCanvas("c22","c22",1,1,600,600);
 	gPad->SetLogy(0);
@@ -409,8 +403,8 @@ void plotVM_mass_and_t(TString name="phi", bool veto_=false, bool PHP_ = false, 
 	w8->AddEntry(ratio_2, "Sartre "+legendName+" coh. mixed w. PID  ", "PL");
 
 	w8->Draw("same");
-	if(veto_) c22->Print("../figures/dsigmadt_mass/ratio_veto_dsigma_dt_"+name+".pdf");
-	else c22->Print("../figures/dsigmadt_mass/ratio_dsigma_dt_"+name+".pdf");
+	// if(veto_) c22->Print("../figures/dsigmadt_mass/ratio_veto_dsigma_dt_"+name+".pdf");
+	// else c22->Print("../figures/dsigmadt_mass/ratio_dsigma_dt_"+name+".pdf");
 
 
 }

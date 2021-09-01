@@ -1,5 +1,5 @@
 #include "/gpfs02/eic/ztu/ATHENA/exclusiveGroup_ATHENA/analysis/include/pleaseIncludeMe.h"
-void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true, double setLowPt_=0.1){
+void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", const int nEvents = 40000, bool PHP_ = false, bool veto_ = true, double setLowPt_=0.1, bool smear_ = false ){
 
 	minPt_=setLowPt_;
 
@@ -290,10 +290,14 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 			}
 		}
 		//end
-		//for each vm; do...
+		//for each vm
 		//accurate mass
 		for(int ivm=0;ivm<3;ivm++){
 			if(hasvm[ivm]&&inPhaseSpace[ivm]) {//has vm and vm rapidity acceptance < 4.0
+				//smearing
+				if(smear_) letsMakeItReal(e_beam,e_scattered,A_beam,vm_vect1[ivm],vm_vect2[ivm]);
+				//end smearing
+				vm_vect[ivm] = vm_vect1[ivm]+vm_vect2[ivm];
 				h_VM[processindex][ivm][4]->Fill(-t_hat); //true cross section
 				if(!acceptance[ivm]||!ptacceptance[ivm]) continue; //cut on daughters.
 				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
