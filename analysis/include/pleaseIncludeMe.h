@@ -238,10 +238,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		// daug_2.Boost(eA_beam_reverse_boost);
 
 		//2. pt resolution
-		// double pt_resolution[]={0.0005,0.0005,0.01};
-		// double pt_resolution_constant[]={0.005,0.01,0.02};
-		double pt_resolution[]={0.5,0.5,0.1};
-		double pt_resolution_constant[]={0.5,0.1,0.2};
+		double pt_resolution[]={0.0005,0.0005,0.01};
+		double pt_resolution_constant[]={0.005,0.01,0.02};
 		double eta_bins[]={0.,1.0,2.5,4.0};
 		int pt_index_e = -1;
 		int pt_index_daug_1 = -1;
@@ -263,35 +261,20 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		cout << "e M " << e_scattered.M() << endl;
 		double pt_e_scattered = -99.;
 		if(pt_index_e>=0) {
-
-			cout << "here" << endl;
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_e]);
 			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_e]*pt_resolution_constant[pt_index_e]);//add in quardrature constant term
 			pt_e_scattered = (1.+ resolution) * e_scattered.Pt();
 			e_scattered.SetPtEtaPhiM(pt_e_scattered,e_scattered.Eta(),e_scattered.Phi(),e_scattered.M());
 		
 		}
-		cout << "e smeared pt " << e_scattered.Pt() << endl;
-		cout << "e smeared eta " << e_scattered.Eta() << endl;
-		cout << "e smeared phi " << e_scattered.Phi() << endl;
-		cout << "e smeared M " << e_scattered.M() << endl;
 		//daughter 1:
-		cout << "daug1 pt " << daug_1.Pt() << endl;
-		cout << "daug1 eta " << daug_1.Eta() << endl;
-		cout << "daug1 phi " << daug_1.Phi() << endl;
-		cout << "daug1 M " << daug_1.M() << endl;
 		double pt_daug_1 = -99.;
 		if(pt_index_daug_1>=0) {
-			cout << "here 2 " << endl;
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_1]);
 			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug_1]*pt_resolution_constant[pt_index_daug_1]);//add in quardrature constant term
 			pt_daug_1 = (1.+ resolution) * daug_1.Pt();
 			daug_1.SetPtEtaPhiM(pt_daug_1,daug_1.Eta(),daug_1.Phi(),daug_1.M());
 		}
-		cout << "daug1 smeared pt " << daug_1.Pt() << endl;
-		cout << "daug1 smeared eta " << daug_1.Eta() << endl;
-		cout << "daug1 smeared phi " << daug_1.Phi() << endl;
-		cout << "daug1 smeared M " << daug_1.M() << endl;
 		//daughter 2:
 		double pt_daug_2 = -99.;
 		if(pt_index_daug_2>=0) {
@@ -301,7 +284,7 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
 		
-		
+
 		e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
 		A_beam.SetPxPyPzE(0.,0.,110.,sqrt(110.*110.+MASS_AU197*MASS_AU197));
 		

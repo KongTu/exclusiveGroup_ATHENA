@@ -202,7 +202,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 			double mom = particle->GetP();
 			int charge = particle->eA->charge;
 			int NoBAM = particle->eA->NoBam;
-			if( index==3 ) e_scattered = particle->Get4Vector();
+			if( index==3 ) {e_scattered.SetPtEtaPhiM(pt,eta,phi,mass);}
 			if( status==1 ) all_part+=particle->Get4Vector();
 
 			//do analysis track-by-track
@@ -296,16 +296,13 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		for(int ivm=0;ivm<3;ivm++){
 			if(hasvm[ivm]&&inPhaseSpace[ivm]) {//has vm and vm rapidity acceptance < 4.0
 				//smearing
-				cout << "pt of daug.1. " << vm_vect1[ivm].Pt() << endl;
 				vector< TLorentzVector> update;
 				if(smear_) {
 					update = letsMakeItReal(e_beam,e_scattered,A_beam,vm_vect1[ivm],vm_vect2[ivm]);
 					e_beam=update[0];e_scattered=update[1];A_beam=update[2];vm_vect1[ivm]=update[3];vm_vect2[ivm]=update[4];
 				}
-				cout << "pt of daug.1. after " << vm_vect1[ivm].Pt() << endl;
 				//end smearing
 				vm_vect[ivm] = vm_vect1[ivm]+vm_vect2[ivm];
-
 				h_VM[processindex][ivm][4]->Fill(-t_hat); //true cross section
 				if(!acceptance[ivm]||!ptacceptance[ivm]) continue; //cut on daughters.
 				double mass = (vm_vect1[ivm]+vm_vect2[ivm]).M();
