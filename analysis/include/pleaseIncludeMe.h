@@ -124,6 +124,7 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	double method_A = -99;
 	TVector2 sum_pt(vm_vect.Px()+e_scattered.Px(), vm_vect.Py()+e_scattered.Py());
 	method_A = sum_pt.Mod2();
+	if( e_scattered.Eta() < -4.0 ) method_A = vm_vect.Pt()*vm_vect.Pt();//photoproduction;
 	
 	double method_L = -99.;
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
