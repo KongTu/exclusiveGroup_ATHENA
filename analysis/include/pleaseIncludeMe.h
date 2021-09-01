@@ -241,17 +241,17 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 		double pt_resolution_constant[]={0.005,0.01,0.02};
 		double eta_bins[]={0.,1.0,2.5,4.0};
 		int pt_index_e = -1;
-		int pt_index_daug1 = -1;
-		int pt_index_daug2 = -1;
+		int pt_index_daug_1 = -1;
+		int pt_index_daug_2 = -1;
 		for(int i=0;i<3;i++){
 			if(fabs(e_scattered.Eta())>eta_bins[i] 
 				&& fabs(e_scattered.Eta()) < eta_bins[i+1]) pt_index_e = i;
 
 			if(fabs(daug_1.Eta())>eta_bins[i] 
-				&& fabs(daug_1.Eta()) < eta_bins[i+1]) pt_index_daug1 = i;
+				&& fabs(daug_1.Eta()) < eta_bins[i+1]) pt_index_daug_1 = i;
 
 			if(fabs(daug_2.Eta())>eta_bins[i] 
-				&& fabs(daug_2.Eta()) < eta_bins[i+1]) pt_index_daug2 = i;
+				&& fabs(daug_2.Eta()) < eta_bins[i+1]) pt_index_daug_2 = i;
 		}
 		//e_scattered:
 		double pt_e_scattered = -99.;
@@ -259,23 +259,23 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_e]);
 			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_e]*pt_resolution_constant[pt_index_e]);//add in quardrature constant term
 			pt_e_scattered = (1.+ resolution) * e_scattered.Pt();
-			e_scattered.SetPt(pt_e_scattered);
+			e_scattered.SetPtEtaPhiM(pt_e_scattered,e_scattered.Eta(),e_scattered.Phi(),e_scattered.M());
 		}
 		//daughter 1:
-		double pt_daug1 = -99.;
-		if(pt_index_daug1>=0) {
-			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug1]);
-			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug1]*pt_resolution_constant[pt_index_daug1]);//add in quardrature constant term
-			pt_daug1 = (1.+ resolution) * daug_1.Pt();
-			daug_1.SetPt(pt_daug1);
+		double pt_daug_1 = -99.;
+		if(pt_index_daug_1>=0) {
+			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_1]);
+			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug_1]*pt_resolution_constant[pt_index_daug_1]);//add in quardrature constant term
+			pt_daug_1 = (1.+ resolution) * daug_1.Pt();
+			daug_1.SetPtEtaPhiM(pt_daug_1,daug_1.Eta(),daug_1.Phi(),daug_1.M());
 		}
 		//daughter 1:
-		double pt_daug2 = -99.;
-		if(pt_index_daug2>=0) {
-			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug2]);
-			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug2]*pt_resolution_constant[pt_index_daug2]);//add in quardrature constant term
-			pt_daug2 = (1.+ resolution) * daug_2.Pt();
-			daug_2.SetPt(pt_daug2);
+		double pt_daug_2 = -99.;
+		if(pt_index_daug_2>=0) {
+			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_2]);
+			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug_2]*pt_resolution_constant[pt_index_daug_2]);//add in quardrature constant term
+			pt_daug_2 = (1.+ resolution) * daug_2.Pt();
+			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
 		 
 		e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
