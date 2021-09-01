@@ -255,10 +255,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 				&& fabs(daug_2.Eta()) < eta_bins[i+1]) pt_index_daug_2 = i;
 		}
 		//e_scattered:
-		cout << "e pt " << e_scattered.Pt() << endl;
-		cout << "e eta " << e_scattered.Eta() << endl;
-		cout << "e phi " << e_scattered.Phi() << endl;
-		cout << "e M " << e_scattered.M() << endl;
 		double pt_e_scattered = -99.;
 		if(pt_index_e>=0) {
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_e]);

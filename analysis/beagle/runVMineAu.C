@@ -209,7 +209,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
-				vm_vect[ivm]=particle->Get4Vector();
+				vm_vect[ivm].SetPtEtaPhiM(pt,eta,phi,mass);
 				if( fabs(vm_vect[ivm].Rapidity())<4.0 ) hasvm[ivm]=1;//found vm.
 
 				//fill vm.
@@ -266,8 +266,8 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 				h_VM_daughter[processindex][ivm][2]->Fill(particle_daug2->GetPhi());
 				h_VM_daughter[processindex][ivm][3]->Fill(particle_daug2->GetTheta());
 
-				vm_vect1[ivm]=particle_daug1->Get4Vector();
-				vm_vect2[ivm]=particle_daug2->Get4Vector();
+				vm_vect1[ivm].SetPtEtaPhiM(particle_daug1->GetPt(),particle_daug1->GetEta(),particle_daug1->GetPhi(),particle_daug1->GetM());
+				vm_vect2[ivm].SetPtEtaPhiM(particle_daug2->GetPt(),particle_daug2->GetEta(),particle_daug2->GetPhi(),particle_daug2->GetM());
 			}
 
 		} // end of particle loop
