@@ -120,12 +120,12 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 
 	double method_E = (-vm_vect-e_scattered+e_beam).Mag2();
-	cout << "method_E " << -method_E << endl;
+	
 	double method_A = -99;
 	TVector2 sum_pt(vm_vect.Px()+e_scattered.Px(), vm_vect.Py()+e_scattered.Py());
 	method_A = sum_pt.Mod2();
 	if( e_scattered.Eta() < -4.0 ) method_A = vm_vect.Pt()*vm_vect.Pt();//photoproduction;
-	cout << "method_A " << -method_A << endl;
+	
 	double method_L = -99.;
 	TLorentzVector p_beam_scattered = p_beam-(vm_vect+e_scattered-e_beam);
 	double p_Aplus = p_beam_scattered.E()+p_beam_scattered.Pz();
@@ -211,31 +211,31 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		- e, e', VM daughters (2-prone), Au.
 		*/
 
-		// //1. angular divergence: CDR
-		// double theta_resolution_e[]={0.101,0.037};//x,y mrad
-		// double theta_resolution_h[]={0.218,0.379};//x,y mrad, w. strong hadron cooling
-		// //e' beam
-		// TVector3 e_beam_boost = e_beam.BoostVector();
-		// double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
-		// double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
-		// TLorentzVector e_beam_smear(px, py, e_beam.Pz(), e_beam.E());
-		// TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
-		// e_scattered.Boost(-e_beam_boost);
-		// e_scattered.Boost(e_beam_reverse_boost);
+		//1. angular divergence: CDR
+		double theta_resolution_e[]={0.101,0.037};//x,y mrad
+		double theta_resolution_h[]={0.218,0.379};//x,y mrad, w. strong hadron cooling
+		//e' beam
+		TVector3 e_beam_boost = e_beam.BoostVector();
+		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
+		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
+		TLorentzVector e_beam_smear(px, py, e_beam.Pz(), e_beam.E());
+		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
+		e_scattered.Boost(-e_beam_boost);
+		e_scattered.Boost(e_beam_reverse_boost);
 
-		// //VM daughters 1 and 2
-		// TVector3 A_beam_boost = A_beam.BoostVector();
-		// px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])*1E-3) * A_beam.Pz();
-		// py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])*1E-3) * A_beam.Pz();
-		// TLorentzVector A_beam_smear(px, py, A_beam.Pz(), A_beam.E());
-		// TLorentzVector eA_beam = e_beam+A_beam;
-		// TVector3 eA_beam_boost = eA_beam.BoostVector();
-		// daug_1.Boost(-eA_beam_boost);
-		// daug_2.Boost(-eA_beam_boost);
-		// TLorentzVector eA_beam_smear = e_beam_smear+A_beam_smear;
-		// TVector3 eA_beam_reverse_boost = eA_beam_smear.BoostVector();
-		// daug_1.Boost(eA_beam_reverse_boost);
-		// daug_2.Boost(eA_beam_reverse_boost);
+		//VM daughters 1 and 2
+		TVector3 A_beam_boost = A_beam.BoostVector();
+		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])*1E-3) * A_beam.Pz();
+		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])*1E-3) * A_beam.Pz();
+		TLorentzVector A_beam_smear(px, py, A_beam.Pz(), A_beam.E());
+		TLorentzVector eA_beam = e_beam+A_beam;
+		TVector3 eA_beam_boost = eA_beam.BoostVector();
+		daug_1.Boost(-eA_beam_boost);
+		daug_2.Boost(-eA_beam_boost);
+		TLorentzVector eA_beam_smear = e_beam_smear+A_beam_smear;
+		TVector3 eA_beam_reverse_boost = eA_beam_smear.BoostVector();
+		daug_1.Boost(eA_beam_reverse_boost);
+		daug_2.Boost(eA_beam_reverse_boost);
 
 		//2. pt resolution
 		double pt_resolution[]={0.0005,0.0005,0.01};
