@@ -258,6 +258,9 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 		}
 		//e_scattered:
 		cout << "e pt " << e_scattered.Pt() << endl;
+		cout << "e eta " << e_scattered.Eta() << endl;
+		cout << "e phi " << e_scattered.Phi() << endl;
+		cout << "e M " << e_scattered.M() << endl;
 		double pt_e_scattered = -99.;
 		if(pt_index_e>=0) {
 
@@ -268,7 +271,10 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 			e_scattered.SetPtEtaPhiM(pt_e_scattered,e_scattered.Eta(),e_scattered.Phi(),e_scattered.M());
 		
 		}
-		cout << "e pt smeared" << e_scattered.Pt() << endl;
+		cout << "e smeared pt " << e_scattered.Pt() << endl;
+		cout << "e smeared eta " << e_scattered.Eta() << endl;
+		cout << "e smeared phi " << e_scattered.Phi() << endl;
+		cout << "e smeared M " << e_scattered.M() << endl;
 		//daughter 1:
 		double pt_daug_1 = -99.;
 		if(pt_index_daug_1>=0) {
