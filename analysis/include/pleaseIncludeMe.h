@@ -257,13 +257,18 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 				&& fabs(daug_2.Eta()) < eta_bins[i+1]) pt_index_daug_2 = i;
 		}
 		//e_scattered:
+		cout << "e pt " << e_scattered.Pt() << endl;
 		double pt_e_scattered = -99.;
 		if(pt_index_e>=0) {
+
+			cout << "here" << endl;
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_e]);
 			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_e]*pt_resolution_constant[pt_index_e]);//add in quardrature constant term
 			pt_e_scattered = (1.+ resolution) * e_scattered.Pt();
 			e_scattered.SetPtEtaPhiM(pt_e_scattered,e_scattered.Eta(),e_scattered.Phi(),e_scattered.M());
+		
 		}
+		cout << "e pt smeared" << e_scattered.Pt() << endl;
 		//daughter 1:
 		double pt_daug_1 = -99.;
 		if(pt_index_daug_1>=0) {
