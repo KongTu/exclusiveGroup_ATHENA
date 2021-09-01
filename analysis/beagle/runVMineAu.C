@@ -12,8 +12,9 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 	TString name_PHP=Form("%d",PHP_);
 	TString name_veto=Form("%d",veto_);
     TString name_LowPt=Form("%.2f",setLowPt_);
+    TString name_smear=Form("%d",smear_);
 	TFile* output = 0;
-	TString outputROOT="beagle_allVMs_w_breakups_PHP_"+name_PHP+"_veto_"+name_veto+"_minPt_"+name_LowPt+".root";
+	TString outputROOT="beagle_allVMs_w_breakups_PHP_"+name_PHP+"_veto_"+name_veto+"_minPt_"+name_LowPt+"_smear_"+name_smear+".root";
 	output = new TFile(outputname+outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
