@@ -297,7 +297,11 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 			if(hasvm[ivm]&&inPhaseSpace[ivm]) {//has vm and vm rapidity acceptance < 4.0
 				//smearing
 				cout << "pt of daug.1. " << vm_vect1[ivm].Pt() << endl;
-				if(smear_) letsMakeItReal(e_beam,e_scattered,A_beam,vm_vect1[ivm],vm_vect2[ivm]);
+				vector< TLorentzVector> update;
+				if(smear_) {
+					update = letsMakeItReal(e_beam,e_scattered,A_beam,vm_vect1[ivm],vm_vect2[ivm]);
+					e_beam=update[0];e_scattered=update[1];A_beam=update[2];vm_vect1[ivm]=update[3];vm_vect2[ivm]=update[4];
+				}
 				cout << "pt of daug.1. after " << vm_vect1[ivm].Pt() << endl;
 				//end smearing
 				vm_vect[ivm] = vm_vect1[ivm]+vm_vect2[ivm];

@@ -202,8 +202,8 @@ void printSTABLE(EventBeagle* event, int nParticles){
 
 }
 
-void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector A_beam,
-	TLorentzVector daug_1, TLorentzVector daug_2){
+vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered,
+ TLorentzVector A_beam, TLorentzVector daug_1, TLorentzVector daug_2){
 
 		/*Smearing includes:
 		- crossing angle 25 mrad.
@@ -301,11 +301,17 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
 		
-		e_scattered = e_scattered;
-		daug_1 = daug_1;
-		daug_2 = daug_2;
+		
 		e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
 		A_beam.SetPxPyPzE(0.,0.,110.,sqrt(110.*110.+MASS_AU197*MASS_AU197));
+		
+		vector<TLorentzVector > update;
+		update.push_back(e_beam);
+		update.push_back(e_scattered);
+		update.push_back(A_beam);
+		update.push_back(daug_1);
+		update.push_back(daug_2);
 
+		return update;
 }
 
