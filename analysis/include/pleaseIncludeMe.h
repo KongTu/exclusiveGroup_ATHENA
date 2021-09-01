@@ -276,14 +276,23 @@ void letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzV
 		cout << "e smeared phi " << e_scattered.Phi() << endl;
 		cout << "e smeared M " << e_scattered.M() << endl;
 		//daughter 1:
+		cout << "daug1 pt " << daug_1.Pt() << endl;
+		cout << "daug1 eta " << daug_1.Eta() << endl;
+		cout << "daug1 phi " << daug_1.Phi() << endl;
+		cout << "daug1 M " << daug_1.M() << endl;
 		double pt_daug_1 = -99.;
 		if(pt_index_daug_1>=0) {
+			cout << "here 2 " << endl;
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_1]);
 			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug_1]*pt_resolution_constant[pt_index_daug_1]);//add in quardrature constant term
 			pt_daug_1 = (1.+ resolution) * daug_1.Pt();
 			daug_1.SetPtEtaPhiM(pt_daug_1,daug_1.Eta(),daug_1.Phi(),daug_1.M());
 		}
-		//daughter 1:
+		cout << "daug1 smeared pt " << daug_1.Pt() << endl;
+		cout << "daug1 smeared eta " << daug_1.Eta() << endl;
+		cout << "daug1 smeared phi " << daug_1.Phi() << endl;
+		cout << "daug1 smeared M " << daug_1.M() << endl;
+		//daughter 2:
 		double pt_daug_2 = -99.;
 		if(pt_index_daug_2>=0) {
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_2]);
