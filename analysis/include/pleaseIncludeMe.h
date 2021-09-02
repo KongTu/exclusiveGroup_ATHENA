@@ -216,8 +216,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double theta_resolution_h[]={0.218,0.379};//x,y mrad, w. strong hadron cooling
 		//e' beam
 		TVector3 e_beam_boost = e_beam.BoostVector();
-		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
-		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
+		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-6) * e_beam.Pz();
+		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-6) * e_beam.Pz();
 		TLorentzVector e_beam_smear(px, py, e_beam.Pz(), e_beam.E());
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
 		e_scattered.Boost(-e_beam_boost);
