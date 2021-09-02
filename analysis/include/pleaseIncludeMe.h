@@ -250,8 +250,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		horizDiv->MasterToLocalVect(simComp, angDivOutHoriz);
 		vertDiv->MasterToLocalVect(angDivOutHoriz, angDivOutHorizAndVert);
 
-		// TVector3 e_scattered_modified(angDivOutHorizAndVert);
-    // e_scattered.SetVectM(e_scattered_modified,MASS_ELECTRON);
+		TVector3 e_scattered_modified(angDivOutHorizAndVert);
+    e_scattered.SetVectM(e_scattered_modified,MASS_ELECTRON);
 
 		//VM daughters 1 and 2
 		TVector3 A_beam_boost = A_beam.BoostVector();
@@ -314,7 +314,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
 		
-
 		// e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
 		// A_beam.SetPxPyPzE(0.,0.,110.*197,sqrt(110.*110.*197*197+MASS_AU197*MASS_AU197));
 		
