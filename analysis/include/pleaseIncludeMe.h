@@ -214,13 +214,13 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 
 		//prepare all four-vectors
 		TLorentzVector vm_vector  =  daug_1+daug_2;
-		TLorentzVector A_beam_outgoing = e_beam - e_scattered - vm_vector - A_beam;
+		TLorentzVector A_beam_outgoing = e_beam - e_scattered - vm_vector + A_beam;
 
 		cout << "before" << endl;
-    cout << "CHeck E" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).E() << endl;
-    cout << "CHeck Px" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
-    cout << "CHeck Py" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Py() << endl;
-    cout << "CHeck Pz" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
+    cout << "CHeck E " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).E() << endl;
+    cout << "CHeck Px " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
+    cout << "CHeck Py " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Py() << endl;
+    cout << "CHeck Pz " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
 
 		cout << "after" << endl;
 
