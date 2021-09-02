@@ -216,6 +216,14 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TLorentzVector vm_vector  =  daug_1+daug_2;
 		TLorentzVector A_beam_outgoing = e_beam - e_scattered - vm_vector - A_beam;
 
+		cout << "before" << endl;
+    cout << "CHeck E" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).E() << endl;
+    cout << "CHeck Px" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
+    cout << "CHeck Py" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Py() << endl;
+    cout << "CHeck Pz" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
+
+		cout << "after" << endl;
+
 		//1. angular divergence: CDR
 		double momentum_resolution_e = 10.9E-4;// GeV/c
 		double momentum_resolution_Au = 6.2E-4;// GeV/c
