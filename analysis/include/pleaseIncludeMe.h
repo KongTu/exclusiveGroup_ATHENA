@@ -215,13 +215,22 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double theta_resolution_e[]={0.101,0.037};//x,y mrad
 		double theta_resolution_h[]={0.218,0.379};//x,y mrad, w. strong hadron cooling
 		//e' beam
+		cout << "e px " << e_scattered.Px() << endl;
+		cout << "e py " << e_scattered.Py() << endl;
+		cout << "e pz " << e_scattered.Pz() << endl;
+		cout << "e E " << e_scattered.E() << endl;
 		TVector3 e_beam_boost = e_beam.BoostVector();
-		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-6) * e_beam.Pz();
-		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-6) * e_beam.Pz();
+		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
+		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
 		TLorentzVector e_beam_smear(px, py, e_beam.Pz(), e_beam.E());
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
 		e_scattered.Boost(-e_beam_boost);
 		e_scattered.Boost(e_beam_reverse_boost);
+
+		cout << "e smeared px " << e_scattered.Px() << endl;
+		cout << "e smeared py " << e_scattered.Py() << endl;
+		cout << "e smeared pz " << e_scattered.Pz() << endl;
+		cout << "e smeared E " << e_scattered.E() << endl;
 
 		//VM daughters 1 and 2
 		// TVector3 A_beam_boost = A_beam.BoostVector();
