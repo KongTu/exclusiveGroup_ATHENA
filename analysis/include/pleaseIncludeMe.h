@@ -219,6 +219,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
 		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
 		double pz = (1.+gRandom->Gaus(0.,10.9E-4))*e_beam.Pz();
+		px = 0.;
+		py = 0.;
 		TLorentzVector e_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_ELECTRON*MASS_ELECTRON));
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
 		e_scattered.Boost(-e_beam_boost);
