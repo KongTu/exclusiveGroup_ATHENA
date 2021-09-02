@@ -280,9 +280,9 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
 		
-		
+
 		e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
-		A_beam.SetPxPyPzE(0.,0.,110.,sqrt(110.*110.+MASS_AU197*MASS_AU197));
+		A_beam.SetPxPyPzE(0.,0.,110.*197,sqrt(110.*110.*197*197+MASS_AU197*MASS_AU197));
 		
 		vector<TLorentzVector > update;
 		update.push_back(e_beam);
