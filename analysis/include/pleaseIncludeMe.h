@@ -223,8 +223,16 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		py = 0.;
 		TLorentzVector e_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_ELECTRON*MASS_ELECTRON));
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
-		e_scattered.Boost(-e_beam_boost);
-		e_scattered.Boost(e_beam_reverse_boost);
+		// e_scattered.Boost(-e_beam_boost);
+		// e_scattered.Boost(e_beam_reverse_boost);
+		
+		TGeoRotation *horizDiv = new TGeoRotation();
+    TGeoRotation *vertDiv  = new TGeoRotation();
+    horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]);
+    vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]);
+
+    e_scattered.RotateY(horizAngle);
+    e_scattered.RotateX(vertAngle);
 
 		//VM daughters 1 and 2
 		TVector3 A_beam_boost = A_beam.BoostVector();
