@@ -219,6 +219,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		cout << "e py " << e_scattered.Py() << endl;
 		cout << "e pz " << e_scattered.Pz() << endl;
 		cout << "e E " << e_scattered.E() << endl;
+
+		e_beam.SetPxPyPzE(0.,0.,e_beam.Pz(),sqrt(e_beam.Pz()*e_beam.Pz()+MASS_ELECTRON*MASS_ELECTRON));
 		TVector3 e_beam_boost = e_beam.BoostVector();
 
 		cout << "e beam lab px " << e_beam.Px() << endl;
@@ -234,7 +236,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		cout << "e beam lab smeared py " << e_beam_smear.Py() << endl;
 		cout << "e beam lab smeared pz " << e_beam_smear.Pz() << endl;
 		cout << "e beam lab smeared E " << e_beam_smear.E() << endl;
-
 
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
 		e_scattered.Boost(-e_beam_boost);
