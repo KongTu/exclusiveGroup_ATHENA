@@ -213,15 +213,15 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		*/
 
 		//1. angular divergence: CDR
-		double momentum_resolution_e = 10.9E-4;
-		double momentum_resolution_Au = 6.2E-4;
-		double theta_resolution_e[2]={0.101,0.037};//x,y mrad
-		double theta_resolution_h[2]={0.218,0.379};//x,y mrad, w. strong hadron cooling
+		double momentum_resolution_e = 10.9E-4;// GeV/c
+		double momentum_resolution_Au = 6.2E-4;// GeV/c
+		double theta_resolution_e[2]={0.101E-3,0.037E-3};//x,y rad
+		double theta_resolution_h[2]={0.218E-3,0.379E-3};//x,y rad, w. strong hadron cooling
 		//e' beam
 		TVector3 e_beam_boost = e_beam.BoostVector();
 		double p = e_beam.Pz();
-		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]*1E-3) ) * p;
-		double py = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[1]*1E-3) ) * p;
+		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]) ) * p;
+		double py = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[1]) ) * p;
 		double theta = TMath::ASin(sqrt(px*px+py*py)/p);
 		double pz = p*TMath::Cos(theta);
 		pz = (1.+gRandom->Gaus(0.,momentum_resolution_e))*pz;
@@ -240,8 +240,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TGeoRotation *horizDiv = new TGeoRotation();
 		TGeoRotation *vertDiv  = new TGeoRotation();
 		
-		double horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]*1E-3);   
-		double vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]*1E-3); 
+		double horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]);   
+		double vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]); 
 
 		horizDiv->RotateY(horizAngle);
 		vertDiv->RotateX(vertAngle);
@@ -256,8 +256,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		//VM daughters 1 and 2
 		TVector3 A_beam_boost = A_beam.BoostVector();
 		p = A_beam.Pz();
-		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])*1E-3) * p;
-		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])*1E-3) * p;
+		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])) * p;
+		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])) * p;
 		theta = TMath::ASin(sqrt(px*px+py*py)/p);
 		pz = p*TMath::Cos(theta);
 		pz = (1.+gRandom->Gaus(0.,momentum_resolution_Au))*pz;
