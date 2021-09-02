@@ -216,8 +216,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double theta_resolution_h[2]={0.218,0.379};//x,y mrad, w. strong hadron cooling
 		//e' beam
 		TVector3 e_beam_boost = e_beam.BoostVector();
-		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
-		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
+		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]*1E-3) ) * e_beam.Pz();
+		double py = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[1]*1E-3) ) * e_beam.Pz();
 		double pz = (1.+gRandom->Gaus(0.,10.9E-4))*e_beam.Pz();
 		px = 0.;
 		py = 0.;
@@ -226,13 +226,26 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		// e_scattered.Boost(-e_beam_boost);
 		// e_scattered.Boost(e_beam_reverse_boost);
 		
-		// TGeoRotation *horizDiv = new TGeoRotation();
-  //   TGeoRotation *vertDiv  = new TGeoRotation();
-    double horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]);
-    double vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]);
+		double simComp[3]; 
+		simComp[0] = e_scattered.Px(); 
+		simComp[1] = e_scattered.Py(); 
+		simComp[2] = e_scattered.Pz();		
+	
+		TGeoRotation *horizDiv = new TGeoRotation();
+		TGeoRotation *vertDiv  = new TGeoRotation();
+		
+		horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]*1E-3);   
+		vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]*1E-3); 
 
-    e_scattered.RotateY(horizAngle);
-    e_scattered.RotateX(vertAngle);
+		horizDiv->RotateY(horizAngle);
+		vertDiv->RotateX(vertAngle);
+
+		double angDivOutHoriz[3], angDivOutHorizAndVert[3];
+		horizDiv->MasterToLocalVect(simComp, angDivOutHoriz);
+		vertDiv->MasterToLocalVect(angDivOutHoriz, angDivOutHorizAndVert);
+
+		TVector3 e_scattered_modified(angDivOutHorizAndVert);
+    e_scattered.SetVectM(e_scattered_modified,MASS_ELECTRON);
 
 		//VM daughters 1 and 2
 		TVector3 A_beam_boost = A_beam.BoostVector();
