@@ -289,19 +289,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TVector3 A_beam_outgoing_modified(angDivOutHorizAndVert);
     A_beam_outgoing.SetVectM(A_beam_outgoing_modified,MASS_AU197);
 
-	 	//Modify VM:
-    vm_vector = e_beam + A_beam - e_scattered - A_beam_outgoing;
-    TVector3 diff_vect = (vm_vector - (daug_1+daug_2)).Vect();
-    TVector3 daug_1_v3 = daug_1.Vect()+0.5*diff_vect;
-    TVector3 daug_2_v3 = daug_2.Vect()+0.5*diff_vect;
-    daug_1.SetVectM(daug_1_v3, daug_1.M());
-    daug_2.SetVectM(daug_2_v3, daug_2.M());
-
-    cout << "CHeck E" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).E() << endl;
-    cout << "CHeck Px" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
-    cout << "CHeck Py" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Py() << endl;
-    cout << "CHeck Pz" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
-
 		//2. pt resolution. YR. page 351.
 		double pt_resolution[]={0.0005,0.001,0.001};
 		double pt_resolution_constant[]={0.005,0.005,0.005};
