@@ -36,6 +36,7 @@
 #include "TGraphErrors.h"
 #include "TLorentzVector.h"
 #include "TBranchElement.h"
+#include "TGeoRotation.h"
 #include "TRandom2.h"
 #include "Math/Interpolator.h"
 #include "Math/InterpolationTypes.h"
