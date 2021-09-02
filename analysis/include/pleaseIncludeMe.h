@@ -234,8 +234,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TGeoRotation *horizDiv = new TGeoRotation();
 		TGeoRotation *vertDiv  = new TGeoRotation();
 		
-		horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]*1E-3);   
-		vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]*1E-3); 
+		double horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]*1E-3);   
+		double vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]*1E-3); 
 
 		horizDiv->RotateY(horizAngle);
 		vertDiv->RotateX(vertAngle);
