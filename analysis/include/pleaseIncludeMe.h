@@ -258,25 +258,24 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double pt_e_scattered = -99.;
 		if(pt_index_e>=0) {
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_e]);
-			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_e]*pt_resolution_constant[pt_index_e]);//add in quardrature constant term
-			pt_e_scattered = (1.+ resolution) * e_scattered.Pt();
+			double resolution_constant = gRandom->Gaus(0.0,pt_resolution_constant[pt_index_e]);
+			pt_e_scattered = sqrt(TMath::Power((1.+ resolution_constant) * e_scattered.Pt(),2) + TMath::Power(resolution*TMath::Power(e_scattered.Pt(),2),2));
 			e_scattered.SetPtEtaPhiM(pt_e_scattered,e_scattered.Eta(),e_scattered.Phi(),e_scattered.M());
-		
 		}
 		//daughter 1:
 		double pt_daug_1 = -99.;
 		if(pt_index_daug_1>=0) {
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_1]);
-			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug_1]*pt_resolution_constant[pt_index_daug_1]);//add in quardrature constant term
-			pt_daug_1 = (1.+ resolution) * daug_1.Pt();
+			double resolution_constant = gRandom->Gaus(0.0,pt_resolution_constant[pt_index_daug_1]);
+			pt_daug_1 = sqrt(TMath::Power((1.+ resolution_constant) * daug_1.Pt(),2) + TMath::Power(resolution*TMath::Power(daug_1.Pt(),2),2));
 			daug_1.SetPtEtaPhiM(pt_daug_1,daug_1.Eta(),daug_1.Phi(),daug_1.M());
 		}
 		//daughter 2:
 		double pt_daug_2 = -99.;
 		if(pt_index_daug_2>=0) {
 			double resolution = gRandom->Gaus(0.0,pt_resolution[pt_index_daug_2]);
-			resolution = sqrt(resolution*resolution + pt_resolution_constant[pt_index_daug_2]*pt_resolution_constant[pt_index_daug_2]);//add in quardrature constant term
-			pt_daug_2 = (1.+ resolution) * daug_2.Pt();
+			double resolution_constant = gRandom->Gaus(0.0,pt_resolution_constant[pt_index_daug_2]);
+			pt_daug_2 = sqrt(TMath::Power((1.+ resolution_constant) * daug_2.Pt(),2) + TMath::Power(resolution*TMath::Power(daug_2.Pt(),2),2));
 			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
 		
