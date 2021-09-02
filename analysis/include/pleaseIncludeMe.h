@@ -226,8 +226,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		// e_scattered.Boost(-e_beam_boost);
 		// e_scattered.Boost(e_beam_reverse_boost);
 		
-		TGeoRotation *horizDiv = new TGeoRotation();
-    TGeoRotation *vertDiv  = new TGeoRotation();
+		// TGeoRotation *horizDiv = new TGeoRotation();
+  //   TGeoRotation *vertDiv  = new TGeoRotation();
     double horizAngle = gRandom->Gaus(0.0, theta_resolution_e[0]);
     double vertAngle  = gRandom->Gaus(0.0, theta_resolution_e[1]);
 
