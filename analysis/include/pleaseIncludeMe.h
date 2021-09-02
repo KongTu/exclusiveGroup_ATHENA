@@ -226,9 +226,11 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double pz = p*TMath::Cos(theta);
 		pz = (1.+gRandom->Gaus(0.,momentum_resolution_e))*pz;
 		TLorentzVector e_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_ELECTRON*MASS_ELECTRON));
-		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
-		e_scattered.Boost(-e_beam_boost);
-		e_scattered.Boost(e_beam_reverse_boost);
+		e_beam = e_beam_smear;
+		
+		// TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
+		// e_scattered.Boost(-e_beam_boost);
+		// e_scattered.Boost(e_beam_reverse_boost);
 
 		double simComp[3]; 
 		simComp[0] = e_scattered.Px(); 
@@ -253,15 +255,20 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 
 		//VM daughters 1 and 2
 		TVector3 A_beam_boost = A_beam.BoostVector();
-		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])*1E-3) * A_beam.Pz();
-		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])*1E-3) * A_beam.Pz();
-		TLorentzVector A_beam_smear(px, py, A_beam.Pz(), A_beam.E());
-		TLorentzVector eA_beam = e_beam+A_beam;
-		TVector3 eA_beam_boost = eA_beam.BoostVector();
+		p = A_beam.Pz();
+		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])*1E-3) * p;
+		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])*1E-3) * p;
+		theta = TMath::ASin(sqrt(px*px+py*py)/p);
+		pz = p*TMath::Cos(theta);
+		pz = (1.+gRandom->Gaus(0.,momentum_resolution_Au))*pz;
+		TLorentzVector A_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_AU197*MASS_AU197));
+		A_beam = A_beam_smear;
+		// TLorentzVector eA_beam = e_beam+A_beam;
+		// TVector3 eA_beam_boost = eA_beam.BoostVector();
 		// daug_1.Boost(-eA_beam_boost);
 		// daug_2.Boost(-eA_beam_boost);
-		TLorentzVector eA_beam_smear = e_beam_smear+A_beam_smear;
-		TVector3 eA_beam_reverse_boost = eA_beam_smear.BoostVector();
+		// TLorentzVector eA_beam_smear = e_beam_smear+A_beam_smear;
+		// TVector3 eA_beam_reverse_boost = eA_beam_smear.BoostVector();
 		// daug_1.Boost(eA_beam_reverse_boost);
 		// daug_2.Boost(eA_beam_reverse_boost);
 
@@ -308,8 +315,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		}
 		
 
-		e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
-		A_beam.SetPxPyPzE(0.,0.,110.*197,sqrt(110.*110.*197*197+MASS_AU197*MASS_AU197));
+		// e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
+		// A_beam.SetPxPyPzE(0.,0.,110.*197,sqrt(110.*110.*197*197+MASS_AU197*MASS_AU197));
 		
 		vector<TLorentzVector > update;
 		update.push_back(e_beam);
