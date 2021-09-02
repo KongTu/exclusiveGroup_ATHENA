@@ -214,15 +214,7 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 
 		//prepare all four-vectors
 		TLorentzVector vm_vector  =  daug_1+daug_2;
-		TLorentzVector A_beam_outgoing = e_beam - e_scattered - vm_vector + A_beam;
-
-		cout << "before" << endl;
-    cout << "CHeck E " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).E() << endl;
-    cout << "CHeck Px " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
-    cout << "CHeck Py " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Py() << endl;
-    cout << "CHeck Pz " << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
-
-		cout << "after" << endl;
+		TLorentzVector A_beam_outgoing = e_beam + A_beam - e_scattered - vm_vector ;
 
 		//1. angular divergence: CDR
 		double momentum_resolution_e = 10.9E-4;// GeV/c
@@ -266,6 +258,17 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TVector3 e_scattered_modified(angDivOutHorizAndVert);
     e_scattered.SetVectM(e_scattered_modified,MASS_ELECTRON);
 
+    //A incoming beam.
+		TVector3 A_beam_boost = A_beam.BoostVector();
+		p = A_beam.Pz();
+		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])) * p;
+		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])) * p;
+		theta = TMath::ASin(sqrt(px*px+py*py)/p);
+		pz = p*TMath::Cos(theta);
+		pz = (1.+gRandom->Gaus(0.,momentum_resolution_Au))*pz;
+		TLorentzVector A_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_AU197*MASS_AU197));
+		A_beam = A_beam_smear;
+
     //Modify A outgoing beam
     double simComp_A[3]; 
 		simComp_A[0] = A_beam_outgoing.Px(); 
@@ -285,17 +288,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		vertDiv_A->MasterToLocalVect(angDivOutHoriz, angDivOutHorizAndVert);
 		TVector3 A_beam_outgoing_modified(angDivOutHorizAndVert);
     A_beam_outgoing.SetVectM(A_beam_outgoing_modified,MASS_AU197);
-
-		//A incoming beam.
-		TVector3 A_beam_boost = A_beam.BoostVector();
-		p = A_beam.Pz();
-		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])) * p;
-		py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[1])) * p;
-		theta = TMath::ASin(sqrt(px*px+py*py)/p);
-		pz = p*TMath::Cos(theta);
-		pz = (1.+gRandom->Gaus(0.,momentum_resolution_Au))*pz;
-		TLorentzVector A_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_AU197*MASS_AU197));
-		A_beam = A_beam_smear;
 
 	 	//Modify VM:
     vm_vector = e_beam + A_beam - e_scattered - A_beam_outgoing;
