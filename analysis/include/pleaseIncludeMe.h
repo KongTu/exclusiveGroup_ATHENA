@@ -209,7 +209,7 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
  TLorentzVector A_beam, TLorentzVector daug_1, TLorentzVector daug_2){
 
 		/*Smearing includes:
-		- crossing angle 25 mrad.
+		- crossing angle 25 mrad. [not yet]
 		- angular divergence of the beams.
 		- e, e', VM daughters (2-prone), Au.
 		*/
