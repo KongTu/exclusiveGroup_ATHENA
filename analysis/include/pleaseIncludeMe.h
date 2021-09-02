@@ -233,12 +233,12 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TLorentzVector A_beam_smear(px, py, A_beam.Pz(), A_beam.E());
 		TLorentzVector eA_beam = e_beam+A_beam;
 		TVector3 eA_beam_boost = eA_beam.BoostVector();
-		daug_1.Boost(-eA_beam_boost);
-		daug_2.Boost(-eA_beam_boost);
+		// daug_1.Boost(-eA_beam_boost);
+		// daug_2.Boost(-eA_beam_boost);
 		TLorentzVector eA_beam_smear = e_beam_smear+A_beam_smear;
 		TVector3 eA_beam_reverse_boost = eA_beam_smear.BoostVector();
-		daug_1.Boost(eA_beam_reverse_boost);
-		daug_2.Boost(eA_beam_reverse_boost);
+		// daug_1.Boost(eA_beam_reverse_boost);
+		// daug_2.Boost(eA_beam_reverse_boost);
 
 		//2. pt resolution. YR. page 351.
 		double pt_resolution[]={0.0005,0.001,0.001};
