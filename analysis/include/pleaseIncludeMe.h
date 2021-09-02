@@ -213,19 +213,23 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		*/
 
 		//1. angular divergence: CDR
+		double momentum_resolution_e = 10.9E-4;
+		double momentum_resolution_Au = 6.2E-4;
 		double theta_resolution_e[2]={0.101,0.037};//x,y mrad
 		double theta_resolution_h[2]={0.218,0.379};//x,y mrad, w. strong hadron cooling
 		//e' beam
 		TVector3 e_beam_boost = e_beam.BoostVector();
-		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]*1E-3) ) * e_beam.Pz();
-		double py = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[1]*1E-3) ) * e_beam.Pz();
-		// double pz = (1.+gRandom->Gaus(0.,10.9E-4))*e_beam.Pz();
-		double pz = e_beam.Pz();
+		double p = e_beam.Pz()
+		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]*1E-3) ) * p;
+		double py = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[1]*1E-3) ) * p;
+		double theta = TMath::ASin(sqrt(px*px+py*py)/p);
+		double pz = p*TMath::Cos(theta);
+		pz = (1.+gRandom->Gaus(0.,momentum_resolution_e))*pz;
 		TLorentzVector e_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_ELECTRON*MASS_ELECTRON));
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
 		e_scattered.Boost(-e_beam_boost);
 		e_scattered.Boost(e_beam_reverse_boost);
-		
+
 		double simComp[3]; 
 		simComp[0] = e_scattered.Px(); 
 		simComp[1] = e_scattered.Py(); 
