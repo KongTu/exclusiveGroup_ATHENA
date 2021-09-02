@@ -207,12 +207,6 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         TLorentzVector gammaVec(*gamma);
         TLorentzVector aInVec(0.,0.,pInVec.Pz()*197, sqrt(pInVec.Pz()*197*pInVec.Pz()*197 + MASS_AU197*MASS_AU197) );
         
-        cout << "px. " << pOutVec.Px() << endl;
-        cout << "py. " << pOutVec.Py() << endl;
-        cout << "pz. " << pOutVec.Pz() << endl;
-        cout << "E. " << pOutVec.E() << endl;
-        cout << "M. " << pOutVec.M() << endl;
-
         //=================================================================
         //  ==> At this point all information of the tuple is available <==
         //=================================================================

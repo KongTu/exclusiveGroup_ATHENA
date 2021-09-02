@@ -212,12 +212,16 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		- e, e', VM daughters (2-prone), Au.
 		*/
 
+		//prepare all four-vectors
+		TLorentzVector vm_vector  =  daug_1+daug_2;
+		TLorentzVector A_beam_outgoing = e_beam - e_scattered - vm_vector - A_beam;
+
 		//1. angular divergence: CDR
 		double momentum_resolution_e = 10.9E-4;// GeV/c
 		double momentum_resolution_Au = 6.2E-4;// GeV/c
 		double theta_resolution_e[2]={0.101E-3,0.037E-3};//x,y rad
 		double theta_resolution_h[2]={0.218E-3,0.379E-3};//x,y rad, w. strong hadron cooling
-		//e' beam
+		//e incoming beam
 		TVector3 e_beam_boost = e_beam.BoostVector();
 		double p = e_beam.Pz();
 		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]) ) * p;
@@ -232,6 +236,7 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		// e_scattered.Boost(-e_beam_boost);
 		// e_scattered.Boost(e_beam_reverse_boost);
 
+		//Modify scattered e'
 		double simComp[3]; 
 		simComp[0] = e_scattered.Px(); 
 		simComp[1] = e_scattered.Py(); 
@@ -253,7 +258,27 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TVector3 e_scattered_modified(angDivOutHorizAndVert);
     e_scattered.SetVectM(e_scattered_modified,MASS_ELECTRON);
 
-		//VM daughters 1 and 2
+    //Modify A outgoing beam
+    double simComp_A[3]; 
+		simComp_A[0] = A_beam_outgoing.Px(); 
+		simComp_A[1] = A_beam_outgoing.Py(); 
+		simComp_A[2] = A_beam_outgoing.Pz();
+
+    TGeoRotation *horizDiv_A = new TGeoRotation();
+		TGeoRotation *vertDiv_A  = new TGeoRotation();
+
+    horizAngle = gRandom->Gaus(0.0, theta_resolution_h[0]);   
+		vertAngle  = gRandom->Gaus(0.0, theta_resolution_h[1]); 
+		
+		horizDiv_A->RotateY(horizAngle);
+		vertDiv_A->RotateX(vertAngle);
+
+		horizDiv_A->MasterToLocalVect(simComp_A, angDivOutHoriz);
+		vertDiv_A->MasterToLocalVect(angDivOutHoriz, angDivOutHorizAndVert);
+		TVector3 A_beam_outgoing_modified(angDivOutHorizAndVert);
+    A_beam_outgoing.SetVectM(A_beam_outgoing_modified,MASS_AU197);
+
+		//A incoming beam.
 		TVector3 A_beam_boost = A_beam.BoostVector();
 		p = A_beam.Pz();
 		px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_h[0])) * p;
@@ -263,14 +288,19 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		pz = (1.+gRandom->Gaus(0.,momentum_resolution_Au))*pz;
 		TLorentzVector A_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_AU197*MASS_AU197));
 		A_beam = A_beam_smear;
-		// TLorentzVector eA_beam = e_beam+A_beam;
-		// TVector3 eA_beam_boost = eA_beam.BoostVector();
-		// daug_1.Boost(-eA_beam_boost);
-		// daug_2.Boost(-eA_beam_boost);
-		// TLorentzVector eA_beam_smear = e_beam_smear+A_beam_smear;
-		// TVector3 eA_beam_reverse_boost = eA_beam_smear.BoostVector();
-		// daug_1.Boost(eA_beam_reverse_boost);
-		// daug_2.Boost(eA_beam_reverse_boost);
+
+	 	//Modify VM:
+    vm_vector = e_beam + A_beam - e_scattered - A_beam_outgoing;
+    TVector3 diff_vect = (vm_vector - (daug_1+daug_2)).Vect();
+    TVector3 daug_1_v3 = daug_1.Vect()+0.5*diff_vect;
+    TVector3 daug_2_v3 = daug_2.Vect()+0.5*diff_vect;
+    daug_1.SetVectM(daug_1_v3, daug_1.M());
+    daug_2.SetVectM(daug_2_v3, daug_2.M());
+
+    cout << "CHeck E" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).E() << endl;
+    cout << "CHeck Px" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
+    cout << "CHeck Py" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Py() << endl;
+    cout << "CHeck Pz" << (e_beam + A_beam - e_scattered - A_beam_outgoing - daug_1 - daug_2).Px() << endl;
 
 		//2. pt resolution. YR. page 351.
 		double pt_resolution[]={0.0005,0.001,0.001};
