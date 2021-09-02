@@ -220,8 +220,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
 		TLorentzVector e_beam_smear(px, py, e_beam.Pz(), sqrt(px*px+py*py+e_beam.Pz()*e_beam.Pz()+MASS_ELECTRON*MASS_ELECTRON));
 		TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
-		// e_scattered.Boost(-e_beam_boost);
-		// e_scattered.Boost(e_beam_reverse_boost);
+		e_scattered.Boost(-e_beam_boost);
+		e_scattered.Boost(e_beam_reverse_boost);
 
 		//VM daughters 1 and 2
 		TVector3 A_beam_boost = A_beam.BoostVector();
