@@ -212,17 +212,14 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		- e, e', VM daughters (2-prone), Au.
 		*/
 
-		//prepare all four-vectors
-		TLorentzVector vm_vector  =  daug_1+daug_2;
-		TLorentzVector A_beam_outgoing = e_beam + A_beam - e_scattered - vm_vector ;
 
 		//1. angular divergence: CDR
 		double momentum_resolution_e = 10.9E-4;// GeV/c
 		double momentum_resolution_Au = 6.2E-4;// GeV/c
 		double theta_resolution_e[2]={0.101E-3,0.037E-3};//x,y rad
 		double theta_resolution_h[2]={0.218E-3,0.379E-3};//x,y rad, w. strong hadron cooling
+	
 		//e incoming beam
-		TVector3 e_beam_boost = e_beam.BoostVector();
 		double p = e_beam.Pz();
 		double px = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[0]) ) * p;
 		double py = TMath::Sin( gRandom->Gaus(0.0,theta_resolution_e[1]) ) * p;
@@ -232,6 +229,8 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		TLorentzVector e_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_ELECTRON*MASS_ELECTRON));
 		e_beam = e_beam_smear;
 		
+		// // Boost the system around doesn't work?
+		// TVector3 e_beam_boost = e_beam.BoostVector();
 		// TVector3 e_beam_reverse_boost = e_beam_smear.BoostVector();
 		// e_scattered.Boost(-e_beam_boost);
 		// e_scattered.Boost(e_beam_reverse_boost);
@@ -268,26 +267,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		pz = (1.+gRandom->Gaus(0.,momentum_resolution_Au))*pz;
 		TLorentzVector A_beam_smear(px, py, pz, sqrt(px*px+py*py+pz*pz+MASS_AU197*MASS_AU197));
 		A_beam = A_beam_smear;
-
-    //Modify A outgoing beam
-    double simComp_A[3]; 
-		simComp_A[0] = A_beam_outgoing.Px(); 
-		simComp_A[1] = A_beam_outgoing.Py(); 
-		simComp_A[2] = A_beam_outgoing.Pz();
-
-    TGeoRotation *horizDiv_A = new TGeoRotation();
-		TGeoRotation *vertDiv_A  = new TGeoRotation();
-
-    horizAngle = gRandom->Gaus(0.0, theta_resolution_h[0]);   
-		vertAngle  = gRandom->Gaus(0.0, theta_resolution_h[1]); 
-		
-		horizDiv_A->RotateY(horizAngle);
-		vertDiv_A->RotateX(vertAngle);
-
-		horizDiv_A->MasterToLocalVect(simComp_A, angDivOutHoriz);
-		vertDiv_A->MasterToLocalVect(angDivOutHoriz, angDivOutHorizAndVert);
-		TVector3 A_beam_outgoing_modified(angDivOutHorizAndVert);
-    A_beam_outgoing.SetVectM(A_beam_outgoing_modified,MASS_AU197);
 
 		//2. pt resolution. YR. page 351.
 		double pt_resolution[]={0.0005,0.001,0.001};
@@ -330,9 +309,6 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 			pt_daug_2 = (1.+resolution)*daug_2.Pt();
 			daug_2.SetPtEtaPhiM(pt_daug_2,daug_2.Eta(),daug_2.Phi(),daug_2.M());
 		}
-		
-		// e_beam.SetPxPyPzE(0.,0.,-18.,sqrt(18*18+MASS_ELECTRON*MASS_ELECTRON));
-		// A_beam.SetPxPyPzE(0.,0.,110.*197,sqrt(110.*110.*197*197+MASS_AU197*MASS_AU197));
 		
 		vector<TLorentzVector > update;
 		update.push_back(e_beam);
