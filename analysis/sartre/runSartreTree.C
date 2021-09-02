@@ -54,11 +54,13 @@ ostream& operator<<(ostream& os, const TLorentzVector& v)
 //  Main function
 //===========================================================================
 
-void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", int PID_=0, double setLowPt_=0.1)
+void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", int PID_=0, double setLowPt_=0.1, bool smear_=false)
 {
     minPt_ = setLowPt_;
     TString name_PID=Form("%d",PID_);
     TString name_LowPt=Form("%.2f",setLowPt_);
+    TString name_smear=Form("%d",smear_);
+
     //  Setup filenames
     //
     string fnames[16];
@@ -77,7 +79,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     nnames = 10;
     
     //output root files:
-    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+name_PID+"_minPt_"+name_LowPt+".root","RECREATE");
+    TFile hfile("../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+name_PID+"_minPt_"+name_LowPt+"_smear_"+name_smear+".root","RECREATE");
     //
     //   Histogram Booking (example)
     //
@@ -249,7 +251,12 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         }
         
         acceptedEvents++;
-
+        //smearing
+        vector< TLorentzVector> update;
+        if(smear_){
+            update = letsMakeItReal(eInVec,eOutVec,aInVec,vmd1Vec,vmd2Vec);
+            eInVec=update[0];eOutVec=update[1];aInVec=update[2];vmd1Vec=update[3];vmd2Vec=update[4];  
+        }
         //VM t
         for(int imass=0;imass<3;imass++){
             TLorentzVector vmd1Vec_new,vmd2Vec_new,vmVec_new;
@@ -321,5 +328,5 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     
     hfile.Write();
     hfile.Close();
-    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+name_PID+"_minPt_"+name_LowPt+".root'." << endl;
+    cout << "All histos stored in file '../../rootfiles/sartre_"+vm_name+"_bnonsat_PID_"+name_PID+"_minPt_"+name_LowPt+"_smear_"+name_smear+".root'." << endl;
 }
