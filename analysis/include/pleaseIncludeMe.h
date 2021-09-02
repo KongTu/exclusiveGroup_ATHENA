@@ -223,7 +223,7 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		double px = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[0])*1E-3) * e_beam.Pz();
 		double py = TMath::Sin(gRandom->Gaus(0.0,theta_resolution_e[1])*1E-3) * e_beam.Pz();
 		
-		TLorentzVector e_beam_smear(px, py, e_beam.Pz(), e_beam.E());
+		TLorentzVector e_beam_smear(px, py, e_beam.Pz(), sqrt(px*px+py*py+e_beam.Pz()*e_beam.Pz()+MASS_ELECTRON*MASS_ELECTRON));
 		cout << "e beam lab px " << e_beam_smear.Px() << endl;
 		cout << "e beam lab py " << e_beam_smear.Py() << endl;
 		cout << "e beam lab pz " << e_beam_smear.Pz() << endl;
