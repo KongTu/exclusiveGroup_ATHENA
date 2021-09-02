@@ -237,10 +237,10 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		// daug_1.Boost(eA_beam_reverse_boost);
 		// daug_2.Boost(eA_beam_reverse_boost);
 
-		//2. pt resolution
-		double pt_resolution[]={0.0005,0.0005,0.01};
-		double pt_resolution_constant[]={0.005,0.01,0.02};
-		double eta_bins[]={0.,1.0,2.5,4.0};
+		//2. pt resolution. YR. page 351.
+		double pt_resolution[]={0.0005,0.001,0.001};
+		double pt_resolution_constant[]={0.005,0.005,0.005};
+		double eta_bins[]={0.0,1.0,2.5,4.0};
 		int pt_index_e = -1;
 		int pt_index_daug_1 = -1;
 		int pt_index_daug_2 = -1;
