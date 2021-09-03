@@ -250,8 +250,8 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 					}
 				}
 
-				if(TMath::Abs(particle_daug1->GetEta())>4.0||
-					TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
+				if(TMath::Abs(particle_daug1->GetEta())>1.0||
+					TMath::Abs(particle_daug2->GetEta())>1.0) acceptance[ivm]=0;
 
 				if(particle_daug1->GetPt()<minPt_||
 					particle_daug2->GetPt()<minPt_) ptacceptance[ivm]=0;

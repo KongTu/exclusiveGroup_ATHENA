@@ -90,3 +90,19 @@ void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_e
 	hist->Scale( 1. / (lumi_to_apply * BR_to_apply * binwidth) );
 
 }
+TH1D* histogramSubtraction(TH1D* hist_1, TH1D* hist_2){
+
+	TH1D* hist = (TH1D*) hist_1->Clone("hist");
+	for(int i=0;i<hist_1->GetNbinsX();i++){
+		double value_1 = hist_1->GetBinContent(i+1);
+		double value_2 = hist_2->GetBinContent(i+1);
+		double error_1 = hist_1->GetBinError(i+1);
+		double error_2 = hist_2->GetBinError(i+1);
+
+		hist->SetBinContent(i+1, value_1-value_2);
+		hist->SetBinError(i+1, sqrt(error_1*error_1-error_2*error_2));
+	}
+	
+	return hist;
+
+}

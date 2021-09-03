@@ -269,8 +269,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
             
             if(PID_==1){
                 double chi2=-99.;
-                if(TMath::Abs(vmd1Vec_new.Eta())<4.0 
-                            && TMath::Abs(vmd2Vec_new.Eta())<4.0
+                if(TMath::Abs(vmd1Vec_new.Eta())<1.0 
+                            && TMath::Abs(vmd2Vec_new.Eta())<1.0
                                 && imass==1){
                     if( vm_name=="rho"||vm_name=="rho_photo" ){
                         chi2 = giveMe_PIDChi2(vmd1Vec_new, vmd2Vec_new, MASS_PION);

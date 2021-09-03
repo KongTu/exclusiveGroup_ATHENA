@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotProposalFigure_1(TString name="phi_photo",int PHP_ = 1, int veto_ = 1, double minPt_=0.1, int method=2){
+void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double minPt_=0.15, int method=2){
 
 	TFile* beam_piple_file = new TFile("../analysis/include/beam_pipe.root");
 	TH1D* h_beam_pipe = (TH1D*) beam_piple_file->Get("beam_pipe_factor");
@@ -8,7 +8,7 @@ void plotProposalFigure_1(TString name="phi_photo",int PHP_ = 1, int veto_ = 1, 
 	int beagle_vm_index=0;
 	int processindex=1;//91,93
 	double scale_factor = 0.822;
-	if(name=="phi_photo") scale_factor=0.335;
+	if(name=="phi_photo") {scale_factor=0.335;PHP_=1;}
 
 	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
@@ -106,17 +106,15 @@ void plotProposalFigure_1(TString name="phi_photo",int PHP_ = 1, int veto_ = 1, 
 	TH1D* h_mass_for_binning = (TH1D*) h_VM_t_mass_sartre[0][method][1]->ProjectionX("h_mass_for_binning",1,1000);
 	int bin_lower = h_mass_for_binning->FindBin(1.019-0.02);
 	int bin_upper = h_mass_for_binning->FindBin(1.019+0.02);
-	//true phi sample, with phi ->kk mass.
-	TH1D* h_t_from_mass_coherent = (TH1D*) h_VM_t_mass_sartre[0][method][sartre_vm_index]->ProjectionY("h_t_from_mass_coherent",bin_lower,bin_upper);
-	h_t_from_mass_coherent->SetLineColor(kRed);
-	measureXsection(name, h_t_from_mass_coherent, 1);
-	// h_t_from_mass_coherent->Draw("hist same");
+	
 	//use mixed
+	//residue using kk mass on rho vm. 
 	TH1D* h_t_from_mass_coherent_mixed_rho = (TH1D*) h_VM_t_mass_sartre_mixed[0][method][sartre_vm_index][0]->ProjectionY("h_t_from_mass_coherent_mixed_rho",bin_lower,bin_upper);
 	TString name_temp = "rho";
 	if(PHP_) name_temp = "rho_photo";
 	measureXsection(name_temp, h_t_from_mass_coherent_mixed_rho, 1);
 	
+	//true phi vm. 
 	TH1D* h_t_from_mass_coherent_mixed_phi = (TH1D*) h_VM_t_mass_sartre_mixed[0][method][sartre_vm_index][1]->ProjectionY("h_t_from_mass_coherent_mixed_phi",bin_lower,bin_upper);
 	name_temp = "phi";
 	if(PHP_) name_temp = "phi_photo";
@@ -124,8 +122,7 @@ void plotProposalFigure_1(TString name="phi_photo",int PHP_ = 1, int veto_ = 1, 
 
 	h_t_from_mass_coherent_mixed_phi->SetLineColor(kBlack);
 	h_t_from_mass_coherent_mixed_phi->SetMarkerStyle(25);
-	h_t_from_mass_coherent_mixed_phi->Add(h_t_from_mass_coherent_mixed_rho,+1);
-	// h_t_from_mass_coherent_mixed_phi->Draw("P same");
+	h_t_from_mass_coherent_mixed_phi->Add(h_t_from_mass_coherent_mixed_rho,+1);//add both together
 
 	//incoherent pid mass
 	TH1D* h_t_from_PIDmass_incoherent_91 = (TH1D*) h_VM_t_mass[0][vm_index][method][2]->ProjectionY("h_t_from_PIDmass_incoherent_91",bin_lower,bin_upper);
@@ -136,23 +133,20 @@ void plotProposalFigure_1(TString name="phi_photo",int PHP_ = 1, int veto_ = 1, 
 	h_t_from_PIDmass_incoherent_91->SetMarkerColor(kBlue);
 	h_t_from_PIDmass_incoherent_91->Scale(1./scale_factor);//number coming from integral ratio for t>0.0;
 	//add beam pipe effect.
-	for(int ibin=0;ibin<h_t_from_PIDmass_incoherent_91->GetNbinsX();ibin++){
-		double bincenter = h_t_from_PIDmass_incoherent_91->GetBinCenter(ibin+1);
-		double weight = h_beam_pipe->GetBinContent( h_beam_pipe->FindBin(bincenter) );
-		h_t_from_PIDmass_incoherent_91->SetBinContent(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinContent(ibin+1)*weight);
-		h_t_from_PIDmass_incoherent_91->SetBinError(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinError(ibin+1)*weight);
-	}
-	// h_t_from_PIDmass_incoherent_91->Draw("P same");
-
-	//incoherent wrong mass
-	TH1D* h_t_from_wrongmass_incoherent_91 = (TH1D*) h_VM_t_mass[0][vm_index][method][1]->ProjectionY("h_t_from_wrongmass_incoherent_91",bin_lower,bin_upper);
-	TH1D* h_t_from_wrongmass_incoherent_93 = (TH1D*) h_VM_t_mass[1][vm_index][method][1]->ProjectionY("h_t_from_wrongmass_incoherent_93",bin_lower,bin_upper);
-	h_t_from_wrongmass_incoherent_91->Add(h_t_from_wrongmass_incoherent_93,+1);
-	measureXsection(name, h_t_from_wrongmass_incoherent_91, 0, t_hat_all->GetEntries(), PHP_);
-	h_t_from_wrongmass_incoherent_91->Scale(1./scale_factor);//number coming from integral ratio for t>0.0;
-	h_t_from_wrongmass_incoherent_91->SetMarkerStyle(24);
-	h_t_from_wrongmass_incoherent_91->SetMarkerColor(kBlue);
-	// h_t_from_wrongmass_incoherent_91->Draw("P same");
+	// for(int ibin=0;ibin<h_t_from_PIDmass_incoherent_91->GetNbinsX();ibin++){
+	// 	double bincenter = h_t_from_PIDmass_incoherent_91->GetBinCenter(ibin+1);
+	// 	double weight = h_beam_pipe->GetBinContent( h_beam_pipe->FindBin(bincenter) );
+	// 	if(veto_){
+	// 		h_t_from_PIDmass_incoherent_91->SetBinContent(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinContent(ibin+1)*weight);
+	// 		h_t_from_PIDmass_incoherent_91->SetBinError(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinError(ibin+1)*weight);
+	// 	}		
+	// }
+	/*
+	Start to play with subtraction. 
+	*/
+	TFile* file_temp = new TFile("veto_extrapolation.root");
+	TH1D* h_tagged = (TH1D*) file_temp->Get("ratio");
+	h_tagged->Scale(h_t_from_PIDmass_incoherent_91->Integral()*1.0);
 
 	TH1D* h_total = (TH1D*) h_t_from_mass_coherent_mixed_phi->Clone("h_total");
 	h_total->Add(h_t_from_PIDmass_incoherent_91,+1);
@@ -161,6 +155,12 @@ void plotProposalFigure_1(TString name="phi_photo",int PHP_ = 1, int veto_ = 1, 
 	h_total->SetMarkerStyle(25);
 	h_total->SetMarkerColor(kRed);
 	h_total->Draw("P e3 same");
+	
+	TH1D* h_total_subtract = (TH1D*) h_total->Clone("h_total_subtract");
+	h_total_subtract->Add(h_tagged,-1);
+	h_total_subtract->SetMarkerColor(kBlue);
+	h_total_subtract->SetMarkerStyle(24);
+	h_total_subtract->Draw("P same");
 
 	TLatex* r42 = new TLatex(0.18, 0.91, "eAu 18x110 GeV^{2}");
 	r42->SetNDC();
