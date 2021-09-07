@@ -400,9 +400,9 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 						if(hasvm[0]){
 							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new, MASS_PION);
 						}
-						// if(hasvm[1]){
-						// 	chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new, MASS_KAON);
-						// }
+						if(hasvm[1]){
+							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new, MASS_KAON);
+						}
 						//cross check TOF PID.
 						if( chi2 > 0 ) h_PID->Fill(vm_vect1_new.P(), chi2);
 						if( chi2 > 4.6 ){
