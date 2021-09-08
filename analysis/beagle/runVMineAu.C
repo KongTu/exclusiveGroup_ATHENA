@@ -397,7 +397,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 					if(TMath::Abs(vm_vect1_new.Eta())<1.0 
 						&& TMath::Abs(vm_vect2_new.Eta())<1.0){
 						double chi2=-99.;
-						if(hasvm[0]){
+						if(hasvm[0]&&!hasvm[1]){
 							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new, MASS_PION);
 						}
 						// if(hasvm[1]){
