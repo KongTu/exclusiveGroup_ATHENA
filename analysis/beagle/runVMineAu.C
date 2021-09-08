@@ -165,11 +165,11 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		else if( event_process==93) processindex=1;
 		else processindex=2;
 		if(PHP_){
-			if( trueQ2 > 0.2 ) continue;
+			if( trueQ2 > 0.2 || trueQ2 < 0.1 ) continue; //compare to sartre
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
-		// if( trueY > 0.95 || trueY < 0.01 ) continue;
+		if( trueX > 0.01 ) continue;// sartre phase space cut as well!
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 		//perform veto.
 		if( veto_ ){
@@ -250,8 +250,8 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 					}
 				}
 
-				if(TMath::Abs(particle_daug1->GetEta())>1.0||
-					TMath::Abs(particle_daug2->GetEta())>1.0) acceptance[ivm]=0;
+				if(TMath::Abs(particle_daug1->GetEta())>4.0||
+					TMath::Abs(particle_daug2->GetEta())>4.0) acceptance[ivm]=0;
 
 				if(particle_daug1->GetPt()<minPt_||
 					particle_daug2->GetPt()<minPt_) ptacceptance[ivm]=0;
@@ -275,26 +275,10 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		//check mom. conser.
 		double nonconserve=(e_beam+A_beam-all_part).E();
 		h_CHECK[processindex]->Fill(nonconserve,pf3);
-		//apply vm Q2 cut to match sartre photoproduction! this is bad...
-		bool inPhaseSpace[]={true,true,true};
-		if(PHP_){
-			for(int ivm=0;ivm<3;ivm++){
-				if(hasvm[0]){
-					if(trueQ2<0.1 || trueQ2>0.2) inPhaseSpace[0]=false;
-				}
-				if(hasvm[1]){
-					if(trueQ2<0.0001 || trueQ2>0.01) inPhaseSpace[1]=false;
-				}
-				if(hasvm[2]){
-					if(trueQ2<0.0001 || trueQ2>0.01) inPhaseSpace[2]=false;
-				}
-			}
-		}
-		//end
-		//for each vm
+
 		//accurate mass
 		for(int ivm=0;ivm<3;ivm++){
-			if(hasvm[ivm]&&inPhaseSpace[ivm]) {//has vm and vm rapidity acceptance < 4.0
+			if(hasvm[ivm]) {//has vm and vm rapidity acceptance < 4.0
 				//smearing
 				vector< TLorentzVector> update;
 				if(smear_) {
@@ -346,9 +330,9 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		//end each vm with correct mass;
 		//...
 		//wrong mass:
-		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]&&inPhaseSpace[0]) 
-			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]&&inPhaseSpace[1]) 
-				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]&&inPhaseSpace[2]) ){
+		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
+			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
+				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
 			
 			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
 			for(int ivm=0;ivm<3;ivm++){
@@ -375,9 +359,9 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 
 		}
 		//repeat but with PID assignment check on phi assumption
-		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]&&inPhaseSpace[0]) 
-			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]&&inPhaseSpace[1]) 
-				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]&&inPhaseSpace[2]) ){
+		if( (hasvm[0]&&acceptance[0]&&ptacceptance[0]) 
+			|| (hasvm[1]&&acceptance[1]&&ptacceptance[1]) 
+				|| (hasvm[2]&&acceptance[2]&&ptacceptance[2]) ){
 
 			TLorentzVector vm_vect1_new(0.,0.,0.,0.),vm_vect2_new(0.,0.,0.,0.),vm_vect_new(0.,0.,0.,0.);
 			for(int ivm=0;ivm<3;ivm++){
@@ -400,9 +384,6 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 						if(hasvm[0]&&!hasvm[1]){
 							chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new, MASS_PION);
 						}
-						// if(hasvm[1]){
-						// 	chi2 = giveMe_PIDChi2(vm_vect1_new, vm_vect2_new, MASS_KAON);
-						// }
 						//cross check TOF PID.
 						if( chi2 > 0 ) h_PID->Fill(vm_vect1_new.P(), chi2);
 						if( chi2 > 4.6 ){

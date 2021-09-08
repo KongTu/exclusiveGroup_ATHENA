@@ -126,7 +126,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         }
     }
     TH2D* h_PID=new TH2D("h_PID",";p;chi2",100,0,3,500,0,100);
-
+    TH1D* h_xbj = new TH1D("h_xbj","xbj",1000,1e-5,1.);
     
     //
     //  Build chain
@@ -231,6 +231,10 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         
 
         bool accepted = true;
+        double Q2=-gammaVec.Mag2();
+        double xbj = Q2/(2.pInVec.Dot(gammaVec));
+        h_xbj->Fill(xbj);
+        if (xbj > 0.01 ) accepted = false;
         if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
         if (!accepted) continue;
         if (myEvent.dmode < 0.5) { // coherent
@@ -239,8 +243,8 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         else {                    // incoherent
             hist_t_incoherent->Fill(fabs(myEvent.t), 1);
         }
-        if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 1.) accepted = false;
-        if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 1.) accepted = false;
+        if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 4.) accepted = false;
+        if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 4.) accepted = false;
         if (vmd1Vec.Pt() < minPt_) accepted = false;
         if (vmd2Vec.Pt() < minPt_) accepted = false;
         if (!accepted) continue;
