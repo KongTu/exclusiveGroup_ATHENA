@@ -234,7 +234,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         double Q2=-gammaVec.Mag2();
         double xbj = Q2/(2.pInVec.Dot(gammaVec));
         h_xbj->Fill(xbj);
-        if (xbj > 0.01 ) accepted = false;
+        if (xbj > 0.01 ) accepted = false; //artifact cut.
         if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
         if (!accepted) continue;
         if (myEvent.dmode < 0.5) { // coherent
