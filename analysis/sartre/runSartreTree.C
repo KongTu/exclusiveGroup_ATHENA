@@ -126,6 +126,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         }
     }
     TH2D* h_PID=new TH2D("h_PID",";p;chi2",100,0,3,500,0,100);
+    TH1D* h_xbj_truth = new TH1D("h_xbj_truth","xbj",1000,1e-5,1.);
     TH1D* h_xbj = new TH1D("h_xbj","xbj",1000,1e-5,1.);
     
     //
@@ -232,9 +233,10 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
 
         bool accepted = true;
         double Q2=-gammaVec.Mag2();
-        double xbj = Q2/(2. * pInVec.Dot(gammaVec));
+        double xbj = Q2/(2. * aInVec.Dot(gammaVec));
+        h_xbj_truth->Fill(myEvent.x);
         h_xbj->Fill(xbj);
-        if (xbj > 0.01 ) accepted = false; //artifact cut.
+        if (myEvent.x > 0.01 ) accepted = false; //artifact cut.
         if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
         if (!accepted) continue;
         if (myEvent.dmode < 0.5) { // coherent
