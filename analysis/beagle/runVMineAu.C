@@ -165,7 +165,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		else if( event_process==93) processindex=1;
 		else processindex=2;
 		if(PHP_){
-			if( trueQ2 > 0.2 || trueQ2 < 0.1 ) continue; //compare to sartre
+			if( trueQ2 > 0.2 ) continue; //compare to sartre
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
