@@ -18,6 +18,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 	output = new TFile(outputname+outputROOT,"RECREATE");
 	
 	TH1D* h_trueT = new TH1D("h_trueT",";-t (GeV^{2})", 100,0,0.5);
+	TH2D* h_Q2vsX = new TH2D("h_Q2vsX",";x;Q^{2}",10000,1e-5,0.2,100,0,100);
 	//VM histograms//
 	/* first   index VM process, 91=0, 93=1, everything else=2*/
 	/* second  index VM species, rho=0, phi=1, jpsi=2*/
@@ -164,12 +165,13 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		if( event_process==91) processindex=0;
 		else if( event_process==93) processindex=1;
 		else processindex=2;
+		h_Q2vsX->Fill(trueX, trueQ2);
 		if(PHP_){
 			if( trueQ2 > 0.2 ) continue; //compare to sartre
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
-		// if( trueX > 0.01 ) continue; //compare to sartre
+		if( trueX > 0.01 ) continue; //compare to sartre
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 		//perform veto.
 		if( veto_ ){
