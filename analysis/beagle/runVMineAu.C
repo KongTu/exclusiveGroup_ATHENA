@@ -167,7 +167,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		else processindex=2;
 		h_Q2vsX->Fill(trueX, trueQ2);
 		if(PHP_){
-			if( trueQ2 > 0.1 || trueQ2 < 0.01 ) continue; //compare to sartre
+			if( trueQ2 > 0.2 || trueQ2 < 0.1 ) continue; //compare to sartre
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
