@@ -121,7 +121,7 @@ bool veto_this_event(EventBeagle* event, int nParticles, int step_=-1){
 double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, TLorentzVector p_beam, TLorentzVector vm_vect){
 
 	double method_E = (-vm_vect-e_scattered+e_beam).Mag2();
-	if( e_scattered.Eta() < -4.0 ) method_E = -0.01;//photoproduction protection
+	// if( e_scattered.Eta() < -4.0 ) method_E = -0.01;//photoproduction protection
 
 	double method_A = -99;
 	TVector2 sum_pt(vm_vect.Px()+e_scattered.Px(), vm_vect.Py()+e_scattered.Py());
@@ -136,7 +136,7 @@ double giveMe_t(int option, TLorentzVector e_beam, TLorentzVector e_scattered, T
 	TLorentzVector p_beam_scattered_corr; 
 	p_beam_scattered_corr.SetPxPyPzE(p_beam_scattered.Px(),p_beam_scattered.Py(),(p_Aplus-p_Aminus)/2., (p_Aplus+p_Aminus)/2. );
 	method_L = (p_beam_scattered_corr-p_beam).Mag2();
-	if( e_scattered.Eta() < -4.0 ) method_L = -0.05;//photoproduction protection
+	// if( e_scattered.Eta() < -4.0 ) method_L = -0.05;//photoproduction protection
 
 	if(option==0) return -method_E;
 	else if(option==1) return method_A;
