@@ -230,7 +230,6 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         h_VM_daughter[coh_index][1]->Fill(vmd2Vec.Eta());
         h_VM_daughter[coh_index][2]->Fill(vmd2Vec.Phi());
         
-
         bool accepted = true;
         double Q2=-gammaVec.Mag2();
         double xbj = Q2/(2. * pInVec.Dot(gammaVec));
