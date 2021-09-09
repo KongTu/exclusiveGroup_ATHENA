@@ -169,7 +169,7 @@ void runVMineAu(const TString filename="eA_TEST", TString outputname="Output_", 
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
-		if( trueX > 0.01 ) continue; //compare to sartre
+		// if( trueX > 0.01 ) continue; //compare to sartre
 		if( trueW2<TMath::Power(1.95772,2)||trueW2>TMath::Power(88.9985,2)) continue;//to match Sartre
 		//perform veto.
 		if( veto_ ){
