@@ -235,7 +235,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         double Q2=-gammaVec.Mag2();
         double xbj = Q2/(2. * pInVec.Dot(gammaVec));
         h_xbj_truth->Fill(myEvent.x);
-        h_xbj->Fill(xbj);
+        
         if (myEvent.x > 0.01 ) accepted = false; //artifact cut.
         if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
         if (!accepted) continue;
@@ -244,6 +244,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         }
         else {                    // incoherent
             hist_t_incoherent->Fill(fabs(myEvent.t), 1);
+            h_xbj->Fill(xbj);
         }
         if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 4.) accepted = false;
         if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 4.) accepted = false;
