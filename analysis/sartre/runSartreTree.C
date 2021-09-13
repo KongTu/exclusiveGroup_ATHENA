@@ -83,10 +83,10 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     //
     //   Histogram Booking (example)
     //
-    TH1D *hist_t_coherent = new TH1D("hist_t_coherent", "coherent", 72, 0, 0.18);
-    TH1D *hist_t_incoherent = new TH1D("hist_t_incoherent", "incoherent", 72, 0, 0.18);
-    TH1D *hist_t_afterPhaseSpace_coherent = new TH1D("hist_t_afterPhaseSpace_coherent", "coherent", 72, 0, 0.18);
-    TH1D *hist_t_afterPhaseSpace_incoherent = new TH1D("hist_t_afterPhaseSpace_incoherent", "incoherent", 72, 0, 0.18);
+    TH1D *hist_t_coherent = new TH1D("hist_t_coherent", "coherent", 200, 0, 0.2);
+    TH1D *hist_t_incoherent = new TH1D("hist_t_incoherent", "incoherent", 200, 0, 0.2);
+    TH1D *hist_t_afterPhaseSpace_coherent = new TH1D("hist_t_afterPhaseSpace_coherent", "coherent", 200, 0, 0.2);
+    TH1D *hist_t_afterPhaseSpace_incoherent = new TH1D("hist_t_afterPhaseSpace_incoherent", "incoherent", 200, 0, 0.2);
 
     TH1D *h_VM[2][3];
     TH1D *h_VM_daughter[2][3];
