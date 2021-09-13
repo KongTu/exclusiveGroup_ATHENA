@@ -271,8 +271,12 @@ vector<TLorentzVector> letsMakeItReal(TLorentzVector e_beam, TLorentzVector e_sc
 		A_beam = A_beam_smear;
 
 		//2. pt resolution. YR. page 351.
-		double pt_resolution[]={0.0005,0.001,0.001};
-		double pt_resolution_constant[]={0.005,0.005,0.005};
+		// B=3T
+		// double pt_resolution[]={0.0005,0.001,0.001};
+		// double pt_resolution_constant[]={0.005,0.005,0.005};
+		// B=1.5T
+		double pt_resolution[]={0.001,0.002,0.002};
+		double pt_resolution_constant[]={0.01,0.01,0.01};
 		double eta_bins[]={0.0,1.0,2.5,4.0};
 		int pt_index_e = -1;
 		int pt_index_daug_1 = -1;
