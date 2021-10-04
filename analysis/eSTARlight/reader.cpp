@@ -53,17 +53,17 @@ int main(int argc, char **argv) {
         if(inputFile.failed() ) break;
 
         //virtual photon
-        TLorentzVector gammaStar = getFourMomentum(evt.particles().at(1)); 
+        TLorentzVector gammaStar = getFourMomentum(evt.particles().at(0)); 
 
         //in kaons
-        TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(2)); 
-        TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(3)); 
+        TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(1)); 
+        TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(2)); 
 
         //out electron
-        TLorentzVector eOut = getFourMomentum(evt.particles().at(4)); 
+        TLorentzVector eOut = getFourMomentum(evt.particles().at(3)); 
 
         //out proton
-        TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
+        TLorentzVector pOut = getFourMomentum(evt.particles().at(4)); 
 
 
         cout << "proton momentum " << pOut.P() << endl;
