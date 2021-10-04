@@ -73,12 +73,12 @@ int main(int argc, char **argv) {
         TLorentzVector phi = kaonPlus+kaonMinus;
         h_phi_mass->Fill( phi.M() );
 
-        if(fabs(kaonMinus.Eta())>4.0 
-            || fabs(kaonPlus.Eta())>4.0
-              || kaonMinus.Pt() < 0.15 
-                || kaonPlus.Pt() < 0.15 ) continue;
+        // if(fabs(kaonMinus.Eta())>4.0 
+        //     || fabs(kaonPlus.Eta())>4.0
+        //       || kaonMinus.Pt() < 0.15 
+        //         || kaonPlus.Pt() < 0.15 ) continue;
 
-        if( fabs(phi.Rapidity()) > 4.0 ) continue;
+        // if( fabs(phi.Rapidity()) > 4.0 ) continue;
 
         double Q2 = gammaStar.Mag2();
         double xbj = Q2 / (2*AIn.Dot(gammaStar));
