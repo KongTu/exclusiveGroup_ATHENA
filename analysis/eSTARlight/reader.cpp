@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 
         //beam particles:
         TLorentzVector eIn; eIn.SetPxPyPzE(0.,0.,-18.,18);
-        TLorentzVector AIn; Ain.SetPxPyPzE(0.,0.,110.*197, sqrt(110.*197*110.*197+MASS_AU197*MASS_AU197));
+        TLorentzVector AIn; AIn.SetPxPyPzE(0.,0.,110.*197, sqrt(110.*197*110.*197+MASS_AU197*MASS_AU197));
         
         //virtual photon
         TLorentzVector gammaStar = getFourMomentum(evt.particles().at(0)); 
