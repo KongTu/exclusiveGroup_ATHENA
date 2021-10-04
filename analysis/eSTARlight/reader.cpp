@@ -15,6 +15,7 @@
 #include "TLorentzVector.h"
 
 #define MASS_AU197    183.45406466643374
+#define MASS_PROTON   0.93827
 using namespace HepMC3;
 
 TLorentzVector getFourMomentum(std::shared_ptr<const HepMC3::GenParticle> p){
@@ -56,6 +57,7 @@ int main(int argc, char **argv) {
         //beam particles:
         TLorentzVector eIn; eIn.SetPxPyPzE(0.,0.,-18.,18);
         TLorentzVector AIn; AIn.SetPxPyPzE(0.,0.,110.*197, sqrt(110.*197*110.*197+MASS_AU197*MASS_AU197));
+        TLorentzVector pIn; pIn.SetPxPyPzE(0.,0.,110., sqrt(110.*110.+MASS_PROTON*MASS_PROTON));
         
         //virtual photon
         TLorentzVector gammaStar = getFourMomentum(evt.particles().at(0)); 
@@ -72,7 +74,6 @@ int main(int argc, char **argv) {
 
         TLorentzVector phi = kaonPlus+kaonMinus;
         h_phi_mass->Fill( phi.M() );
-
         // if(fabs(kaonMinus.Eta())>4.0 
         //     || fabs(kaonPlus.Eta())>4.0
         //       || kaonMinus.Pt() < 0.15 
@@ -83,7 +84,7 @@ int main(int argc, char **argv) {
         TLorentzVector q=eIn-eOut;
         double Q2= -q.Mag2();
         // double Q2 = gammaStar.Mag2();
-        double xbj = Q2 / (2*AIn.Dot(q));
+        double xbj = Q2 / (2*pIn.Dot(q));
         hQ2vsX->Fill(xbj,Q2);
 
         //id
