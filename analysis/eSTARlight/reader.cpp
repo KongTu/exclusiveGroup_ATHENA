@@ -36,8 +36,8 @@ int main(int argc, char **argv) {
 
     TFile* output = new TFile("output.root","RECREATE");
     TH1D* h_phi_mass = new TH1D("h_phi_mass",";mass (GeV)",100,0.1,1.5);
-    TH2D* hQ2vsX = new TH2D("hQ2vsX",";xbj;Q2 (GeV^{2})",10000,1e-5,1e-1,1000,0,10);
-    TH1D* hQ2 = new TH1D("hQ2",";Q2 (GeV^{2})",1000,0,10);
+    TH2D* hQ2vsX = new TH2D("hQ2vsX",";xbj;Q2 (GeV^{2})",10000,1e-5,1e-1,1000,0,1);
+    TH1D* hQ2 = new TH1D("hQ2",";Q2 (GeV^{2})",100000,0,1);
     //open file
     ReaderAscii inputFile(argv[1]);
     
