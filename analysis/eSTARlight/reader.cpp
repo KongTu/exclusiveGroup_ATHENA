@@ -13,7 +13,14 @@
 #include <TCanvas.h>
 #include <iostream>
 
+#include "TFile.h"
+#include "TLorentzVector.h"
+
 using namespace HepMC3;
+
+TLorentzVector getFourMomentum(std::shared_ptr<const HepMC3::GenParticle> p){
+    return TLorentzVector(p->momentum().px(), p->momentum().py(), p->momentum().pz(), p->momentum().e());
+}
 
 //main
 int main(int argc, char **argv) {
@@ -45,7 +52,21 @@ int main(int argc, char **argv) {
         //if reading failed - exit loop
         if(inputFile.failed() ) break;
 
-        cout << "something " << iEvent << endl;
+        //virtual photon
+        TLorentzVector gammaStar = getFourMomentum(evt.particles().at(1)); 
+
+        //in kaons
+        TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(2)); 
+        TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(3)); 
+
+        //out electron
+        TLorentzVector eOut = getFourMomentum(evt.particles().at(4)); 
+
+        //out proton
+        TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
+
+
+        cout << "proton momentum " << pOut.P() << endl;
         //id
         iEvent++;
     }
