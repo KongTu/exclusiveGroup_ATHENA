@@ -12,9 +12,9 @@
 #include <TGraph.h>
 #include <TCanvas.h>
 #include <iostream>
+#include "TLorentzVector.h"
 
-#include "../include/pleaseIncludeMe.h"
-
+#define MASS_AU197    183.45406466643374
 using namespace HepMC3;
 
 TLorentzVector getFourMomentum(std::shared_ptr<const HepMC3::GenParticle> p){
