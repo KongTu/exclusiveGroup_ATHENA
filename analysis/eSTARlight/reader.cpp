@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
     //histograms
 
     TFile* output = new TFile("output.root","RECREATE");
+    TH1D* h_phi_mass = new TH1D("h_phi_mass",";mass (GeV)",100,0.1,1.5);
     //open file
     ReaderAscii inputFile(argv[1]);
     
@@ -58,6 +59,8 @@ int main(int argc, char **argv) {
         //in kaons
         TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(1)); 
         TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(2)); 
+        TLorentzVector phi = kaonPlus+kaonMinus;
+        h_phi_mass->Fill( phi.M() );
 
         //out electron
         TLorentzVector eOut = getFourMomentum(evt.particles().at(3)); 
@@ -65,8 +68,6 @@ int main(int argc, char **argv) {
         //out proton
         TLorentzVector pOut = getFourMomentum(evt.particles().at(4)); 
 
-
-        cout << "proton momentum " << pOut.P() << endl;
         //id
         iEvent++;
     }
