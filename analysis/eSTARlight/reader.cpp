@@ -80,8 +80,7 @@ int main(int argc, char **argv) {
 
         if( fabs(phi.Rapidity()) > 4.0 ) continue;
 
-        double Q2 = -gammaStar.Mag2();
-        cout << "Q2 " << Q2 << endl;
+        double Q2 = gammaStar.Mag2();
         double xbj = Q2 / (2*AIn.Dot(gammaStar));
         hQ2vsX->Fill(xbj,Q2);
 
