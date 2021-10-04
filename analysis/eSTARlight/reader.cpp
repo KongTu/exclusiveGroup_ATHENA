@@ -13,8 +13,7 @@
 #include <TCanvas.h>
 #include <iostream>
 
-#include "TFile.h"
-#include "TLorentzVector.h"
+#include "../include/pleaseIncludeMe.h"
 
 using namespace HepMC3;
 
@@ -36,6 +35,7 @@ int main(int argc, char **argv) {
 
     TFile* output = new TFile("output.root","RECREATE");
     TH1D* h_phi_mass = new TH1D("h_phi_mass",";mass (GeV)",100,0.1,1.5);
+    TH2D* hQ2vsX = new TH2D("hQ2vsX",";xbj;Q2 (GeV^{2})",10000,1e-5,1e-1,1000,0,10);
     //open file
     ReaderAscii inputFile(argv[1]);
     
@@ -53,21 +53,36 @@ int main(int argc, char **argv) {
         //if reading failed - exit loop
         if(inputFile.failed() ) break;
 
+        //beam particles:
+        TLorentzVector eIn; eIn.SetPxPyPzE(0.,0.,-18.,18);
+        TLorentzVector AIn; Ain.SetPxPyPzE(0.,0.,110.*197, sqrt(110.*197*110.*197+MASS_AU197*MASS_AU197));
+        
         //virtual photon
         TLorentzVector gammaStar = getFourMomentum(evt.particles().at(0)); 
 
         //in kaons
         TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(1)); 
         TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(2)); 
-        TLorentzVector phi = kaonPlus+kaonMinus;
-        h_phi_mass->Fill( phi.M() );
 
         //out electron
         TLorentzVector eOut = getFourMomentum(evt.particles().at(3)); 
 
         //out Ion
         TLorentzVector pOut = getFourMomentum(evt.particles().at(4)); 
-        cout<< "mass of pOut " << pOut.M() << endl;
+
+        TLorentzVector phi = kaonPlus+kaonMinus;
+        h_phi_mass->Fill( phi.M() );
+
+        if(fabs(kaonMinus.Eta())>4.0 
+            || fabs(kaonPlus.Eta())>4.0
+              || kaonMinus.Pt() < 0.15 
+                || kaonPlus.Pt() < 0.15 ) continue;
+
+        if( fabs(phi.Rapidity()) > 4.0 ) continue;
+
+        double Q2 = -gammaStar.Mag2();
+        double xbj = Q2 / (2*AIn.Dot(gammaStar));
+        hQ2vsX->Fill(xbj,Q2);
 
         //id
         iEvent++;
