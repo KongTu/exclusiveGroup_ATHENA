@@ -86,6 +86,7 @@ int main(int argc, char **argv) {
         double Q2= -q.Mag2();
         double Q2_starlight = gammaStar.Mag2();
         hQ2->Fill(Q2_starlight);
+        cout << "Q2_starlight " << Q2_starlight << endl;
         double xbj = Q2 / (2*pIn.Dot(q));
         hQ2vsX->Fill(xbj,Q2);
 
