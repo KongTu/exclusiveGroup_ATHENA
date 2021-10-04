@@ -80,8 +80,10 @@ int main(int argc, char **argv) {
 
         // if( fabs(phi.Rapidity()) > 4.0 ) continue;
 
-        double Q2 = gammaStar.Mag2();
-        double xbj = Q2 / (2*AIn.Dot(gammaStar));
+        TLorentzVector q=eIn-eOut;
+        double Q2= -q.Mag2();
+        // double Q2 = gammaStar.Mag2();
+        double xbj = Q2 / (2*AIn.Dot(q));
         hQ2vsX->Fill(xbj,Q2);
 
         //id
