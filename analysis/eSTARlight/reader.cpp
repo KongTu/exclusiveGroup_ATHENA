@@ -65,8 +65,9 @@ int main(int argc, char **argv) {
         //out electron
         TLorentzVector eOut = getFourMomentum(evt.particles().at(3)); 
 
-        //out proton
+        //out Ion
         TLorentzVector pOut = getFourMomentum(evt.particles().at(4)); 
+        cout<< "mass of pOut " << pOut.M() << endl;
 
         //id
         iEvent++;
