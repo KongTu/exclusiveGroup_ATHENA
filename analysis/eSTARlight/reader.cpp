@@ -83,9 +83,10 @@ int main(int argc, char **argv) {
         TLorentzVector q=eIn-eOut;
         double Q2= -q.Mag2();
         double Q2_starlight = gammaStar.Mag2();
+        cout << "Q2 kong " << Q2 <<  " with Q2 from starlight " << Q2_starlight << endl;
         hQ2->Fill(Q2_starlight);
-        double xbj = Q2 / (2*pIn.Dot(q));
-        hQ2vsX->Fill(xbj,Q2);
+        double xbj = Q2_starlight / (2*pIn.Dot(gammaStar));
+        hQ2vsX->Fill(xbj,Q2_starlight);
 
         //id
         iEvent++;
