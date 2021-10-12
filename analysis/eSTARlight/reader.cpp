@@ -56,22 +56,20 @@ int main(int argc, char **argv) {
         if(inputFile.failed() ) break;
 
         //beam particles:
-        TLorentzVector eIn; eIn.SetPxPyPzE(0.,0.,-18.,18);
-        TLorentzVector AIn; AIn.SetPxPyPzE(0.,0.,110.*197, sqrt(110.*197*110.*197+MASS_AU197*MASS_AU197));
-        TLorentzVector pIn; pIn.SetPxPyPzE(0.,0.,110., sqrt(110.*110.+MASS_PROTON*MASS_PROTON));
-        
+        TLorentzVector eIn = getFourMomentum(evt.particles().at(0));
         //virtual photon
-        TLorentzVector gammaStar = getFourMomentum(evt.particles().at(0)); 
+        TLorentzVector gammaStar = getFourMomentum(evt.particles().at(1)); 
+         //out electron
+        TLorentzVector eOut = getFourMomentum(evt.particles().at(2));
+        
+        TLorentzVector pIn = getFourMomentum(evt.particles().at(3));
 
         //in kaons
-        TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(1)); 
-        TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(2)); 
-
-        //out electron
-        TLorentzVector eOut = getFourMomentum(evt.particles().at(3)); 
+        TLorentzVector kaonPlus = getFourMomentum(evt.particles().at(4)); 
+        TLorentzVector kaonMinus = getFourMomentum(evt.particles().at(5)); 
 
         //out Ion
-        TLorentzVector pOut = getFourMomentum(evt.particles().at(4)); 
+        TLorentzVector AOut = getFourMomentum(evt.particles().at(6)); 
 
         TLorentzVector phi = kaonPlus+kaonMinus;
         h_phi_mass->Fill( phi.M() );
@@ -86,7 +84,6 @@ int main(int argc, char **argv) {
         double Q2= -q.Mag2();
         double Q2_starlight = gammaStar.Mag2();
         hQ2->Fill(Q2_starlight);
-        cout << "Q2_starlight " << Q2_starlight << endl;
         double xbj = Q2 / (2*pIn.Dot(q));
         hQ2vsX->Fill(xbj,Q2);
 
