@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
     TFile* output = new TFile("output.root","RECREATE");
     TH1D* h_phi_mass = new TH1D("h_phi_mass",";mass (GeV)",100,0.1,1.5);
-    TH2D* hQ2vsX = new TH2D("hQ2vsX",";xbj;Q2 (GeV^{2})",1000,1e-5,1e-1,10000,1e-11,1e-4);
+    TH2D* hQ2vsX = new TH2D("hQ2vsX",";xbj;Q2 (GeV^{2})",1000,1e-11,1e-1,10000,1e-11,1e-4);
     TH1D* hQ2 = new TH1D("hQ2",";Q2 (GeV^{2})",100000,0,1);
     //open file
     ReaderAscii inputFile(argv[1]);
@@ -87,11 +87,6 @@ int main(int argc, char **argv) {
         hQ2->Fill(Q2_starlight);
         double xbj = Q2_starlight / (2*pIn.Dot(gammaStar));
         hQ2vsX->Fill(xbj,Q2_starlight);
-        cout << "xbj = " << xbj << endl;
-
-        // check
-        TLorentzVector ePq = eOut+gammaStar;
-        cout << "E " << (eIn-ePq).E() << " Pz " << (eIn-ePq).E() << " Mass " << (eIn-ePq).M() << endl;
 
         //id
         iEvent++;
