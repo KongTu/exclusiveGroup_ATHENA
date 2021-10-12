@@ -87,6 +87,7 @@ int main(int argc, char **argv) {
         hQ2->Fill(Q2_starlight);
         double xbj = Q2_starlight / (2*pIn.Dot(gammaStar));
         hQ2vsX->Fill(xbj,Q2_starlight);
+        cout << "xbj = " << xbj << endl;
 
         // check
         TLorentzVector ePq = eOut+gammaStar;
