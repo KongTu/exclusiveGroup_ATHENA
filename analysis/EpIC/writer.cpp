@@ -25,45 +25,15 @@ int main(int argc, char **argv) {
     //input file
     if(argc != 3){
 
-        std::cout << __func__ << ": error: usage should be: " << argv[0] << " inputFile" << std::endl;
+        std::cout << __func__ << ": error: usage should be: " << argv[0] << " inputFile" << argv[1] << " outputFile" << std::endl;
         exit(0);
     }
 
     //histograms
-    std::vector<TH1D*> h_Q2(10, nullptr);
-    std::vector<TH1D*> h_t(10, nullptr);
-    std::vector<TH1D*> h_xB(10, nullptr);
-    std::vector<TH1D*> h_y(10, nullptr);
-    std::vector<TH1D*> h_phi(10, nullptr);
 
     TF1 *deutNk_beagle = new TF1("Deuteron n(k) in fm^{-1}",getdNdkDeut,0,10,0);
     TF1* cthetaFlat= new TF1("cthetaFlat","0.5",-1.,1.);
     TF1* phiFlat= new TF1("phiFlat","1",-PI,PI);
-
-
-    TFile* output = new TFile("output.root","RECREATE");
-
-    h_Q2[0] = new TH1D("h_Q2_00", "", 90, 1., 10.);
-    h_t[0] = new TH1D("h_t_00", "", 50, 0.0, 1.0);
-    h_xB[0] = new TH1D("h_xB_00", "", 50, 0.0, 1.0);
-    h_y[0] = new TH1D("h_y_00", "", 50, 0.0, 1.0);
-    h_phi[0] = new TH1D("h_phi_00", "", 100, 0.0, 6.2831);
-
-    TH1D* h_alpha = new TH1D("h_alpha","",100,0,2);
-    TH1D* h_p = new TH1D("h_p","",100,0,1);
-    TH1D* h_pz = new TH1D("h_pz","",100,-1,1);
-    TH1D* h_pz_diff_b = new TH1D("h_pz_diff_b","",100,-10,10);
-    TH1D* h_E_diff_b = new TH1D("h_E_diff_b","",100,-10,10);
-    TH1D* h_pz_diff = new TH1D("h_pz_diff","",100,-10,10);
-    TH1D* h_E_diff = new TH1D("h_E_diff","",100,-10,10);
-
-    TH1D* h_new_t_A = new TH1D("h_new_t_A", "", 50, 0.0, 1.0);
-    TH1D* h_new_t_D = new TH1D("h_new_t_D", "", 50, 0.0, 1.0);
-
-    TH2D* h_thetaVsp_proton = new TH2D("h_thetaVsp_proton",";p (Gev/c);#theta (mrad)",200,0,200,100,0,50);
-    TH2D* h_thetaVsp_neutron = new TH2D("h_thetaVsp_neutron",";p (Gev/c);#theta (mrad)",200,0,200,100,0,50);
-    TH2D* h_ptVsEta_gamma_b = new TH2D("h_ptVsEta_gamma_b",";#eta ;p_{T} (GeV/c)",200,-6,6,100,0,4);
-    TH2D* h_ptVsEta_gamma = new TH2D("h_ptVsEta_gamma",";#eta ;p_{T} (GeV/c)",200,-6,6,100,0,4);
 
     //open file
     ReaderAscii inputFile(argv[1]);
@@ -131,7 +101,6 @@ int main(int argc, char **argv) {
         TLorentzVector pIn = getFourMomentum(evt.particles().at(3)); 
         //out photon
         TLorentzVector gammaOut = getFourMomentum(evt.particles().at(4)); 
-        h_ptVsEta_gamma_b->Fill(gammaOut.Eta(),gammaOut.Pt());
 
         //out proton
         TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
@@ -153,11 +122,9 @@ int main(int argc, char **argv) {
         double pz2 = -(alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
         double E2 = (alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
 
-        h_alpha->Fill(alpha_SN);
         TLorentzVector pIn_d(kx1,ky1,pz1,E1);
         TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
-        h_p->Fill(nIn_d.P());
-        h_pz->Fill(nIn_d.Pz());
+
 
         //Deuteron beam.
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
@@ -175,8 +142,6 @@ int main(int argc, char **argv) {
         gammaOut.Boost(p_rf_new);
 
         TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
-        h_pz_diff_b->Fill(all.Pz());
-        h_E_diff_b->Fill(all.E());
         
         //correcting energy momentum. 
         gammaStar.Boost(-d_rf);
@@ -207,44 +172,6 @@ int main(int argc, char **argv) {
 
         all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
 
-        h_pz_diff->Fill(all.Pz());
-        h_E_diff->Fill(all.E());
-
-        //Method A.
-        TVector2 sum_pt(eOut.Px()+gammaOut.Px(), eOut.Py()+gammaOut.Py());
-            h_new_t_A->Fill(sum_pt.Mod2());
-
-        //Method D. double tagging
-        nIn_d.Boost(-d_rf);
-        pOut.Boost(-d_rf);
-
-        Double_t E_bInt = (alpha_AN*MASS_DEUTERON)/4. + (nIn_d.Px()*nIn_d.Px()+
-            nIn_d.Py()*nIn_d.Py()+MASS_PROTON*MASS_PROTON)/(alpha_AN*MASS_DEUTERON);
-        Double_t Pz_bInt = -(alpha_AN*MASS_DEUTERON)/4. + (nIn_d.Px()*nIn_d.Px()+
-            nIn_d.Py()*nIn_d.Py()+MASS_PROTON*MASS_PROTON)/(alpha_AN*MASS_DEUTERON);
-        //new 4 vector for struck nucleon before interaction;
-        TLorentzVector n_primeprime;
-        n_primeprime.SetPxPyPzE(-nIn_d.Px(),-nIn_d.Py(),
-        Pz_bInt,E_bInt);
-        double t_doubletagging = -1*(pOut - n_primeprime).Mag2();
-            h_new_t_D->Fill(t_doubletagging);
-
-        nIn_d.Boost(d_rf);
-        pOut.Boost(d_rf);
-
-        //2D kinematics
-        h_thetaVsp_proton->Fill(pOut.P(), pOut.Theta()*1000.);
-        h_thetaVsp_neutron->Fill(nIn_d.P(), nIn_d.Theta()*1000.);
-        h_ptVsEta_gamma->Fill(gammaOut.Eta(),gammaOut.Pt());
-        //*Kong ends here.
-
-        //fill
-        h_Q2[0]->Fill(dvcsEvent.getQ2());
-        h_t[0]->Fill(-1 * dvcsEvent.getT());
-        h_xB[0]->Fill(dvcsEvent.getXb());
-        h_y[0]->Fill(dvcsEvent.getY());
-        h_phi[0]->Fill(dvcsEvent.getPhi());
-
         //id
         iEvent++;
     }
@@ -274,26 +201,6 @@ int main(int argc, char **argv) {
     inputFile.close();
     text_output.close();
 
-    //print 
-   
-    TCanvas* can = new TCanvas();
-    can->Divide(3, 2);
-
-    can->cd(1);
-    h_Q2[0]->Draw();
-    can->cd(2);
-    h_t[0]->Draw();
-    can->cd(3);
-    h_xB[0]->Draw();
-    can->cd(4);
-    h_y[0]->Draw();
-    can->cd(5);
-    h_phi[0]->Draw();
-  
-    can->Print("plots.pdf", "pdf");
-    
-    output->Write();
-    output->Close();
 
     return 0;
 }
