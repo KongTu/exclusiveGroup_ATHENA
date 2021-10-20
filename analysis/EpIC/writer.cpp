@@ -73,24 +73,8 @@ int main(int argc, char **argv) {
         GenVertexPtr v2 = std::make_shared<GenVertex>();
         v2->add_particle_in (p3);
         v2->add_particle_out(p4);
-        evt_w.add_vertex(v2);
-        GenVertexPtr v3 = std::make_shared<GenVertex>();
-        v3->add_particle_in(p2);
-        v3->add_particle_in(p4);
-        evt_w.add_vertex(v3);
-        GenParticlePtr p5 = std::make_shared<GenParticle>( FourVector(-3.813,  0.113, -1.833, 4.233),  22, 1 );
-        GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( 1.517,-20.68, -20.605,85.925), -24, 3 );
-        v3->add_particle_out(p5);
-        v3->add_particle_out(p6);
-        GenVertexPtr v4 =std:: make_shared<GenVertex>();
-        v4->add_particle_in (p6);
-        evt_w.add_vertex(v4);
-        GenParticlePtr p7 = std::make_shared<GenParticle>( FourVector(-2.445, 28.816,  6.082,29.552),  1, 1 );
-        GenParticlePtr p8 = std::make_shared<GenParticle>( FourVector( 3.962,-49.498,-26.687,56.373), -2, 1 );
-        v4->add_particle_out(p7);
-        v4->add_particle_out(p8);
 
-        text_output.write_event(evt);
+        text_output.write_event(evt_w);
 
         TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
         //out electron
