@@ -1,5 +1,6 @@
 #include "HepMC3/GenEvent.h"
 #include "HepMC3/ReaderAscii.h"
+#include "HepMC3/WriterAscii.h"
 #include "HepMC3/Print.h"
 #include "HepMC3/GenVertex.h"
 #include "HepMC3/GenParticle.h"
@@ -66,6 +67,7 @@ int main(int argc, char **argv) {
 
     //open file
     ReaderAscii inputFile(argv[1]);
+    WriterAscii text_output(argv[2]);
     
     //loop over event
     size_t iEvent = 0;
@@ -74,6 +76,7 @@ int main(int argc, char **argv) {
 
         //event
         GenEvent evt(Units::GEV,Units::MM);
+        GenEvent evt_w(Units::GEV,Units::MM);
 
         //read event from input file
         inputFile.read_event(evt);
@@ -85,6 +88,39 @@ int main(int argc, char **argv) {
         DVCSEvent dvcsEvent(evt);
 
         //*Kong starts here.
+
+        //                                                               px      py        pz       e     pdgid status
+        GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,   7000.0,  7000.0  ),2212,  3 );
+        GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( 0.750, -1.569,   32.191,  32.238),   1,  3 );
+        GenParticlePtr p3 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,  -7000.0,  7000.0  ),2212,  3 );
+        GenParticlePtr p4 = std::make_shared<GenParticle>( FourVector(-3.047,-19.0,    -54.629,  57.920),  -2,  3 );
+        GenVertexPtr v1 = std::make_shared<GenVertex>();
+        v1->add_particle_in (p1);
+        v1->add_particle_out(p2);
+        evt_w.add_vertex(v1);
+        // Set vertex status if needed
+        v1->set_status(4);
+        GenVertexPtr v2 = std::make_shared<GenVertex>();
+        v2->add_particle_in (p3);
+        v2->add_particle_out(p4);
+        evt_w.add_vertex(v2);
+        GenVertexPtr v3 = std::make_shared<GenVertex>();
+        v3->add_particle_in(p2);
+        v3->add_particle_in(p4);
+        evt_w.add_vertex(v3);
+        GenParticlePtr p5 = std::make_shared<GenParticle>( FourVector(-3.813,  0.113, -1.833, 4.233),  22, 1 );
+        GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( 1.517,-20.68, -20.605,85.925), -24, 3 );
+        v3->add_particle_out(p5);
+        v3->add_particle_out(p6);
+        GenVertexPtr v4 =std:: make_shared<GenVertex>();
+        v4->add_particle_in (p6);
+        evt_w.add_vertex(v4);
+        GenParticlePtr p7 = std::make_shared<GenParticle>( FourVector(-2.445, 28.816,  6.082,29.552),  1, 1 );
+        GenParticlePtr p8 = std::make_shared<GenParticle>( FourVector( 3.962,-49.498,-26.687,56.373), -2, 1 );
+        v4->add_particle_out(p7);
+        v4->add_particle_out(p8);
+
+        text_output.write_event(evt_w);
 
         TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
         //out electron
@@ -236,6 +272,7 @@ int main(int argc, char **argv) {
     
     //close file
     inputFile.close();
+    text_output.close();
 
     //print 
    
