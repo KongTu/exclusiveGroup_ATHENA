@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     //loop over event
     size_t iEvent = 0;
 
-    GenEvent evt_w(Units::GEV,Units::MM);
+
 
     while(! inputFile.failed()) {
 
@@ -60,8 +60,9 @@ int main(int argc, char **argv) {
 
         //*Kong starts here.
 
+        GenEvent evt_w(Units::GEV,Units::MM);
         //                                                               px      py        pz       e     pdgid status
-        GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,   7000.0,  7000.0  ),2212,  3 );
+        GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,   7000.0+iEvent,  7000.0  ),2212,  3 );
         GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( 0.750, -1.569,   32.191,  32.238),   1,  3 );
         GenParticlePtr p3 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,  -7000.0,  7000.0  ),2212,  3 );
         GenParticlePtr p4 = std::make_shared<GenParticle>( FourVector(-3.047,-19.0,    -54.629,  57.920),  -2,  3 );
