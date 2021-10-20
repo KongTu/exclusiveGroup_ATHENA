@@ -23,7 +23,7 @@ using namespace HepMC3;
 int main(int argc, char **argv) {
 
     //input file
-    if(argc != 2){
+    if(argc != 3){
 
         std::cout << __func__ << ": error: usage should be: " << argv[0] << " inputFile" << std::endl;
         exit(0);
