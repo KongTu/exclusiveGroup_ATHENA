@@ -42,8 +42,6 @@ int main(int argc, char **argv) {
     //loop over event
     size_t iEvent = 0;
 
-
-
     while(! inputFile.failed()) {
 
         //event
@@ -92,7 +90,7 @@ int main(int argc, char **argv) {
         v4->add_particle_out(p7);
         v4->add_particle_out(p8);
 
-        text_output.write_event(evt_w);
+        text_output.write_event(evt);
 
         TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
         //out electron
@@ -103,7 +101,6 @@ int main(int argc, char **argv) {
         TLorentzVector pIn = getFourMomentum(evt.particles().at(3)); 
         //out photon
         TLorentzVector gammaOut = getFourMomentum(evt.particles().at(4)); 
-
         //out proton
         TLorentzVector pOut = getFourMomentum(evt.particles().at(5)); 
    
