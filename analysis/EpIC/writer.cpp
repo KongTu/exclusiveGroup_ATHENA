@@ -42,11 +42,12 @@ int main(int argc, char **argv) {
     //loop over event
     size_t iEvent = 0;
 
+    GenEvent evt_w(Units::GEV,Units::MM);
+
     while(! inputFile.failed()) {
 
         //event
         GenEvent evt(Units::GEV,Units::MM);
-        GenEvent evt_w(Units::GEV,Units::MM);
 
         //read event from input file
         inputFile.read_event(evt);
