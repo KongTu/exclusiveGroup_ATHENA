@@ -137,7 +137,10 @@ int main(int argc, char **argv) {
 
         all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
 
+        //Hepmc3 output
+
         GenEvent evt_w(Units::GEV,Units::MM);
+        evt_w.set_event_number(iEvent);
         //                                                               px      py        pz       e     pdgid status
         GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( eIn.Px(), eIn.Py(),  eIn.Pz(),  eIn.E() ),11,  4 );
         GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( eOut.Px(), eOut.Py(),  eOut.Pz(),  eOut.E()),11,  1 );
@@ -150,7 +153,7 @@ int main(int argc, char **argv) {
         v1->add_particle_in (p3);
         v1->add_particle_out(p4);
         evt_w.add_vertex(v1);
-        v1->set_status(0);
+        // v1->set_status(0);
 
         GenParticlePtr p5 = std::make_shared<GenParticle>( FourVector( gammaOut.Px(), gammaOut.Py(),  gammaOut.Pz(),  gammaOut.E() ),22,  1 );
         GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( pOut.Px(), pOut.Py(),  pOut.Pz(),  pOut.E()), 2212,  1 );
