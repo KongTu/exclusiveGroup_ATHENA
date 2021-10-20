@@ -58,24 +58,6 @@ int main(int argc, char **argv) {
 
         //*Kong starts here.
 
-        GenEvent evt_w(Units::GEV,Units::MM);
-        //                                                               px      py        pz       e     pdgid status
-        GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,   7000.0+iEvent,  7000.0  ),2212,  3 );
-        GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( 0.750, -1.569,   32.191,  32.238),   1,  3 );
-        GenParticlePtr p3 = std::make_shared<GenParticle>( FourVector( 0.0,    0.0,  -7000.0,  7000.0  ),2212,  3 );
-        GenParticlePtr p4 = std::make_shared<GenParticle>( FourVector(-3.047,-19.0,    -54.629,  57.920),  -2,  3 );
-        GenVertexPtr v1 = std::make_shared<GenVertex>();
-        v1->add_particle_in (p1);
-        v1->add_particle_out(p2);
-        evt_w.add_vertex(v1);
-        // Set vertex status if needed
-        v1->set_status(4);
-        GenVertexPtr v2 = std::make_shared<GenVertex>();
-        v2->add_particle_in (p3);
-        v2->add_particle_out(p4);
-
-        text_output.write_event(evt_w);
-
         TLorentzVector eIn = getFourMomentum(evt.particles().at(0)); 
         //out electron
         TLorentzVector eOut = getFourMomentum(evt.particles().at(1)); 
@@ -154,6 +136,25 @@ int main(int argc, char **argv) {
         pOut.Boost(d_rf);
 
         all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+
+        GenEvent evt_w(Units::GEV,Units::MM);
+        //                                                               px      py        pz       e     pdgid status
+        GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( eIn.Px(), eIn.Py(),  eIn.Pz(),  eIn.E() ),11,  4 );
+        GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( eOut.Px(), eOut.Py(),  eOut.Pz(),  eOut.E()),11,  1 );
+        GenParticlePtr p3 = std::make_shared<GenParticle>( FourVector( gammaStar.Px(), gammaStar.Py(),  gammaStar.Pz(),  gammaStar.E() ),22,  3 );
+        GenParticlePtr p4 = std::make_shared<GenParticle>( FourVector( dIn.Px(), dIn.Py(),  dIn.Pz(),  dIn.E()), 1000010020,  4 );
+        GenVertexPtr v1 = std::make_shared<GenVertex>();
+        v1->add_particle_in (p3);
+        v1->add_particle_out(p4);
+        evt_w.add_vertex(v1);
+        v1->set_status(0);
+
+        GenParticlePtr p5 = std::make_shared<GenParticle>( FourVector( gammaOut.Px(), gammaOut.Py(),  gammaOut.Pz(),  gammaOut.E() ),22,  1 );
+        GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( pOut.Px(), pOut.Py(),  pOut.Pz(),  pOut.E()), 2212,  1 );
+        GenParticlePtr p7 = std::make_shared<GenParticle>( FourVector( nIn_d.Px(), nIn_d.Py(),  nIn_d.Pz(),  nIn_d.E()), 2112,  1 );
+
+        Print::listing(evt_w);
+        text_output.write_event(evt_w);
 
         //id
         iEvent++;
