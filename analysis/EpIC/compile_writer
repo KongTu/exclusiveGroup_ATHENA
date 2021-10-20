@@ -1,0 +1,11 @@
+#!/bin/bash
+
+HEPMC3DIR="/gpfs/mnt/gpfs02/eic/sznajder/software/HepMC3_instalation"
+#HEPMC3DIR="/direct/eic+u/sfazio/MC/DVCS/runEpIC/hepmc3-install"
+
+#setenv LD_LIBRARY_PATH /gpfs/mnt/gpfs02/eic/sznajder/software/HepMC3_instalation/lib:$LD_LIBRARY_PATH
+
+
+g++ -std=c++11 -I$HEPMC3DIR/include `root-config --cflags` -c writer.cpp
+g++ writer.o -L$HEPMC3DIR/lib -Wl,-rpath=$HEPMC3DIR -lHepMC3 `root-config --libs` -o writer.exe
+#g++ reader.o -L$HEPMC3DIR/lib64 -lHepMC3 `root-config --libs` -o reader.exe
