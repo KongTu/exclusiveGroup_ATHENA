@@ -141,6 +141,10 @@ int main(int argc, char **argv) {
 
         GenEvent evt_w(Units::GEV,Units::MM);
         evt_w.set_event_number(iEvent);
+        std::shared_ptr<GenCrossSection> cross_section = std::make_shared<GenCrossSection>();
+        evt_w.add_attribute("GenCrossSection",cross_section);
+        cross_section->set_cross_section(1.0,0.0);
+
         //                                                               px      py        pz       e     pdgid status
         GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( eIn.Px(), eIn.Py(),  eIn.Pz(),  eIn.E() ),11,  4 );
         GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( eOut.Px(), eOut.Py(),  eOut.Pz(),  eOut.E()),11,  1 );
