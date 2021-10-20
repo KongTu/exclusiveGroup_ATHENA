@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
         GenParticlePtr p1 = std::make_shared<GenParticle>( FourVector( eIn.Px(), eIn.Py(),  eIn.Pz(),  eIn.E() ),11,  4 );
         GenParticlePtr p2 = std::make_shared<GenParticle>( FourVector( eOut.Px(), eOut.Py(),  eOut.Pz(),  eOut.E()),11,  1 );
         GenParticlePtr p3 = std::make_shared<GenParticle>( FourVector( gammaStar.Px(), gammaStar.Py(),  gammaStar.Pz(),  gammaStar.E() ),22,  3 );
-        GenParticlePtr p4 = std::make_shared<GenParticle>( FourVector( dIn.Px(), dIn.Py(),  dIn.Pz(),  dIn.E()), 1000010020,  4 );
+        GenParticlePtr p4 = std::make_shared<GenParticle>( FourVector( dIn.Px(), dIn.Py(),  dIn.Pz(),  dIn.E()), 2212,  4 );
         
         GenVertexPtr v1 = std::make_shared<GenVertex>();
         v1->add_particle_in (p1);
