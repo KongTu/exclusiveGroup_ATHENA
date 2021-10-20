@@ -153,6 +153,14 @@ int main(int argc, char **argv) {
         GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( pOut.Px(), pOut.Py(),  pOut.Pz(),  pOut.E()), 2212,  1 );
         GenParticlePtr p7 = std::make_shared<GenParticle>( FourVector( nIn_d.Px(), nIn_d.Py(),  nIn_d.Pz(),  nIn_d.E()), 2112,  1 );
 
+        evt_w.add_particle(p1);
+        evt_w.add_particle(p2);
+        evt_w.add_particle(p3);
+        evt_w.add_particle(p4);
+        evt_w.add_particle(p5);
+        evt_w.add_particle(p6);
+        evt_w.add_particle(p7);
+        
         Print::listing(evt_w);
         text_output.write_event(evt_w);
 
