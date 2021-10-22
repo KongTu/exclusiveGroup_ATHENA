@@ -110,16 +110,18 @@ int main(int argc, char **argv) {
         double Enn = sqrt(kx1*kx1+ky1*ky1+kz1*kz1+MASS_NUCLEON*MASS_NUCLEON);
         double alpha_SN = 1. - kz1 / Enn;
         double alpha_AN = 2 - alpha_SN;
-        double ANMT2 = MASS_PROTON*MASS_PROTON+kx1*kx1+ky1*ky1;
+        //swap proton w. neutron
+        double ANMT2 = MASS_NEUTRON*MASS_NEUTRON+kx1*kx1+ky1*ky1;
         double pz1 = -(alpha_AN*MASS_DEUTERON)/4. + ANMT2/(alpha_AN*MASS_DEUTERON);
         double E1 = (alpha_AN*MASS_DEUTERON)/4. + ANMT2/(alpha_AN*MASS_DEUTERON);
-        double SNMT2 = MASS_NEUTRON*MASS_NEUTRON + kx1*kx1 + ky1*ky1;
+        double SNMT2 = MASS_PROTON*MASS_PROTON + kx1*kx1 + ky1*ky1;
         double pz2 = -(alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
         double E2 = (alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
 
         h_alpha->Fill(alpha_SN);
-        TLorentzVector pIn_d(kx1,ky1,pz1,E1);
-        TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
+        //swap proton w. neutron
+        TLorentzVector nIn_d(kx1,ky1,pz1,E1);
+        TLorentzVector pIn_d(-kx1,-ky1,pz2,E2);
         h_p->Fill(nIn_d.P());
         h_pz->Fill(nIn_d.Pz());
 
@@ -138,38 +140,42 @@ int main(int argc, char **argv) {
         gammaOut.Boost(-p_rf);
         gammaOut.Boost(p_rf_new);
 
-        TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        TLorentzVector nOut;
+        nOut.SetPtEtaPhiM(pOut.Pt(),pOut.Eta(),pOut.Phi(),MASS_NEUTRON);
+        //swap proton w. neutron
+        TLorentzVector all = eIn+dIn-eOut-gammaOut-nOut-pIn_d;
+        
         h_pz_diff_b->Fill(all.Pz());
         h_E_diff_b->Fill(all.E());
         
         //correcting energy momentum. 
         gammaStar.Boost(-d_rf);
-        nIn_d.Boost(-d_rf);
+        pIn_d.Boost(-d_rf);
         gammaOut.Boost(-d_rf);
-        pOut.Boost(-d_rf);
+        nOut.Boost(-d_rf);
 
-        double qzkz = gammaStar.Pz() - (nIn_d.Pz());//qz-kz
-        double numn = gammaStar.E() - nIn_d.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
+        double qzkz = gammaStar.Pz() - (pIn_d.Pz());//qz-kz
+        double numn = gammaStar.E() - pIn_d.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
         double jx = gammaOut.Px();
         double jy = gammaOut.Py();
         double jz = gammaOut.Pz();
-        double px = pOut.Px();
-        double py = pOut.Py();
-        double pz = pOut.Pz();
+        double px = nOut.Px();
+        double py = nOut.Py();
+        double pz = nOut.Pz();
 
         //ad hoc momentum conservation. move excess momentum energy to photon and struck nucleon
-        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
-        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
+        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_NEUTRON);
+        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_NEUTRON);
 
         gammaOut.SetPxPyPzE(jx,jy,jz,sqrt(jx*jx+jy*jy+jz*jz));
-        pOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_PROTON*MASS_PROTON));
+        nOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_NEUTRON*MASS_NEUTRON));
 
         gammaStar.Boost(d_rf);
-        nIn_d.Boost(d_rf);
+        pIn_d.Boost(d_rf);
         gammaOut.Boost(d_rf);
-        pOut.Boost(d_rf);
+        nOut.Boost(d_rf);
 
-        all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        all = eIn+dIn-eOut-gammaOut-nOut-pIn_d;
 
         h_pz_diff->Fill(all.Pz());
         h_E_diff->Fill(all.E());
@@ -179,26 +185,26 @@ int main(int argc, char **argv) {
             h_new_t_A->Fill(sum_pt.Mod2());
 
         //Method D. double tagging
-        nIn_d.Boost(-d_rf);
-        pOut.Boost(-d_rf);
+        pIn_d.Boost(-d_rf);
+        nOut.Boost(-d_rf);
 
-        Double_t E_bInt = (alpha_AN*MASS_DEUTERON)/4. + (nIn_d.Px()*nIn_d.Px()+
-            nIn_d.Py()*nIn_d.Py()+MASS_PROTON*MASS_PROTON)/(alpha_AN*MASS_DEUTERON);
-        Double_t Pz_bInt = -(alpha_AN*MASS_DEUTERON)/4. + (nIn_d.Px()*nIn_d.Px()+
-            nIn_d.Py()*nIn_d.Py()+MASS_PROTON*MASS_PROTON)/(alpha_AN*MASS_DEUTERON);
+        Double_t E_bInt = (alpha_AN*MASS_DEUTERON)/4. + (pIn_d.Px()*pIn_d.Px()+
+            pIn_d.Py()*pIn_d.Py()+MASS_NEUTRON*MASS_NEUTRON)/(alpha_AN*MASS_DEUTERON);
+        Double_t Pz_bInt = -(alpha_AN*MASS_DEUTERON)/4. + (pIn_d.Px()*pIn_d.Px()+
+            pIn_d.Py()*pIn_d.Py()+MASS_NEUTRON*MASS_NEUTRON)/(alpha_AN*MASS_DEUTERON);
         //new 4 vector for struck nucleon before interaction;
         TLorentzVector n_primeprime;
-        n_primeprime.SetPxPyPzE(-nIn_d.Px(),-nIn_d.Py(),
+        n_primeprime.SetPxPyPzE(-pIn_d.Px(),-pIn_d.Py(),
         Pz_bInt,E_bInt);
-        double t_doubletagging = -1*(pOut - n_primeprime).Mag2();
+        double t_doubletagging = -1*(nOut - n_primeprime).Mag2();
             h_new_t_D->Fill(t_doubletagging);
 
-        nIn_d.Boost(d_rf);
-        pOut.Boost(d_rf);
+        pIn_d.Boost(d_rf);
+        nOut.Boost(d_rf);
 
         //2D kinematics
-        h_thetaVsp_proton->Fill(pOut.P(), pOut.Theta()*1000.);
-        h_thetaVsp_neutron->Fill(nIn_d.P(), nIn_d.Theta()*1000.);
+        h_thetaVsp_proton->Fill(nOut.P(), nOut.Theta()*1000.);
+        h_thetaVsp_neutron->Fill(pIn_d.P(), pIn_d.Theta()*1000.);
         h_ptVsEta_gamma->Fill(gammaOut.Eta(),gammaOut.Pt());
         //*Kong ends here.
 
