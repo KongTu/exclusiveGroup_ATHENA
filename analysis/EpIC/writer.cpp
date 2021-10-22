@@ -80,17 +80,18 @@ int main(int argc, char **argv) {
         double Enn = sqrt(kx1*kx1+ky1*ky1+kz1*kz1+MASS_NUCLEON*MASS_NUCLEON);
         double alpha_SN = 1. - kz1 / Enn;
         double alpha_AN = 2 - alpha_SN;
-        double ANMT2 = MASS_PROTON*MASS_PROTON+kx1*kx1+ky1*ky1;
+        //swap proton w. neutron
+        double ANMT2 = MASS_NEUTRON*MASS_NEUTRON+kx1*kx1+ky1*ky1;
         double pz1 = -(alpha_AN*MASS_DEUTERON)/4. + ANMT2/(alpha_AN*MASS_DEUTERON);
         double E1 = (alpha_AN*MASS_DEUTERON)/4. + ANMT2/(alpha_AN*MASS_DEUTERON);
-        double SNMT2 = MASS_NEUTRON*MASS_NEUTRON + kx1*kx1 + ky1*ky1;
+        double SNMT2 = MASS_PROTON*MASS_PROTON + kx1*kx1 + ky1*ky1;
         double pz2 = -(alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
         double E2 = (alpha_SN*MASS_DEUTERON)/4. + SNMT2/(alpha_SN*MASS_DEUTERON);
 
-        TLorentzVector pIn_d(kx1,ky1,pz1,E1);
-        TLorentzVector nIn_d(-kx1,-ky1,pz2,E2);
-
-
+        //swap proton w. neutron
+        TLorentzVector nIn_d(kx1,ky1,pz1,E1);
+        TLorentzVector pIn_d(-kx1,-ky1,pz2,E2);
+ 
         //Deuteron beam.
         TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
         
@@ -106,36 +107,39 @@ int main(int argc, char **argv) {
         gammaOut.Boost(-p_rf);
         gammaOut.Boost(p_rf_new);
 
-        TLorentzVector all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        TLorentzVector nOut;
+        nOut.SetPtEtaPhiM(pOut.Pt(),pOut.Eta(),pOut.Phi(),MASS_NEUTRON);
+        //swap proton w. neutron
+        TLorentzVector all = eIn+dIn-eOut-gammaOut-nOut-pIn_d;
         
         //correcting energy momentum. 
         gammaStar.Boost(-d_rf);
-        nIn_d.Boost(-d_rf);
+        pIn_d.Boost(-d_rf);
         gammaOut.Boost(-d_rf);
-        pOut.Boost(-d_rf);
+        nOut.Boost(-d_rf);
 
-        double qzkz = gammaStar.Pz() - (nIn_d.Pz());//qz-kz
-        double numn = gammaStar.E() - nIn_d.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
+        double qzkz = gammaStar.Pz() - (pIn_d.Pz());//qz-kz
+        double numn = gammaStar.E() - pIn_d.E();//sqrt( MASS_NEUTRON*MASS_NEUTRON + pxf*pxf+pyf*pyf+pzf*pzf )
         double jx = gammaOut.Px();
         double jy = gammaOut.Py();
         double jz = gammaOut.Pz();
-        double px = pOut.Px();
-        double py = pOut.Py();
-        double pz = pOut.Pz();
+        double px = nOut.Px();
+        double py = nOut.Py();
+        double pz = nOut.Pz();
 
         //ad hoc momentum conservation. move excess momentum energy to photon and struck nucleon
-        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
-        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_PROTON);
+        jz = getCorrJz(qzkz,numn,jx,jy,px,py,MASS_NEUTRON);
+        pz = getCorrPz(qzkz,numn,jx,jy,px,py,MASS_NEUTRON);
 
         gammaOut.SetPxPyPzE(jx,jy,jz,sqrt(jx*jx+jy*jy+jz*jz));
-        pOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_PROTON*MASS_PROTON));
+        nOut.SetPxPyPzE(px,py,pz,sqrt(px*px+py*py+pz*pz+MASS_NEUTRON*MASS_NEUTRON));
 
         gammaStar.Boost(d_rf);
-        nIn_d.Boost(d_rf);
+        pIn_d.Boost(d_rf);
         gammaOut.Boost(d_rf);
-        pOut.Boost(d_rf);
+        nOut.Boost(d_rf);
 
-        all = eIn+dIn-eOut-gammaOut-pOut-nIn_d;
+        all = eIn+dIn-eOut-gammaOut-nOut-pIn_d;
 
         //Hepmc3 output
 
@@ -163,8 +167,8 @@ int main(int argc, char **argv) {
         evt_w.add_vertex(v2);
 
         GenParticlePtr p5 = std::make_shared<GenParticle>( FourVector( gammaOut.Px(), gammaOut.Py(),  gammaOut.Pz(),  gammaOut.E() ),22,  1 );
-        GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( pOut.Px(), pOut.Py(),  pOut.Pz(),  pOut.E()), 2212,  1 );
-        GenParticlePtr p7 = std::make_shared<GenParticle>( FourVector( nIn_d.Px(), nIn_d.Py(),  nIn_d.Pz(),  nIn_d.E()), 2112,  1 );
+        GenParticlePtr p6 = std::make_shared<GenParticle>( FourVector( nOut.Px(), nOut.Py(),  nOut.Pz(),  nOut.E()), 2112,  1 );
+        GenParticlePtr p7 = std::make_shared<GenParticle>( FourVector( pIn_d.Px(), pIn_d.Py(),  pIn_d.Pz(),  pIn_d.E()), 2212,  1 );
 
         v2->add_particle_out(p5);
         v2->add_particle_out(p6);
