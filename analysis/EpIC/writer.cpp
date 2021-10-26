@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
         TLorentzVector pIn_d(-kx1,-ky1,pz2,E2);
  
         //Deuteron beam.
-        TLorentzVector dIn(0.,0.,200.,sqrt(200*200+MASS_DEUTERON*MASS_DEUTERON));
+        TLorentzVector dIn(0.,0.,pIn.Pz()*2,sqrt(pIn.Pz()*2*pIn.Pz()*2+MASS_DEUTERON*MASS_DEUTERON));
         
         TVector3 d_rf = dIn.BoostVector();
         nIn_d.Boost(d_rf);
