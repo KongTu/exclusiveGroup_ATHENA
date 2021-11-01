@@ -13,6 +13,12 @@ void plot_DVCS_ep(){
 	TH1D* h_Eta_gamma_MC_match = (TH1D*) file->Get("h_Eta_gamma_MC_match");
 	TH1D* h_Eta_gamma_MC = (TH1D*) file->Get("h_Eta_gamma_MC");
 
+	TH1D* h_Eta_gamma_REC = (TH1D*) file->Get("h_Eta_gamma_REC");
+	TH1D* h_Eta_gamma_REC_not_match = (TH1D*) file->Get("h_Eta_gamma_REC_not_match");
+
+	TH1D* h_Eta_scatElec_MC_match = (TH1D*) file->Get("h_Eta_scatElec_MC_match");
+	TH1D* h_Eta_scatElec_MC = (TH1D*) file->Get("h_Eta_scatElec_MC");
+
 	//only plotting phi
 	TCanvas* c11 = new TCanvas("c11","c11",1,1,600,600);
 	gPad->SetLogy(1);
@@ -111,8 +117,8 @@ void plot_DVCS_ep(){
 	gPad->SetLeftMargin(0.15);
 	gPad->SetBottomMargin(0.15);
 	gPad->SetRightMargin(0.01);
-	TH1D* base33 = makeHist("base33", "", "#eta (photon)", "Efficiency x Acceptance ", 100,-4,4,kBlack);
-	base33->GetYaxis()->SetRangeUser(0, 1.2);
+	TH1D* base33 = makeHist("base33", "", "#eta (photon)", "Photon reco. ", 100,-4,4,kBlack);
+	base33->GetYaxis()->SetRangeUser(0.001, 1.2);
 	base33->GetXaxis()->SetTitleColor(kBlack);
 	// TGaxis::SetMaxDigits(3);
 	fixedFontHist1D(base33,1.2,1.4);
@@ -126,9 +132,36 @@ void plot_DVCS_ep(){
 
 	TGraphAsymmErrors * eff[5];
    	eff[0] = new TGraphAsymmErrors();
-   	eff[0]->BayesDivide(h_Eta_gamma_MC_match,h_Eta_gamma_MC);
+   	eff[0]->Divide(h_Eta_gamma_MC_match,h_Eta_gamma_MC);
    	eff[0]->SetMarkerStyle(20);
-	eff[0]->Draw("Psame");
+	eff[0]->Draw("PEsame");
+
+	TH1D* ratio = (TH1D*) h_Eta_gamma_REC_not_match->Clone("ratio");
+	for(int i=0;i<h_Eta_gamma_REC_not_match->GetNbinsX();i++){
+
+		double value = h_Eta_gamma_REC_not_match->GetBinContent(i+1);
+		double value2 = h_Eta_gamma_REC->GetBinContent(i+1);
+
+		if(! ((value/value2) >0.0 && (value/value2) < 1.0) ){
+			h_Eta_gamma_REC->SetBinContent(i+1,1e9);
+		}
+		value2 = h_Eta_gamma_REC->GetBinContent(i+1);
+		ratio->SetBinContent(i+1, value/value2);
+		ratio->SetBinError(i+1, h_Eta_gamma_REC_not_match->GetBinError(i+1)/value2);
+ 	}
+	
+   	ratio->SetMarkerStyle(24);
+	ratio->Draw("PEsame");
+
+	TLegend *w7 = new TLegend(0.43,0.23,0.6,0.33);
+	w7->SetLineColor(kWhite);
+	w7->SetFillColor(0);
+	w7->SetTextSize(18);
+	w7->SetTextFont(45);
+	w7->AddEntry(eff[0], "Efficiency ", "P");
+	w7->AddEntry(ratio, "Fake rate", "P");
+	w7->Draw("same");
+
 
 	TLine* l1 = new TLine(-4,1,4,1);
 	l1->SetLineStyle(2);
@@ -141,9 +174,40 @@ void plot_DVCS_ep(){
 	r44->Draw("same");
 	r44_2->Draw("same");
 
+	TCanvas* c44 = new TCanvas("c44","c44",1,1,600,600);
+	gPad->SetLogy(0);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.15);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetRightMargin(0.01);
+	TH1D* base44 = makeHist("base44", "", "#eta (e')", "e' reco. ", 100,-4,4,kBlack);
+	base44->GetYaxis()->SetRangeUser(0.001, 1.2);
+	base44->GetXaxis()->SetTitleColor(kBlack);
+	// TGaxis::SetMaxDigits(3);
+	fixedFontHist1D(base44,1.2,1.4);
+	base44->GetYaxis()->SetTitleSize(base44->GetYaxis()->GetTitleSize()*1.3);
+	base44->GetXaxis()->SetTitleSize(base44->GetXaxis()->GetTitleSize()*1.3);
+	base44->GetYaxis()->SetLabelSize(base44->GetYaxis()->GetLabelSize()*1.5);
+	base44->GetXaxis()->SetLabelSize(base44->GetXaxis()->GetLabelSize()*1.5);
+	base44->GetXaxis()->SetNdivisions(4,4,0);
+	base44->GetYaxis()->SetNdivisions(5,5,0);
+	base44->Draw();
+
+	eff[1] = new TGraphAsymmErrors();
+   	eff[1]->Divide(h_Eta_scatElec_MC_match,h_Eta_scatElec_MC);
+   	eff[1]->SetMarkerStyle(20);
+	eff[1]->Draw("PEsame");
+
+	l1->Draw("same");
+	r42->Draw("same");
+	r43->Draw("same");
+	r44->Draw("same");
+	r44_2->Draw("same");
+
 	c11->Print("figure_1.pdf");
 	c22->Print("figure_2.pdf");
 	c33->Print("figure_3.pdf");
+	c44->Print("figure_4.pdf");
 
 
 }
