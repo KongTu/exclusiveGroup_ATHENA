@@ -15,7 +15,7 @@ void plotdSigmadt(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_
 
 	 }
 
-	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f_smear_0.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
@@ -42,7 +42,7 @@ void plotdSigmadt(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_
 
 	/* Sartre */
 
-	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_0_minPt_%.2f.root",minPt_));
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_0_minPt_%.2f_smear_0.root",minPt_));
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
 	TH1D* hist_t_afterPhaseSpace_coherent_sartre = (TH1D*) file_sartre->Get("hist_t_afterPhaseSpace_coherent");
@@ -95,9 +95,11 @@ void plotdSigmadt(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_
 
 	TH1D* h_VM_background = (TH1D*) h_VM[0][vm_index][4]->Clone("h_VM_background");
 	h_VM_background->Add(h_VM[1][vm_index][4],+1);
-
-	TH1D* h_VM_background_afterPhaseSpace = (TH1D*) h_t_reco[0][vm_index][0][0]->Clone("h_VM_background_afterPhaseSpace");
-	h_VM_background_afterPhaseSpace->Add(h_t_reco[1][vm_index][0][0],+1);
+	//use Method A. only
+	int method=0;
+	if(PHP_) method=1;
+	TH1D* h_VM_background_afterPhaseSpace = (TH1D*) h_t_reco[0][vm_index][method][0]->Clone("h_VM_background_afterPhaseSpace");
+	h_VM_background_afterPhaseSpace->Add(h_t_reco[1][vm_index][method][0],+1);
 
 	//adding elastic and dissoc. together.
 	measureXsection(name, h_VM_background, 0, t_hat_all->GetEntries(), PHP_, 0);
@@ -156,8 +158,8 @@ void plotdSigmadt(TString name="phi", int veto_ = 0, int PHP_ = 0, double minPt_
 	w6->AddEntry(h_VM_background_afterPhaseSpace, "BeAGLE w. daug. cut "+legendName+" incoherent ", "P");
 	w6->Draw("same");
 
-	cout << "beagle: " << h_VM_background->Integral(h_VM_background->FindBin(0.02),h_VM_background->FindBin(0.2),"width") << endl;
-	cout << "sartre: " << h_incoh_sartre->Integral(h_incoh_sartre->FindBin(0.02),h_incoh_sartre->FindBin(0.2),"width") << endl;
+	// cout << "beagle: " << h_VM_background->Integral(h_VM_background->FindBin(0.02),h_VM_background->FindBin(0.2),"width") << endl;
+	// cout << "sartre: " << h_incoh_sartre->Integral(h_incoh_sartre->FindBin(0.02),h_incoh_sartre->FindBin(0.2),"width") << endl;
 
 	// if(veto_) c1->Print("../figures/dsigmadt_2/veto_dsigma_dt_"+name+".pdf");
 	// else c1->Print("../figures/dsigmadt_2/dsigma_dt_"+name+".pdf");

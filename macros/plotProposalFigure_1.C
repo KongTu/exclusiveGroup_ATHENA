@@ -1,5 +1,5 @@
 #include "utility.h"
-void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double minPt_=0.15, int method=2){
+void plotProposalFigure_1(TString name="phi", int smear_ = 1, int PHP_ = 0, int veto_ = 0, double minPt_=0.15, int method=2){
 
 	TFile* beam_piple_file = new TFile("../analysis/include/beam_pipe.root");
 	TH1D* h_beam_pipe = (TH1D*) beam_piple_file->Get("beam_pipe_factor");
@@ -10,7 +10,7 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	double scale_factor = 0.822;
 	if(name=="phi_photo") {scale_factor=0.335;PHP_=1;}
 
-	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f_smear_%d.root",PHP_,veto_,minPt_,smear_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 
@@ -39,17 +39,17 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	/* Sartre */
 	TFile* file_sartre_all[3];
 	if(PHP_){
-		file_sartre_all[0] = new TFile(Form("../rootfiles/sartre_rho_photo_bnonsat_PID_1_minPt_%.2f.root",minPt_));
-		file_sartre_all[1] = new TFile(Form("../rootfiles/sartre_phi_photo_bnonsat_PID_1_minPt_%.2f.root",minPt_));
-		file_sartre_all[2] = new TFile(Form("../rootfiles/sartre_jpsi_photo_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+		file_sartre_all[0] = new TFile(Form("../rootfiles/sartre_rho_photo_bnonsat_PID_1_minPt_%.2f_smear_0.root",minPt_));
+		file_sartre_all[1] = new TFile(Form("../rootfiles/sartre_phi_photo_bnonsat_PID_1_minPt_%.2f_smear_0.root",minPt_));
+		file_sartre_all[2] = new TFile(Form("../rootfiles/sartre_jpsi_photo_bnonsat_PID_1_minPt_%.2f_smear_0.root",minPt_));
 	}
 	else{
-		file_sartre_all[0] = new TFile(Form("../rootfiles/sartre_rho_bnonsat_PID_1_minPt_%.2f.root",minPt_));
-		file_sartre_all[1] = new TFile(Form("../rootfiles/sartre_phi_bnonsat_PID_1_minPt_%.2f.root",minPt_));
-		file_sartre_all[2] = new TFile(Form("../rootfiles/sartre_jpsi_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+		file_sartre_all[0] = new TFile(Form("../rootfiles/sartre_rho_bnonsat_PID_1_minPt_%.2f_smear_%d.root",minPt_,smear_));
+		file_sartre_all[1] = new TFile(Form("../rootfiles/sartre_phi_bnonsat_PID_1_minPt_%.2f_smear_%d.root",minPt_,smear_));
+		file_sartre_all[2] = new TFile(Form("../rootfiles/sartre_jpsi_bnonsat_PID_1_minPt_%.2f_smear_0.root",minPt_));
 	}	
 
-	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_1_minPt_%.2f_smear_0.root",minPt_));
 	//not use here
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
@@ -78,15 +78,16 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	gPad->SetTicks();
 	gPad->SetLeftMargin(0.15);
 	gPad->SetBottomMargin(0.15);
-	TH1D* base11 = makeHist("base11", "", "|#it{t} | (GeV^{2})", "d#sigma/d|#it{t} | (nb/GeV^{2}) ", 100,0,0.18,kBlack);
-	base11->GetYaxis()->SetRangeUser(1e-1, 1e8);
-	if(name=="phi"){base11->GetYaxis()->SetRangeUser(1e-2, 1e7);}
-	if(name=="phi_photo"){base11->GetYaxis()->SetRangeUser(1e-1, 1e9);}
+	gPad->SetRightMargin(0.01);
+	TH1D* base11 = makeHist("base11", "", "|#it{t} | (GeV^{2})", "d#sigma / d|#it{t} |  (nb/GeV^{2}) ", 100,0,0.18,kBlack);
+	base11->GetYaxis()->SetRangeUser(4e-2, 1e8);
+	if(name=="phi"){base11->GetYaxis()->SetRangeUser(4e-2, 1e7);}
+	if(name=="phi_photo"){base11->GetYaxis()->SetRangeUser(4e-2, 1e9);}
 	base11->GetXaxis()->SetTitleColor(kBlack);
 	TGaxis::SetMaxDigits(3);
-	fixedFontHist1D(base11,1.,1.1);
-	base11->GetYaxis()->SetTitleSize(base11->GetYaxis()->GetTitleSize()*1.5);
-	base11->GetXaxis()->SetTitleSize(base11->GetXaxis()->GetTitleSize()*1.5);
+	fixedFontHist1D(base11,1.2,1.4);
+	base11->GetYaxis()->SetTitleSize(base11->GetYaxis()->GetTitleSize()*1.3);
+	base11->GetXaxis()->SetTitleSize(base11->GetXaxis()->GetTitleSize()*1.3);
 	base11->GetYaxis()->SetLabelSize(base11->GetYaxis()->GetLabelSize()*1.5);
 	base11->GetXaxis()->SetLabelSize(base11->GetXaxis()->GetLabelSize()*1.5);
 	base11->GetXaxis()->SetNdivisions(4,4,0);
@@ -94,8 +95,8 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	base11->Draw();
 
 	measureXsection(name, h_coh_sartre, 1);
-	h_coh_sartre->SetLineColor(kBlue);
-	h_coh_sartre->SetLineWidth(2);
+	h_coh_sartre->SetLineColor(kBlack);
+	h_coh_sartre->SetLineWidth(1);
 	h_coh_sartre->Draw("hist same");
 
 	measureXsection(name, hist_t_afterPhaseSpace_coherent_sartre, 1);
@@ -119,10 +120,11 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	name_temp = "phi";
 	if(PHP_) name_temp = "phi_photo";
 	measureXsection(name_temp, h_t_from_mass_coherent_mixed_phi, 1);
-
 	h_t_from_mass_coherent_mixed_phi->SetLineColor(kBlack);
 	h_t_from_mass_coherent_mixed_phi->SetMarkerStyle(25);
-	h_t_from_mass_coherent_mixed_phi->Add(h_t_from_mass_coherent_mixed_rho,+1);//add both together
+	// h_t_from_mass_coherent_mixed_phi->Draw();
+
+	// h_t_from_mass_coherent_mixed_phi->Add(h_t_from_mass_coherent_mixed_rho,+1);//add both together
 
 	//incoherent pid mass
 	TH1D* h_t_from_PIDmass_incoherent_91 = (TH1D*) h_VM_t_mass[0][vm_index][method][2]->ProjectionY("h_t_from_PIDmass_incoherent_91",bin_lower,bin_upper);
@@ -133,20 +135,32 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	h_t_from_PIDmass_incoherent_91->SetMarkerColor(kBlue);
 	h_t_from_PIDmass_incoherent_91->Scale(1./scale_factor);//number coming from integral ratio for t>0.0;
 	//add beam pipe effect.
-	// for(int ibin=0;ibin<h_t_from_PIDmass_incoherent_91->GetNbinsX();ibin++){
-	// 	double bincenter = h_t_from_PIDmass_incoherent_91->GetBinCenter(ibin+1);
-	// 	double weight = h_beam_pipe->GetBinContent( h_beam_pipe->FindBin(bincenter) );
-	// 	if(veto_){
-	// 		h_t_from_PIDmass_incoherent_91->SetBinContent(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinContent(ibin+1)*weight);
-	// 		h_t_from_PIDmass_incoherent_91->SetBinError(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinError(ibin+1)*weight);
-	// 	}		
-	// }
+	for(int ibin=0;ibin<h_t_from_PIDmass_incoherent_91->GetNbinsX();ibin++){
+		double bincenter = h_t_from_PIDmass_incoherent_91->GetBinCenter(ibin+1);
+		double weight = h_beam_pipe->GetBinContent( h_beam_pipe->FindBin(bincenter) );
+		if(veto_ && smear_){
+			h_t_from_PIDmass_incoherent_91->SetBinContent(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinContent(ibin+1)*weight);
+			h_t_from_PIDmass_incoherent_91->SetBinError(ibin+1, h_t_from_PIDmass_incoherent_91->GetBinError(ibin+1)*weight);
+		}		
+	}
 	/*
 	Start to play with subtraction. 
 	*/
-	TFile* file_temp = new TFile("veto_extrapolation.root");
+	TFile* file_temp = 0;
+	if(smear_){
+		file_temp = new TFile(Form("veto_extrapolation_PHP_%d_wBeamPipe.root",PHP_));
+	}
+	else{
+		file_temp = new TFile(Form("veto_extrapolation_PHP_%d_wNoBeamPipe.root",PHP_));
+	}
+	
 	TH1D* h_tagged = (TH1D*) file_temp->Get("ratio");
+	TH1D* h_tagged_p10 = (TH1D*) h_tagged->Clone("ratio_p10");
+	TH1D* h_tagged_m10 = (TH1D*) h_tagged->Clone("ratio_m10");
+	
 	h_tagged->Scale(h_t_from_PIDmass_incoherent_91->Integral()*1.0);
+	h_tagged_p10->Scale(h_t_from_PIDmass_incoherent_91->Integral()*1.1);
+	h_tagged_m10->Scale(h_t_from_PIDmass_incoherent_91->Integral()*0.9);
 
 	TH1D* h_total = (TH1D*) h_t_from_mass_coherent_mixed_phi->Clone("h_total");
 	h_total->Add(h_t_from_PIDmass_incoherent_91,+1);
@@ -154,13 +168,36 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
     h_total->SetFillStyle(1001);
 	h_total->SetMarkerStyle(25);
 	h_total->SetMarkerColor(kRed);
-	h_total->Draw("P e3 same");
+	h_total->Draw("PE1 same");
 	
 	TH1D* h_total_subtract = (TH1D*) h_total->Clone("h_total_subtract");
+	TH1D* h_total_subtract_p10 = (TH1D*) h_total->Clone("h_total_subtract_p10");
+	TH1D* h_total_subtract_m10 = (TH1D*) h_total->Clone("h_total_subtract_m10");
+	
 	h_total_subtract->Add(h_tagged,-1);
-	h_total_subtract->SetMarkerColor(kBlue);
+	h_total_subtract_p10->Add(h_tagged_p10,-1);
+	h_total_subtract_m10->Add(h_tagged_m10,-1);
+
+	h_total_subtract->SetMarkerColor(kBlack);
 	h_total_subtract->SetMarkerStyle(24);
-	h_total_subtract->Draw("P same");
+	
+	TGraphAsymmErrors* gr = new TGraphAsymmErrors();
+	for(int ibin=0;ibin<h_total_subtract->GetNbinsX();ibin++){
+		double value = h_total_subtract->GetBinContent(ibin+1);
+		double center = h_total_subtract->GetBinCenter(ibin+1);
+		double value_1 = h_total_subtract_p10->GetBinContent(ibin+1);
+		double value_2 = h_total_subtract_m10->GetBinContent(ibin+1);
+		gr->SetPoint(ibin, center, value);
+		gr->SetPointEYhigh(ibin, value_2-value);
+		gr->SetPointEYlow(ibin, value-value_1);
+	}
+	gr->SetFillColorAlpha(kBlue,0.4);
+    gr->SetFillStyle(1001);
+	gr->SetMarkerStyle(25);
+	gr->SetMarkerColor(kBlue);
+	gr->SetMarkerStyle(24);
+	// gr->Draw("P e3 same");
+	// h_total_subtract->Draw("P e1 same");
 
 	TLatex* r42 = new TLatex(0.18, 0.91, "eAu 18x110 GeV^{2}");
 	r42->SetNDC();
@@ -169,12 +206,12 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	r42->SetTextColor(kBlack);
 	r42->Draw("same");
 
-	TLatex* r43 = new TLatex(0.6,0.91, "ATHENA #it{Internal}");
+	TLatex* r43 = new TLatex(0.7,0.91, "ATHENA #it{Internal}");
 	r43->SetNDC();
 	r43->SetTextSize(0.04);
 	r43->Draw("same");
 
-	TLatex* r44 = new TLatex(0.18, 0.84, "1 < Q^{2} < 20 GeV^{2}, |y_{VM}| < 4.0");
+	TLatex* r44 = new TLatex(0.18, 0.84, "1 < Q^{2} < 20 GeV^{2}, |y_{#phi}| < 4.0");
 	r44->SetNDC();
 	r44->SetTextSize(20);
 	r44->SetTextFont(43);
@@ -188,7 +225,7 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	if(PHP_) r44_1->Draw("same");
 	else r44->Draw("same");
 
-	TLatex* r44_2 = new TLatex(0.18, 0.79, Form("|#eta_{daug.}| < 4.0, p_{T,daug.} > %.2f GeV/c",minPt_) );
+	TLatex* r44_2 = new TLatex(0.18, 0.79, Form("|#eta_{kaon}| < 4.0, p_{T,kaon} > %.2f GeV/c",minPt_) );
 	r44_2->SetNDC();
 	r44_2->SetTextSize(20);
 	r44_2->SetTextFont(43);
@@ -199,14 +236,28 @@ void plotProposalFigure_1(TString name="phi",int PHP_ = 0, int veto_ = 1, double
 	if(method==0){method_name = "Method E";}
 	if(method==1){method_name = "Method A";}
 
-	TLegend *w6 = new TLegend(0.18,0.18,0.45,0.28);
+	TLegend *w6 = new TLegend(0.53,0.65,0.9,0.73);
 	w6->SetLineColor(kWhite);
 	w6->SetFillColor(0);
 	w6->SetTextSize(15);
 	w6->SetTextFont(45);
 	w6->AddEntry(h_coh_sartre, "Sartre coherent #phi truth ", "PL");
-	w6->AddEntry(h_total, "Sartre+BeAGLLE coherent #phi reco'. "+method_name+"", "PF");
+	w6->AddEntry(h_total, "Total #phi reco'. "+method_name+"", "P");
+	// w6->AddEntry(h_total_subtract, "Total-incoh. residue-subtracted #phi" , "PE");
+	// w6->AddEntry(h_total_subtract, " reco'. "+method_name+"", "");
 	w6->Draw("same");
+
+	TBox* box1 = new TBox(0.086,2E4,0.096,4.7E4);
+    box1->SetFillColorAlpha(kRed,0.3);
+    box1->SetFillStyle(1001);
+	box1->SetLineWidth(0);
+	// box1->Draw("same");
+
+	TBox* box2 = new TBox(0.086,7E3,0.096,1.6E4);
+    box2->SetFillColorAlpha(kBlue,0.3);
+    box2->SetFillStyle(1001);
+	box2->SetLineWidth(0);
+	// box2->Draw("same");
 
 	c11->Print(Form("../figures/proposal_ideal/proposal_figure_PHP_%d_veto_%d_minPt_%.2f.pdf",PHP_,veto_,minPt_));
 

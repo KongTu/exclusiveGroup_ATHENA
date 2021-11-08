@@ -63,12 +63,12 @@ void measureXsection(TString name="rho", TH1D* hist=0, int sample=0, int total_e
 		legendName="#rho^{0}";
 	}
 	else if(name=="phi_photo"){
-		sigma=2.42E+5;
+		sigma=3.3E+4;
 		vm_index=1;
 		legendName="#phi";
 	}
 	else if(name=="jpsi_photo"){
-		sigma=458.;
+		sigma=120.;
 		vm_index=2;
 		legendName="J/#psi";
 	}

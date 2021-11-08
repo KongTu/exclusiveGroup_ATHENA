@@ -11,11 +11,11 @@ void plotProposalFigure_1_b(TString name="phi",int PHP_ = 0, int veto_ = 1, doub
 	if(name=="phi_photo") {scale_factor=0.335;PHP_=1;}
 
 	//spectial here:
-	TString inputROOT_noVeto=Form("../rootfiles/beagle_output_PHP_%d_veto_0_minPt_%.2f.root",PHP_,minPt_);
+	TString inputROOT_noVeto=Form("../rootfiles/beagle_output_PHP_%d_veto_0_minPt_%.2f_smear_0.root",PHP_,minPt_);
 	TFile* file_beagle_noVeto = new TFile(inputROOT_noVeto);
 	//end
 
-	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f.root",PHP_,veto_,minPt_);
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f_smear_0.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 
@@ -34,7 +34,7 @@ void plotProposalFigure_1_b(TString name="phi",int PHP_ = 0, int veto_ = 1, doub
 	}
 
 	/* Sartre */
-	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_1_minPt_%.2f.root",minPt_));
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_1_minPt_%.2f_smear_0.root",minPt_));
 	//not use here
 	TH1D* h_coh_sartre = (TH1D*) file_sartre->Get("hist_t_coherent");
 	TH1D* h_incoh_sartre = (TH1D*) file_sartre->Get("hist_t_incoherent");
@@ -98,18 +98,14 @@ void plotProposalFigure_1_b(TString name="phi",int PHP_ = 0, int veto_ = 1, doub
 	measureXsection(name, h_t_from_truemass_incoherent_91, 0, t_hat_all->GetEntries(), PHP_);
 	h_t_from_truemass_incoherent_91->SetMarkerStyle(24);
 	h_t_from_truemass_incoherent_91->SetMarkerColor(kBlue);
-	// h_t_from_truemass_incoherent_91->Rebin(2);
-	// h_t_from_truemass_incoherent_91->Scale(0.5);
 	h_t_from_truemass_incoherent_91->Scale(1./scale_factor);//number coming from integral ratio for t>0.0;
-	// // beam pipe should be able to be corrected. Not showing here. 
-	// // add beam pipe effect
 	// for(int ibin=0;ibin<h_t_from_truemass_incoherent_91->GetNbinsX();ibin++){
 	// 	double bincenter = h_t_from_truemass_incoherent_91->GetBinCenter(ibin+1);
 	// 	double weight = h_beam_pipe->GetBinContent( h_beam_pipe->FindBin(bincenter) );
 	// 	if(veto_){
 	// 		h_t_from_truemass_incoherent_91->SetBinContent(ibin+1, h_t_from_truemass_incoherent_91->GetBinContent(ibin+1)*weight);
 	// 		h_t_from_truemass_incoherent_91->SetBinError(ibin+1, h_t_from_truemass_incoherent_91->GetBinError(ibin+1)*weight);
-	// 	}
+	// 	}		
 	// }
 	h_t_from_truemass_incoherent_91->Draw("PE same");
 
@@ -212,7 +208,7 @@ void plotProposalFigure_1_b(TString name="phi",int PHP_ = 0, int veto_ = 1, doub
 	w7->AddEntry(ratio_d, "BeAGLE incoherent #phi residue", "P");
 	w7->Draw("same");
 
-	TFile* output = new TFile("veto_extrapolation.root","RECREATE");
+	TFile* output = new TFile(Form("veto_extrapolation_PHP_%d.root",PHP_),"RECREATE");
 	ratio->Write();
 	ratio_d->Write();
 

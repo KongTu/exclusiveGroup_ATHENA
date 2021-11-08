@@ -12,7 +12,7 @@ void plotVMdaughters(TString name="phi", int veto_ = 0, int PHP_ = 0, double min
 
 	 }
 
-	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.1f.root",PHP_,veto_,minPt_);
+	TString inputROOT=Form("../rootfiles/beagle_output_PHP_%d_veto_%d_minPt_%.2f_smear_0.root",PHP_,veto_,minPt_);
 	TFile* file_beagle = new TFile(inputROOT);
 	TH1D* t_hat_all = (TH1D*) file_beagle->Get("h_trueT");
 	TH1D* h_VM[2][3][5];
@@ -32,7 +32,7 @@ void plotVMdaughters(TString name="phi", int veto_ = 0, int PHP_ = 0, double min
 	}
 
 	/* Sartre */
-	TFile* file_sartre = new TFile("../rootfiles/sartre_"+name+"_bnonsat.root");
+	TFile* file_sartre = new TFile(Form("../rootfiles/sartre_"+name+"_bnonsat_PID_0_minPt_%.2f_smear_0.root",minPt_));
 	TH1D* h_VM_sartre[2][3];
 	TH1D* h_VM_daughter_sartre[2][3];
 	//VM histograms//

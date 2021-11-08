@@ -348,6 +348,7 @@ void drawWWoBPGraph(){
     TFile* outputfile=new TFile("beam_pipe.root","RECREATE");
     h1Tau10Cut[7]->SetName("beam_pipe_factor");
     h1Tau10Cut[7]->Divide(h1Tau10WOBPCut[7]);
+    h1Tau10Cut[7]->Smooth(100);
     h1Tau10Cut[7]->Write();
 
 
