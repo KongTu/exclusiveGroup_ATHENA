@@ -129,6 +129,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     TH1D* h_xbj_truth = new TH1D("h_xbj_truth","xbj",1000,1e-5,1.);
     TH1D* h_xbj = new TH1D("h_xbj","xbj",1000,1e-5,1.);
     TH1D* h_Q2_select = new TH1D("h_Q2_select","Q2",100,0,100);
+    TH1D* h_Eta_e = new TH1D("h_Eta_e","Q2",50,-4,2);
     
     //
     //  Build chain
@@ -259,6 +260,9 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         }
         if(eOutVec.Eta() > -2.2 && myEvent.dmode<0.5){
             h_Q2_select->Fill(myEvent.Q2);
+        }
+        if(myEvent.Q2>4 && myEvent.dmode<0.5){
+            h_Eta_e->Fill(eOutVec.Eta());
         }
         
         acceptedEvents++;
