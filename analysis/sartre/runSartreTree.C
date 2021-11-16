@@ -261,7 +261,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         if(eOutVec.Eta() > -2.2 && myEvent.dmode<0.5){
             h_Q2_select->Fill(myEvent.Q2);
         }
-        if(myEvent.Q2>4 && myEvent.dmode<0.5){
+        if(myEvent.Q2>1 && myEvent.dmode<0.5){
             h_Eta_e->Fill(eOutVec.Eta());
         }
         
