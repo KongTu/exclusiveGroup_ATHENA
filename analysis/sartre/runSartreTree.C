@@ -237,7 +237,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         double xbj = Q2/(2. * pInVec.Dot(gammaVec));
         h_xbj_truth->Fill(myEvent.x);
         
-        if (Q2>10.||Q1<1.) accepted = false;
+        if (Q2>10.||Q2<1.) accepted = false;
         if (myEvent.x > 0.01 ) accepted = false; //artifact cut.
         if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
         if (!accepted) continue;
