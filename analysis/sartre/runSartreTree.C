@@ -241,11 +241,11 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
         if (Q2>10.||Q2<1.) accepted = false;
         if (xbj > 0.01 ) accepted = false; //artifact cut.
         // if (TMath::Abs(vmVec.Rapidity())>4.) accepted = false;
-        if (TMath::Abs(vmd1Vec.Eta())>4.) accepted = false;
-        if (TMath::Abs(vmd2Vec.Eta())>4.) accepted = false;
+        // if (TMath::Abs(vmd1Vec.Eta())>4.) accepted = false;
+        // if (TMath::Abs(vmd2Vec.Eta())>4.) accepted = false;
         // if (W < 20.) accepted = false;
-        if (vmd1Vec.P() < 1. ) accepted = false;
-        if (vmd2Vec.P() < 1. ) accepted = false;
+        // if (vmd1Vec.P() < 1. ) accepted = false;
+        // if (vmd2Vec.P() < 1. ) accepted = false;
         if (!accepted) continue;
         if (myEvent.dmode < 0.5) { // coherent
             hist_t_coherent->Fill(fabs(myEvent.t), 1);
