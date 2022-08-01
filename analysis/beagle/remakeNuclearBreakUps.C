@@ -22,10 +22,12 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 	}
 	TH1D* h_photon[3];
 	TH1D* h_w[3];
+	TH1D* h_vm_y[3];
 	TH2D* h_neutron[3];
 	for(int ivm=0;ivm<3;ivm++){
 		h_photon[ivm] = new TH1D(Form("h_photon_%d",ivm),";flux",100,0,0.2);
 		h_w[ivm] = new TH1D(Form("h_w_%d",ivm),";W (GeV)",100,1.5,90);
+		h_vm_y[ivm] = new TH1D(Form("h_vm_y_%d",ivm),";rapidity",100,-3,5);
 		h_neutron[ivm] = new TH2D(Form("h_neutron_%d",ivm),Form("h_neutron_%d",ivm),100,0,5,100,-PI,PI);
 	}
 	for(int i(0); i < nEvents; ++i ) {
@@ -79,6 +81,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				if(status!=statuslist[ivm]) continue;
 				vm_vect[ivm]=particle->Get4Vector();
 				hasvm[ivm]=1;//found vm.
+
 			}
 		}
 		//after particle loop;
@@ -87,6 +90,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
 				h_photon[ivm]->Fill(photon_flux);
 				h_w[ivm]->Fill(sqrt(trueW2));
+				h_vm_y[ivm]->Fill( vm_vect[ivm].Rapidity() );
 				for(unsigned in=0;in<neutron_vect_443.size();in++){
 					h_neutron[ivm]->Fill(neutron_vect_443[in].Theta()*1000, neutron_vect_443[in].Phi());//mrad
 				}
