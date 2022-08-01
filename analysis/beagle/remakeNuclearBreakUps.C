@@ -66,13 +66,14 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 		int statuslist[]={2,2,2};
 		int hasvm[3]={0,0,0};
 		TLorentzVector vm_vect[3];
+		vector< TLorentzVector> neutron_vect_443;
 		for(int ivm=0;ivm<3;ivm++){vm_vect[ivm].SetPxPyPzE(0.,0.,0.,0.);}
 		//begin particle loop;
 		for(int j(0); j < nParticles; ++j ) {
 			const erhic::ParticleMC* particle = event->GetTrack(j);
 			int status = particle->GetStatus();
 			int pdg = particle->GetPdgCode();
-			if(status==1&&pdg==2112){h_neutron[ivm]->Fill(particle->Get4Vector().Theta(), particle->Get4Vector().Phi());}		
+			if(status==1&&pdg==2112){neutron_vect_443.push_back(particle->Get4Vector());}		
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
@@ -86,6 +87,9 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
 				h_photon[ivm]->Fill(photon_flux);
 				h_w[ivm]->Fill(sqrt(trueW2));
+				for(unsigned in=0;in<neutron_vect_443.size();in++){
+					h_neutron[ivm]->Fill(neutron_vect_443[in].Theta(), neutron_vect_443[in].Phi());
+				}
 				//perform veto.
 				if( veto_this_event(event, nParticles, 6) ) continue;
 				h_VM_t[1][processindex][ivm]->Fill( -t_hat );
