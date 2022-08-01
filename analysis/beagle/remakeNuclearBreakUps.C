@@ -22,9 +22,11 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 	}
 	TH1D* h_photon[3];
 	TH1D* h_w[3];
+	TH2D* h_neutron[3];
 	for(int ivm=0;ivm<3;ivm++){
 		h_photon[ivm] = new TH1D(Form("h_photon_%d",ivm),";flux",100,0,0.2);
 		h_w[ivm] = new TH1D(Form("h_w_%d",ivm),";W (GeV)",100,1.5,90);
+		h_neutron[ivm] = new TH2D(Form("h_neutron_%d",ivm),Form("h_neutron_%d",ivm),100,0,5,100,-PI,PI);
 	}
 	for(int i(0); i < nEvents; ++i ) {
       
@@ -69,13 +71,13 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 		for(int j(0); j < nParticles; ++j ) {
 			const erhic::ParticleMC* particle = event->GetTrack(j);
 			int status = particle->GetStatus();
-			int pdg = particle->GetPdgCode();		
+			int pdg = particle->GetPdgCode();
+			if(status==1&&pdg==2112){h_neutron[ivm]->Fill(particle->Get4Vector().Theta(), particle->Get4Vector().Phi());}		
 			for(int ivm=0;ivm<3;ivm++){
 				if(pdg!=pdglist[ivm]) continue;
 				if(status!=statuslist[ivm]) continue;
 				vm_vect[ivm]=particle->Get4Vector();
 				hasvm[ivm]=1;//found vm.
-				
 			}
 		}
 		//after particle loop;
