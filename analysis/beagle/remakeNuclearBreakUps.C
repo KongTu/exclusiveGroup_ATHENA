@@ -88,7 +88,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				h_photon[ivm]->Fill(photon_flux);
 				h_w[ivm]->Fill(sqrt(trueW2));
 				for(unsigned in=0;in<neutron_vect_443.size();in++){
-					h_neutron[ivm]->Fill(neutron_vect_443[in].Theta(), neutron_vect_443[in].Phi());
+					h_neutron[ivm]->Fill(neutron_vect_443[in].Theta()*1000, neutron_vect_443[in].Phi());//mrad
 				}
 				//perform veto.
 				if( veto_this_event(event, nParticles, 6) ) continue;
