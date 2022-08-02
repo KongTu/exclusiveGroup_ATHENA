@@ -16,7 +16,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 	for(int iveto=0;iveto<2;iveto++){
 		for(int iprocess=0;iprocess<2;iprocess++){
 			for(int ivm=0;ivm<3;ivm++){
-				h_VM_t[iveto][iprocess][ivm] = new TH1D(Form("h_VM_t_%d_%d_%d",iveto,iprocess,ivm),";-t (GeV^{2})",250,0.,0.5);
+				h_VM_t[iveto][iprocess][ivm] = new TH1D(Form("h_VM_t_%d_%d_%d",iveto,iprocess,ivm),";-t (GeV^{2})",100,0.,2);
 			}
 		}
 	}
