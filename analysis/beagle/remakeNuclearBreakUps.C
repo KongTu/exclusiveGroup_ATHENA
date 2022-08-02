@@ -57,7 +57,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 		else continue;
 
 		if(PHP_){
-			if( trueQ2 > 0.2 ) continue;
+			if( trueQ2 > 1.0 ) continue;
 		}else{
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
