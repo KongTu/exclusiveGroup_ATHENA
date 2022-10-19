@@ -66,7 +66,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
 		//this is the right way to cut on the phase space, NOT thur J/psi rapidity.
-		if( trueW2<TMath::Power(8,2)||trueW2>TMath::Power(47,2)) continue;
+		if( trueW2<TMath::Power(15.07,2)||trueW2>TMath::Power(40.98,2)) continue;
 		/*some conditions & initialization*/
 		int pdglist[]={113,333,443};
 		int statuslist[]={2,2,2};
