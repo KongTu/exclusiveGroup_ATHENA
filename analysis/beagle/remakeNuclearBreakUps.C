@@ -91,7 +91,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 		//after particle loop;
 		for(int ivm=0;ivm<3;ivm++){
 			if(hasvm[ivm]){
-				h_VM_t[0][processindex][ivm]->Fill( -t_hat );
+				h_VM_t[0][processindex][ivm]->Fill( -t_hat, 1./photon_flux );
 				h_photon[ivm]->Fill(photon_flux);
 				h_w[ivm]->Fill(sqrt(trueW2));
 				h_vm_y[ivm]->Fill( vm_vect[ivm].Rapidity() );
