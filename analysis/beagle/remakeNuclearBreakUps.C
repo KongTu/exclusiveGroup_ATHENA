@@ -68,7 +68,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 			if( trueQ2 < 1. || trueQ2 > 20. ) continue;
 		}
 		//this is the right way to cut on the phase space, NOT thur J/psi rapidity.
-		if( trueW2<TMath::Power(8,2)||trueW2>TMath::Power(47,2)) continue;
+		if( trueW2<TMath::Power(15.08,2)||trueW2>TMath::Power(40.9,2)) continue;
 		/*some conditions & initialization*/
 		int pdglist[]={113,333,443};
 		int statuslist[]={2,2,2};
@@ -105,7 +105,7 @@ void remakeNuclearBreakUps(const TString filename="eA_TEST", const int nEvents =
 				}
 				//perform veto.
 				if( veto_this_event(event, nParticles, 6) ) continue;
-				h_VM_t[1][processindex][ivm]->Fill( -t_hat );
+				h_VM_t[1][processindex][ivm]->Fill( -t_hat, 1./photon_flux );
 			}
 		}
 
