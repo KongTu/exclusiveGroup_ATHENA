@@ -128,6 +128,7 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
     TH2D* h_PID=new TH2D("h_PID",";p;chi2",100,0,3,500,0,100);
     TH1D* h_xbj_truth = new TH1D("h_xbj_truth","xbj",1000,1e-5,1.);
     TH1D* h_xbj = new TH1D("h_xbj","xbj",1000,1e-5,1.);
+    TH1D* h_xpom = new TH1D("h_xpom","xpom",1000,1e-5,1.);
     TH1D* h_Q2_select = new TH1D("h_Q2_select","Q2",100,0,100);
     TH1D* h_Eta_e = new TH1D("h_Eta_e","Q2",50,-4,2);
     
@@ -254,13 +255,14 @@ void runSartreTree(double fractionOfEventsToRead = 1, TString vm_name="jpsi", in
             hist_t_incoherent->Fill(fabs(myEvent.t), 1);
             h_xbj->Fill(xbj);
         }
-        if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 4.) accepted = false;
-        if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 4.) accepted = false;
+        if (TMath::Abs(vmd1Vec.PseudoRapidity()) > 3.) accepted = false;
+        if (TMath::Abs(vmd2Vec.PseudoRapidity()) > 3.) accepted = false;
         if (vmd1Vec.Pt() < minPt_) accepted = false;
         if (vmd2Vec.Pt() < minPt_) accepted = false;
         if (!accepted) continue;
         if (myEvent.dmode < 0.5) { // coherent
             hist_t_afterPhaseSpace_coherent->Fill(fabs(myEvent.t), 1);
+            h_xpom->Fill(myEvent.xpom);
         }
         else {                    // incoherent
             hist_t_afterPhaseSpace_incoherent->Fill(fabs(myEvent.t), 1);
